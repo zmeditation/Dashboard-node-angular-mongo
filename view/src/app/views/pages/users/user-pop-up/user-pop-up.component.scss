@@ -1,0 +1,37 @@
+@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+
+mat-dialog-content {
+  height: 100%;
+}
+
+.smaller-font-size {
+  font-size: 0.7rem;
+}
+
+.min-height-for-chip {
+  height: auto;
+}
+
+.search-account-manager {
+  width: 91%;
+  padding: 2% 0 0 4%;
+}
+
+#user-id {
+  mat-icon {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+  }
+}
+
+@media all and (max-width: 959px) {
+  .role-top-block-edit-publisher {
+    flex-direction: column !important;
+
+    app-add-account-manager-to-publisher {
+      max-width: 100% !important;
+    }
+  }
+}
+

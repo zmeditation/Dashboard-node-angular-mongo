@@ -1,0 +1,31 @@
+<mat-form-field class="width--full">
+  <mat-chip-list #chipList aria-label="Fruit selection" [formControl]="control">
+    <mat-chip class="chip margin--top-0" *ngFor="let domain of selectedDomains" [selectable]="true" [removable]="true" (removed)="toggleDomain(domain)">
+      {{ domain }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      type="text"
+      [placeholder]="'VIDEO_GENERATOR_PAGE.SELECT_DOMAINS' | translate"
+      matInput
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="createDomain($event)"
+    />
+    <mat-progress-bar *ngIf="loaded" mode="indeterminate"></mat-progress-bar>
+  </mat-chip-list>
+  <mat-hint *ngIf="!control.disabled && !loaded && !list.length">{{ 'VALIDATION_ERRORS.DOMAINS_MUST_CREATED' | translate }}</mat-hint>
+  <mat-autocomplete #auto="matAutocomplete">
+    <span class="mat-option" (click)="selectAllDomains()">{{ 'VIDEO_GENERATOR_PAGE.SELECT_ALL' | translate }}</span>
+    <span class="mat-option" (click)="deselectAllDomains()">{{ 'VIDEO_GENERATOR_PAGE.DESELECT_ALL' | translate }}</span>
+    <mat-option *ngFor="let domain of this.filtered | async" [value]="domain">
+      <div (click)="toggleDomain(domain); $event.stopPropagation()">
+        <mat-checkbox (click)="$event.stopPropagation()" [checked]="selected.has(domain)" (change)="toggleDomain(domain)">
+          {{ domain }}
+        </mat-checkbox>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *appControlError="control"></mat-error>
+</mat-form-field>

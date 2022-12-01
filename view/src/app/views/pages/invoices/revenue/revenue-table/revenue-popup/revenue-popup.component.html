@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>{{ 'REVENUE.DETAILS' | translate }}</h1>
+<div mat-dialog-content>
+  <div>
+    {{'REVENUE.REVENUE_VALUE' | translate }}:
+    <span class="positive">
+      {{revenue.revenue.toFixed(2)}}
+    </span>
+  </div>
+  <div *ngIf="revenue.revenue_rtb">
+    {{'REVENUE.REVENUE_RTB_VALUE' | translate }}:
+    <span class="positive">
+      {{revenue.revenue_rtb.toFixed(2)}}
+    </span>
+  </div>
+
+  <div>
+    {{'REVENUE.TOTAL_DEDUCTION' | translate }}:
+    <span class="negative">
+      {{revenue.deduction.toFixed(2)}}
+    </span>
+  </div>
+
+  <ul>
+    <li *ngFor="let deduction of detailedDeductions">
+      {{'REVENUE.TYPES.' + kebabToScreamingSnakeCase(deduction.type) | translate}}:
+      {{deduction.deduction.toFixed(2)}}
+    </li>
+  </ul>
+</div>

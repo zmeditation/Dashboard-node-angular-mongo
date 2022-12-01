@@ -1,0 +1,120 @@
+<mat-card [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+  <mat-card-title>
+    {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.ALL_CODES_LIST' | translate }}
+  </mat-card-title>
+  <mat-card-content>
+    <div id="publishers-selector">
+      <div><span> {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.SELECT_PUBLISHER' | translate }}</span></div>
+      <mat-form-field>
+        <mat-label>
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER' | translate }}
+        </mat-label>
+        <input type="text" [formControl]="publisher" required matInput [matAutocomplete]="auto"
+               [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_TIP' | translate"
+               (input)="filterPublishers()"/>
+        <mat-error>
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_ERROR' | translate }}
+        </mat-error>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updatePubId($event.option.value)">
+          <mat-option *ngFor="let pub of filteredPublishers" [value]="pub">
+            {{ pub }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div id="no-codes" *ngIf="userCodes && userCodes.length === 0">
+      {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.NO_CODES' | translate }}
+    </div>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let code of userCodes; let i = index">
+        <mat-expansion-panel-header>
+          <div>
+            <h3 style="margin: 0"><strong> Pack {{ i + 1 }}</strong></h3>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="pack-container">
+          <div class="single-code-block" *ngFor="let tag of code['settings']; let k = index">
+            <div class="inline-actions">
+              <div><h4>Code {{ k + 1 }}</h4></div>
+              <button mat-icon-button [disabled]="mainTag.value === tag.script && position.value === getPosition(tag)"
+                      color="primary" (click)="saveThisTag({
+                position: position.value,
+                code: mainTag.value,
+                selector: selector.value,
+                placementId: placementId.value,
+                articleClass: articleClass.value,
+                paragraphNumber: paragraphNumber.valueAsNumber,
+                index: k,
+                id: code.id
+              })">
+                <mat-icon [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.SAVE_CURRENT_SETTINGS' | translate">
+                  save
+                </mat-icon>
+              </button>
+            </div>
+            <div class="script-settings" [hidden]="isHideSettings(tag.script)">
+              <mat-form-field>
+                <mat-label>
+                  {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.AD_BLOCK_POSITION' | translate }}
+                </mat-label>
+                <mat-select [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.CODE_POSITION_TIP' | translate"
+                            #position [value]="getPosition(tag)"
+                >
+                  <mat-option *ngFor="let position of ['inArticle', 'afterElement', 'placementId']" [value]="position"
+                  >
+                    {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CODE_POSITION_' + position | uppercase | translate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div [hidden]="position.value !== 'afterElement'">
+                <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.AFTER_ELEMENT_TIP' | translate">
+                  <mat-label>selector</mat-label>
+                  <input type="text" matInput required #selector [value]="tag.afterElement?.selector">
+                </mat-form-field>
+              </div>
+              <div [hidden]="position.value !== 'placementId'">
+                <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PLACEMENT_ID_TIP' | translate">
+                  <mat-label>Script Id</mat-label>
+                  <input type="text" matInput #placementId [value]="tag.placementId || ''">
+                </mat-form-field>
+              </div>
+              <div id="inArticle-settings" [hidden]="position.value !== 'inArticle'">
+                <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.IN_ARTICLE_CLASS_TIP' | translate">
+                  <mat-label>
+                    {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.ARTICLE_CLASS' | translate }}
+                  </mat-label>
+                  <input type="text" matInput required #articleClass [value]="tag.inArticle?.articleClass">
+                </mat-form-field>
+                <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.IN_ARTICLE_PARAGRAPH_TIP' | translate">
+                  <mat-label>
+                    {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PARAGRAPH_NUMBER' | translate }}
+                  </mat-label>
+                  <input type="number" matInput min="1" required #paragraphNumber
+                         [valueAsNumber]="tag.inArticle?.paragraphNumber">
+                </mat-form-field>
+              </div>
+            </div>
+            <mat-form-field style="width: 100%; margin: 0.5em 0">
+              <mat-label>Code {{ k + 1 }}</mat-label>
+              <textarea #mainTag
+                        cdkTextareaAutosize
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="3"
+                        cdkAutosizeMaxRows="5"
+                        matInput [value]=" tag['script']" [id]="'input-' + code.id">
+              </textarea>
+            </mat-form-field>
+          </div>
+          <div id="action-buttons">
+            <button type="button" mat-raised-button color="primary" (click)="updatePackOnCdn(i)">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.UPDATE_PACK_ON_CDN' | translate }}
+            </button>
+            <button type="button" mat-raised-button color="warn" (click)="deletePack(code.id, i)">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.DELETE_PACK' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

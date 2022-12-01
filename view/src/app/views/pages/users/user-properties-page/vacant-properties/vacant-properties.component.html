@@ -1,0 +1,36 @@
+<div *ngIf="vacantProperties && noData && !isLoading" class="mt-05">
+  <h3 class="text-center">No Vacant Properties!</h3>
+</div>
+<div *ngIf="isLoading" class="pt-1">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+<div
+  *ngIf="!isLoading && !noData"
+  fxLayout="row wrap"
+  fxLayout.lt-md="column wrap"
+  fxLayoutAlign="space-between start"
+  fxLayoutAlign.lt-md="start center"
+  class="mt-05"
+  [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }"
+>
+  <div
+    fxFlex="25"
+    fxLayout="row wrap"
+    *ngFor="let programmatic of vacantProperties"
+    [class.flex-for-amazon]="programmatic['_id'] === 'Amazon'"
+    class="flex-for-small-display"
+  >
+    <div class="full-width">
+      <div>
+        <h3>{{ programmatic['_id'] }}</h3>
+      </div>
+      <div>
+        <ul class="p-0">
+          <li *ngFor="let property of programmatic['properties']" style="list-style: none">
+            {{ property }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

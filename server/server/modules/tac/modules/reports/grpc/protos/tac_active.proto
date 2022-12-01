@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package tac.analytics;
+
+message ActiveFilters {
+    string name = 1; // manager_id | publisher_id | placement_id | domain | ad_unit_code | programmatic | sizes | ad_type | country | device | os | browser
+    repeated string data = 2;
+    string type = 3; //inc OR exc
+}
+
+message ActiveResponse {
+    repeated ActiveFilters filters = 1;
+    repeated string groups = 2;//publisher_id | ad_unit_code | programmatic
+}
+
+message groupActiveMetricsRow {
+    repeated string groupMetricsData = 1;
+}
+
+message ActiveRequest {
+    repeated string groupMetricsNames = 1; // publisher_id | ad_unit_code | programmatic | last_stats_update
+    repeated groupActiveMetricsRow groupMetricsRow = 2;
+}
+
+service AnalyticActive {
+    rpc GetData (ActiveResponse) returns (ActiveRequest) {}
+}

@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>SSP Endpoints</h2>
+
+<mat-dialog-content>
+  <div id="content">
+    <div><p>EU</p>
+      <input matInput disabled [value]="EUEndpoint">
+      <button mat-icon-button color="primary" [cdkCopyToClipboard]="EUEndpoint">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+    <div><p>US</p><input matInput disabled [value]="USEndpoint">
+      <button mat-icon-button color="primary" [cdkCopyToClipboard]="USEndpoint">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+    <div><p>Statistics</p><input matInput disabled [value]="statsEndpoint">
+      <button mat-icon-button color="primary" [cdkCopyToClipboard]="statsEndpoint">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>

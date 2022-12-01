@@ -1,0 +1,8 @@
+<app-invoices-table-filter
+  (currentInvoices)="sendInvoices($event)"
+  [hidden]="role === 'PUBLISHER'"
+  [updateInvoicesList]="updateInvoiceList"
+  (isLoaded)="updateLoadStatus($event)"
+>
+</app-invoices-table-filter>
+<app-invoices-table-main [invoices]="invoices" [load]="load"> </app-invoices-table-main>

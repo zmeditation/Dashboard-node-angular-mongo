@@ -1,0 +1,46 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="2em" fxLayoutGap.xs="1em" fxLayoutAlign="center">
+        <!-- LEFT CONTROLS-->
+        <div fxFlex fxLayout="column" fxLayoutGap="1em" fxLayoutGap.sm="2em">
+          <mat-form-field>
+            <mat-select [placeholder]="'REVENUE.PUBLISHER' | translate" formControlName="publisherControl"
+                        disableOptionCentering>
+              <mat-select-search [formControl]="pubsFilter"></mat-select-search>
+              <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub">
+                {{ pub.name }}
+              </mat-option>
+            </mat-select>
+            <button matSuffix *ngIf="form.controls.publisherControl.value" mat-icon-button aria-label="Clear"
+                    (click)="_reset($event)" class="mat-select-search-clear">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ 'CODES_PAGES.VIDEO_BANNERS.WIDTH' | translate }}</mat-label>
+            <input matInput formControlName="widthControl" appOnlyNumbers type="number" number appChangeInputOnWheel/>
+            <mat-error *appControlError="controls.width"></mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- RIGHT CONTROLS-->
+        <div fxFlex fxLayout="column" fxLayoutGap="1em" fxLayoutGap.sm="2em">
+          <mat-form-field style="width: 100%">
+            <mat-label>{{ 'VIDEO_GENERATOR_PAGE.VAST_URL' | translate }}</mat-label>
+            <input matInput formControlName="vastUrlControl" url/>
+            <mat-error *appControlError="controls.vastUrl"></mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ 'CODES_PAGES.VIDEO_BANNERS.HEIGHT' | translate }}</mat-label>
+            <input matInput formControlName="heightControl" appOnlyNumbers type="number" number appChangeInputOnWheel/>
+            <mat-error *appControlError="controls.height"></mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <button class="width--full" mat-raised-button color="primary" type="submit">
+        {{ 'VIDEO_GENERATOR_PAGE.GENERATE_CODE' | translate }}
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

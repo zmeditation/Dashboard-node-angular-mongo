@@ -1,0 +1,40 @@
+$breakpoint-phone: 576px;
+
+#buttons {
+  padding: 20px 40% 0 40%;
+  display: flex;
+  justify-content: space-evenly;
+
+  button {
+    min-width: 40%
+  }
+}
+
+.mat-column-id {
+  width: 15%;
+}
+
+.mat-column-name {
+  width: 20%;
+}
+
+.mat-column-enable {
+  width: 20%;
+}
+
+.mat-column-secret_key {
+  width: 25%;
+}
+
+@media (max-width: $breakpoint-phone) {
+    #buttons {
+      display: flex;
+      flex-direction: column;
+      padding: 5% 10%;
+
+      button {
+        margin: 1% 0;
+      }
+    }
+}
+

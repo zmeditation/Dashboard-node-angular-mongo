@@ -1,0 +1,168 @@
+<mat-card>
+  <mat-card-title fxLayout="column">
+    <div fxFlex="100" class="card-title-text pb-1 pt-1">
+      {{ 'DEDUCTION_UPLOADER.UPLOAD_DEDUCTION' | translate }}
+    </div>
+    <mat-divider fxFlex="100" [inset]="true"></mat-divider>
+    <mat-error fxFlex="100" class="text-sm" *ngIf="failureQueryAllDeductions !== ''">{{
+      'DEDUCTION_UPLOADER.ERRORS.HAVE_NOT_PUBLISHERS' | translate | titlecase
+    }}</mat-error>
+  </mat-card-title>
+
+  <div *ngIf="loading" fxFlexAlign="row" fxLayoutAlign="center center" style="height: 125px">
+    <mat-spinner [diameter]="70"></mat-spinner>
+  </div>
+
+  <mat-card-content *ngIf="!loading">
+    <form [formGroup]="deductionForm" fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="space-around">
+      <ng-container *ngTemplateOutlet="formFieldWrapper; context: {
+        formFieldTemplate: publisherFormField,
+        titleKey: 'DEDUCTION_UPLOADER.SELECT_PUBLISHER', 
+        fieldName: 'publisher'
+      }"></ng-container>
+
+      <ng-container *ngTemplateOutlet="formFieldWrapper; context: {
+        formFieldTemplate: dateFormField,
+        titleKey: 'DEDUCTION_UPLOADER.SELECT_MONTH', 
+        fieldName: 'date'
+      }"></ng-container>
+
+      <div formGroupName="deductions">
+        <mat-progress-bar *ngIf="deductionsLoading" mode="indeterminate"></mat-progress-bar>
+  
+        <div class="full-width" *ngFor="let type of deductionTypes">
+          <div fxFlex="35" class="input-label-container">
+            {{ ('DEDUCTION_UPLOADER.TYPES.' + type.key) | translate }}
+          </div>
+
+          <div
+            *ngIf="deductionForm.controls.deductions.get(type.value) as formControl"
+            class="full-width" 
+            fxLayout="row" 
+            fxFlex="65" 
+            fxFlex.lt-md="100"
+          >
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="{{ 'DEDUCTION_UPLOADER.SUM_OF_DEDUCTION' | translate }}"
+                [formControlName]="type.value"
+                [readonly]="!deductionsLoaded"
+              />
+
+              <mat-error *ngIf="formControl.errors?.required">
+                {{ 'DEDUCTION_UPLOADER.ERRORS.DEDUCTION_REQUIRED' | translate }}
+              </mat-error>
+
+              <mat-error *ngIf="formControl.errors?.invalidValue as error">
+                {{ error.message }}
+              </mat-error>
+            </mat-form-field>
+
+            <button
+              data-cy="clear_button_1"
+              mat-icon-button
+              matTooltip="Clear"
+              class="icon-clear-input"
+              *ngIf="formControl.value"
+              (click)="clearSelectedInput('deductions.' + type.value, $event)"
+            >
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #publisherFormField>
+        <mat-form-field class="full-width">
+          <input
+            type="text"
+            matInput
+            [placeholder]="
+              (failureQueryAllDeductions 
+                ? 'DEDUCTION_UPLOADER.ERRORS.HAVE_NOT_PUBLISHERS' 
+                : 'DEDUCTION_UPLOADER.PUBLISHER'
+              ) | translate
+            "
+            aria-label="Pablisher"
+            formControlName="publisher"
+            [matAutocomplete]="auto_pub"
+            (keydown)="publisherIdSelected && $event.preventDefault()"
+          />
+
+          <mat-autocomplete #auto_pub="matAutocomplete">
+            <mat-option 
+              *ngFor="let publisher of filteredPublisher | async"
+              [value]="publisher.refs_to_user.name"
+            >
+                {{ publisher.refs_to_user.name }}
+            </mat-option>
+          </mat-autocomplete>
+
+          <mat-error *ngIf="deductionForm.get('publisher').invalid">
+            {{ 'DEDUCTION_UPLOADER.ERRORS.PUBLISHER_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </ng-template>
+
+      <ng-template #dateFormField>
+        <mat-form-field class="full-width">
+          <input
+            readonly
+            matInput
+            [matDatepickerFilter]="dayFilter"
+            [matDatepicker]="dateMonth"
+            placeholder="{{ 'DEDUCTION_UPLOADER.MONTH' | translate }}"
+            formControlName="date"
+            aria-label="date"
+            [min]="min"
+            [max]="max"
+          />
+
+          <mat-datepicker-toggle matSuffix [for]="dateMonth">
+            <mat-icon matDatepickerToggleIcon>event</mat-icon>
+          </mat-datepicker-toggle>
+
+          <mat-datepicker #dateMonth [touchUi]="isMobile" [disabled]="!publisherIdSelected"> </mat-datepicker>
+
+          <mat-error *ngIf="selectedDate === ''">
+            {{ 'DEDUCTION_UPLOADER.ERRORS.DATE_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </ng-template>
+
+      <section fxFlex="100" fxLayoutAlign="center center" class="mt-1 mb-1">
+        <button
+          color="primary"
+          mat-stroked-button
+          [disabled]="deductionForm.invalid || failureQueryAllDeductions !== ''"
+          (click)="addDeductionToPubl()"
+        >
+          {{ 'DEDUCTION_UPLOADER.ADD_DEDUCTION' | translate }}
+        </button>
+      </section>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<ng-template #formFieldWrapper let-formFieldTemplate="formFieldTemplate" let-fieldName="fieldName" let-titleKey="titleKey">
+  <section fxFlex="30" fxFlex.lt-md="100" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
+    <div fxFlex="30" fxFlex.lt.md="25" class="input-label-container">
+      {{ titleKey | translate }}
+    </div>
+
+    <div class="full-width" fxLayout="row" fxFlex="65" fxFlex.lt-md="100">
+      <ng-container *ngTemplateOutlet="formFieldTemplate"></ng-container>
+      <button
+        data-cy="clear_button_1"
+        mat-icon-button
+        matTooltip="Clear"
+        class="icon-clear-input"
+        *ngIf="deductionForm.get(fieldName).value"
+        (click)="clearSelectedInput(fieldName, $event)"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </section>
+</ng-template>

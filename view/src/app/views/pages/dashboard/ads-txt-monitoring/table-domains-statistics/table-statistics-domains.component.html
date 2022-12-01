@@ -1,0 +1,20 @@
+<mat-card class="m-0 p-05">
+  <mat-card-title>
+    <h5 align="center">
+      <strong>{{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.STATISTICS_TITLE' | translate }}</strong>
+    </h5>
+    <h6 class="text-center mt-0 text-small">
+      {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.LAST_UPDATE' | translate }}
+      {{ lastUpdate | date: 'HH:mm, dd.MM.yyyy' }}
+    </h6>
+  </mat-card-title>
+  <mat-table class="statistics-table-styles" [dataSource]="dataSource">
+    <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+      <mat-header-cell *matHeaderCellDef> {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.COLUMNS.' + column | uppercase | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element[column] }} </mat-cell>
+    </ng-container>
+    <!-- Header and Row Declarations -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</mat-card>

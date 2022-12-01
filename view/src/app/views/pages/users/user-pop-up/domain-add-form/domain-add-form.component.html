@@ -1,0 +1,54 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <mat-card-title class="m-1"> {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.DOMAINS' | translate }}</mat-card-title>
+    <div fxLayout="row" *ngxPermissionsOnly="['canEditAllUsers', 'canEditAllPubs']">
+      <button *ngIf="!showEditButton" (click)="editDomains()" mat-button class="mr-1">
+        {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.EDIT' | translate }}
+      </button>
+      <button mat-button *ngIf="showEditButton" class="ml-auto" title="Remove All Domains" (click)="removeAllDomains()">
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" *ngIf="showDomainEditForm">
+      <div fxFlex="100">
+        <mat-chip-list>
+          <mat-chip class="center-all" color="primary" *ngFor="let domain of domainList" selected>
+            {{ domain }}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="100">
+    <mat-form-field *ngIf="!showDomainEditForm" class="full-width">
+      <mat-chip-list #chipList>
+        <mat-chip class="mat-chip-domains" *ngFor="let domain of domainList" [selectable]="selectable" [removable]="removable" (removed)="removeDomain(domain)">
+          <span>{{ domain }}</span>
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.NEW_DOMAIN' | translate }}"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="addDomain($event)"
+        />
+      </mat-chip-list>
+      <mat-hint *ngIf="ErrorHandler" style="color: red">
+        "{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.ERROR_REASON' | translate }}" - {{ reason }}
+      </mat-hint>
+    </mat-form-field>
+  </div>
+  <div fxFlex fxLayoutAlign="start center">
+    <button *ngIf="showEditButton" mat-button color="accent" class="mr-1" (click)="saveDomains()" [disabled]="ErrorHandler || !canSaveDomains || isRequestSent">
+      {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.BUTTONS.SAVE' | translate }}
+    </button>
+    <button *ngIf="showEditButton" mat-button color="warn" class="mr-1" (click)="resetDomains()" [disabled]="isRequestSent">
+      {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.BUTTONS.CANCEL' | translate }}
+    </button>
+    <div *ngIf="isRequestSent" class="loader">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </div>
+</div>

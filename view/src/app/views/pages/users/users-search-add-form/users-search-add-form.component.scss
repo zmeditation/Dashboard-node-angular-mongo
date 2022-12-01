@@ -1,0 +1,46 @@
+.user-search {
+  .user-search__field {
+    margin-top: 15px;
+  }
+
+  .user-search__settings-menu {
+    background: #fff;
+    box-shadow: 0 2px 4px -1px RGB(0 0 0 / 20%), 0 4px 5px 0 RGB(0 0 0 / 14%), 0 1px 10px 0 RGB(0 0 0 / 12%);
+    position: absolute;
+    right: 0;
+    top: 26px;
+    width: 140px;
+    z-index: 3;
+
+    mat-radio-button {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 400;
+    } 
+
+    .user-search__settings-manu__actions {
+      position: absolute;
+      width: 100%;
+      right: 0;
+
+      button {
+        width: 50%;
+      }
+
+      .success {
+        border-radius: 0 0 4px 0;
+      }
+
+      .deny {
+        border-radius: 0 0 0 4px;
+        background: #fff;
+      }
+    }
+  }
+}
+
+.add-user-btn {
+  height: 45px;
+  margin: 10px 1% 0 1%;
+}

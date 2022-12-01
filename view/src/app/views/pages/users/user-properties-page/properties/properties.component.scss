@@ -1,0 +1,89 @@
+mat-card {
+  overflow: hidden;
+}
+
+.btn-save {
+  margin-left: 1rem;
+}
+
+.properties-title {
+  font-weight: 900;
+  margin: 0;
+}
+.padding-reset-background {
+  margin: 0px -24px;
+  background-color: rgba(20, 20, 24, 0.03);
+}
+
+.some-changes {
+  background-color: rgba(57, 132, 115, 0.3);
+}
+.transition-bg-color {
+  transition: background-color 300ms linear;
+}
+
+@media screen and (max-width: 767px) {
+  .properties-title {
+    font-size: 1.2rem;
+  }
+  .transition-bg-color {
+    mat-panel-title {
+      font-size: 1rem;
+    }
+  }
+  .table-head {
+    font-size: 0.8rem;
+  }
+
+  mat-table {
+    overflow: auto;
+
+    mat-header-cell {
+      width: 7rem;
+      text-align: start;
+    }
+
+    mat-cell {
+      width: 7rem;
+      text-align: start;
+
+      span {
+        font-size: 0.8rem;
+      }
+    }
+
+    mat-cell:first-of-type {
+      padding-left: 1.5rem;
+    }
+    mat-header-cell:first-of-type {
+      padding-left: 1.5rem;
+    }
+    mat-header-cell:last-of-type {
+      padding: 0;
+    }
+    mat-header-cell:last-of-type {
+      min-width: 7rem;
+    }
+    mat-cell,
+    mat-header-cell,
+    mat-footer-cell {
+      word-wrap: anywhere;
+    }
+  }
+
+  .hide-for-mobile {
+    display: none;
+  }
+  mat-row {
+    min-width: min-content;
+  }
+  mat-header-row {
+    min-width: max-content;
+  }
+}
+
+// .w-7r {
+//   width: 7rem !important;
+// }
+
+// [ngClass]="{'w-7r': column === 'property_id'}"

@@ -1,0 +1,33 @@
+.search-account-manager {
+  width: 91%;
+  padding: 2% 0 0 4%;
+}
+
+.add-account-manager-to-publisher {
+  position: relative;
+
+  .add-account-manager-to-publisher__controls {
+    position: absolute;
+    right: 0;
+    bottom: -18px;
+
+    .success {
+      border-radius: 0 0 0 4px;
+    }
+
+    .deny {
+      border-radius: 0 0 4px 0 ;
+    }
+  }
+}
+
+mat-progress-bar {
+  position: absolute;
+  bottom: 15px;
+}
+
+@media all and (max-width: 959px) {
+  mat-card-title {
+    margin: 1rem !important;              
+  }
+}

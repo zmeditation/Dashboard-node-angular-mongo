@@ -1,0 +1,110 @@
+<mat-nav-list class="notification-list" fxLayout="column">
+  <!-- Notification item -->
+
+  <h3
+    mat-subheader
+    class="notices-header"
+    fxFlex="100"
+    fxLayoutAlign="space-between center"
+    (click)="showNoticesCollection = !showNoticesCollection"
+  >
+    <span fxLayoutAlign="center center">
+      <mat-icon [color]="noticeObj.color">{{ noticeObj.icon }}</mat-icon>
+      {{ 'NOTIFICATIONS.' + noticeObj.type | translate }} ({{ messagesCount }})
+    </span>
+    <mat-icon
+      *ngIf="!isDeletionOccur && noticeObj.notifications.length"
+      matTooltip="Delete all messages"
+      class="clear-all-msg"
+      (click)="deleteNoticeCollection($event, noticeObj.typeDB)"
+    >delete_forever</mat-icon>
+  </h3>
+
+  <div [ngClass]="showNoticesCollection && messagesCount ? 'items-container' : 'display-none'" #container>
+    <mat-list-item *ngFor="let notification of noticeObj.notifications; let b = index" role="listitem">
+      <div class="mat-list-text" *ngIf="notification.msg; else defectMsg">
+        <!-- Error reports msg -->
+        <h6
+          [ngClass]="{ 'error-text': notification.msg.typeMsg === 'error' }"
+          *ngIf="notification.msg.event === 'reports' && notification.msg.text !== 'UPDATED_PUB_AM_REPORTS'"
+        >
+          <!-- Delete || notification.msg?.triger after 15.08.21 -->
+
+          {{ notification.msg?.trigger || notification.msg?.triger }},
+          {{ 'NOTIFICATIONS.' + (notification.msg.event + '_' + notification.msg.typeMsg) | uppercase | translate }}
+        </h6>
+
+        <h6
+          [ngClass]="{ 'error-text': notification.msg.typeMsg === 'error' }"
+          *ngIf="notification.msg.text && notification.msg.text !== 'UPDATED_PUB_AM_REPORTS'"
+        >
+          {{ notification.msg.text }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'invoices' && notification.msg.success === true && notification.msg.action === 'upload'">
+          {{ 'NOTIFICATIONS.INVOICES.UPLOAD_SUCCESS' | uppercase | translate: { file: notification.msg.file } }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'revenue' && notification.msg.success === true && notification.msg.action === 'upload'">
+          {{ 'NOTIFICATIONS.REVENUE.UPLOAD_SUCCESS' | uppercase | translate }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'invoices' && notification.msg.success === true && notification.msg.action === 'new_invoice'">
+          {{ 'NOTIFICATIONS.INVOICES.NEW_INVOICE' | uppercase | translate: { file: notification.msg.file, pub: notification.msg.pub } }}
+        </h6>
+
+        <h6
+          *ngIf="notification.msg.event === 'invoices' 
+            && notification.msg.success === true 
+            && notification.msg.action === 'invoice_declined'"
+        >
+          {{ 'NOTIFICATIONS.INVOICES.INVOICE_DECLINED' | uppercase | translate: { file: notification.msg.file } }}
+          {{
+            notification.msg.cancelReason.includes('INCO') || notification.msg.cancelReason.includes('PAID')
+              ? ('INVOICES.CANCEL_REASONS.' + notification.msg.cancelReason | translate)
+              : notification.msg.cancelReason
+          }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'invoices' && notification.msg.success === true && notification.msg.action === 'invoice_paid'">
+          {{ 'NOTIFICATIONS.INVOICES.INVOICE_PAID' | uppercase | translate: { file: notification.msg.file } }}
+        </h6>
+
+        <h6
+          *ngIf="
+            notification.msg.event === 'invoices' && notification.msg.success === true && notification.msg.action === 'invoice_approved'
+          "
+        >
+          {{
+            'NOTIFICATIONS.INVOICES.INVOICE_APPROVED'
+              | uppercase
+              | translate
+                : {
+                    file: notification.msg.file,
+                    pub: notification.msg.publisher
+                  }
+          }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'invoices' && notification.msg.success === false">
+          {{ 'NOTIFICATIONS.INVOICES.UPLOAD_ERROR' | uppercase | translate: { file: notification.msg.file } }}
+        </h6>
+
+        <h6 *ngIf="notification.msg.event === 'reports' && notification.msg.text === 'UPDATED_PUB_AM_REPORTS'">
+          {{ 'NOTIFICATIONS.REPORTS.UPDATED_PUB_AM_REPORTS' | uppercase | translate: { name: notification.msg.data.name } }}
+        </h6>
+
+        <small class="text-muted date-text">{{ notification.createdAt | isoTimeZ | notificationTime }}</small>
+      </div>
+
+      <ng-template #defectMsg>
+        {{ 'NOTIFICATIONS.DEFECT_MSG' | translate }}
+      </ng-template>
+
+      <span class="clear-msg" (click)="deleteNotice(notification)">
+        <mat-icon *ngIf="!isDeletionOccur" matTooltip="Delete message" color="warn">delete</mat-icon>
+      </span>
+    </mat-list-item>
+  </div>
+  <mat-divider></mat-divider>
+</mat-nav-list>

@@ -1,0 +1,36 @@
+.analytics-adapter-option {
+  display: flex;
+  align-items: center;
+}
+
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+$breakpoint-phone: 576px;
+
+@media (max-width: $breakpoint-phone) and (min-width: 300px) {
+  h2 {
+    font-size: 0.9rem;
+    line-height: 1rem;
+  }
+
+  .analytics-adapter-option {
+    flex-direction: column;
+
+    mat-form-field,
+    .additional-info {
+      width: 100%;
+    }
+
+    .additional-info {
+      padding: 0;
+    }
+
+    mat-dialog-content {
+      font-size: 0.8rem;
+    }
+  }
+}

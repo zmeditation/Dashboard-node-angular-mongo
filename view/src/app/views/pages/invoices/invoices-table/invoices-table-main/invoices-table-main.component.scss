@@ -1,0 +1,161 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+$breakpoint-small-phone: 359px;
+$paid: #008e2f;
+$declined: #ea291b;
+$approved: #f48f36;
+
+mat-icon {
+  cursor: pointer;
+  margin: 10px 5px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-form-field {
+  align-self: flex-end;
+}
+
+::ng-deep .ngx-datatable.invoices-list {
+  .datatable-body-cell,
+  .datatable-header-cell {
+    display: flex;
+    align-items: center;
+
+    mat-select {
+      &.pending .mat-select-value {
+        color: #000;
+      }
+
+      &.paid .mat-select-value {
+        color: $paid;
+      }
+
+      &.declined .mat-select-value {
+        color: $declined;
+      }
+
+      &.approved .mat-select-value {
+        color: $approved;
+      }
+    }
+
+    span {
+      &.declined {
+        color: $declined;
+      }
+
+      &.approved {
+        color: $approved;
+      }
+
+      &.paid {
+        color: $paid;
+      }
+    }
+  }
+
+  .datatable-body-cell-label {
+    max-width: 100%;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+#spinner {
+  display: flex;
+  justify-content: center;
+  padding: 10px 5px;
+}
+
+::ng-deep .ngx-datatable.invoices-list {
+  .datatable-header {
+    background-color: #577d88 !important;
+    border-radius: 5px 5px 0 0 !important;
+    font-weight: 500;
+
+    .datatable-header-cell {
+      color: #fff !important;
+    }
+  }
+
+  .datatable-scroll:last-child {
+    border-bottom: 1px solid #d1d4d7;
+  }
+
+  .datatable-body-row {
+    min-height: 44px;
+  }
+
+  .datatable-footer {
+    background: #fff;
+    color: #424242;
+    font-size: 12px;
+
+    .page-count {
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    .datatable-pager {
+      ul li:not(.disabled):hover a {
+        background-color: rgba(158, 158, 158, 0.2) !important;
+      }
+
+      a {
+        color: rgba(0, 0, 0, 0.54);
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+::ng-deep .ngx-datatable.invoices-list .datatable-body .datatable-body-row .datatable-body-cell {
+  padding: 0 0.75rem;
+}
+
+@media (max-width: $breakpoint-phone) {
+  ::ng-deep .ngx-datatable.invoices-list .datatable-header .datatable-header-cell {
+    padding: 0.5rem;
+    font-size: 10.5px;
+  }
+
+  ::ng-deep .ngx-datatable.invoices-list .datatable-body .datatable-body-row .datatable-body-cell {
+    font-size: 10.5px;
+
+    .mat-select-trigger {
+      font-size: 10.5px !important;
+    }
+
+    .mat-icon {
+      margin: 0;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  ::ng-deep .ngx-datatable.invoices-list .datatable-body-cell-label {
+    mat-form-field {
+      width: auto;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-small-phone) {
+  ::ng-deep .ngx-datatable.invoices-list .datatable-header .datatable-header-cell {
+    font-size: 8px;
+  }
+
+  ::ng-deep .ngx-datatable.invoices-list .datatable-body .datatable-body-row .datatable-body-cell {
+    font-size: 8px;
+
+    .mat-select-trigger {
+      font-size: 8px !important;
+    }
+  }
+}

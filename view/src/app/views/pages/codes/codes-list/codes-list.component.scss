@@ -1,0 +1,68 @@
+#action-buttons {
+  display: flex;
+
+  button {
+    margin: 0.3em;
+  }
+}
+
+.pack-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0;
+  padding: 0.5em
+}
+
+#inArticle-settings > mat-form-field {
+  margin: 0 1em;
+}
+
+.script-settings {
+  display: flex;
+
+  div mat-form-field {
+    margin: 0 1em;
+  }
+}
+
+.single-code-block > mat-form-field {
+  margin: 0 1em;
+}
+
+.inline-actions {
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    h3, h4 {
+      margin: 0
+    }
+  }
+
+  button {
+    cursor: pointer;
+
+    mat-icon {
+      font-size: 2.5em;
+    }
+  }
+}
+
+#publishers-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    margin: 0 3em;
+    font-size: 1.2em;
+  }
+
+  mat-form-field {
+    width: 25%;
+  }
+}
+
+[hidden] {
+  display: none !important;
+}

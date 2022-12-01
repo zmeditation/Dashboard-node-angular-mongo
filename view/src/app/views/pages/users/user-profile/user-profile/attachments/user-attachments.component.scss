@@ -1,0 +1,22 @@
+.attachments_title {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 767px) {
+  .adapt-content {
+    padding-left: 3px;
+    padding-right: 3px;
+    line-height: normal;
+    span {
+      overflow: hidden;
+      font-size: 0.7rem;
+      white-space: normal;
+    }
+  }
+  .attachments_title {
+    font-size: 1.1rem;
+  }
+}

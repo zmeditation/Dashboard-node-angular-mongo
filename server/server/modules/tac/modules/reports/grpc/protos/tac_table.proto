@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package tac.analytics;
+
+
+message Filters {
+    string name = 1; // manager_id | publisher_id | placement_id | domain | ad_unit_code | programmatic | sizes | ad_type | country | device | os | browser
+    repeated string data = 2;
+    string type = 3; //inc OR exc
+}
+
+message TableResponse {
+    repeated Filters filters = 1;
+    repeated string groups = 2;//day | manager_id | publisher_id | placement_id | domain | ad_unit_code | programmatic | sizes | ad_type | country | device | os | browser
+    string period_start = 3;//"2019-11-01"
+    string period_end = 4;//"2019-11-07"
+
+}
+
+message Metrics {
+    int64 requests = 1;
+    int64 impressions = 2;
+    int64 view = 3;
+    int64 clicks = 4;
+    int64 no_ad = 5;
+}
+
+message TableRow {
+    repeated string groupMetricsData = 1;
+    Metrics metrics = 2;
+}
+
+message TableRequest {
+    repeated TableRow data = 1;
+    TableRow totalData = 2;
+    repeated string metrics = 3;
+}
+
+service AnalyticTable {
+    rpc GetData (TableResponse) returns (TableRequest) {}
+}

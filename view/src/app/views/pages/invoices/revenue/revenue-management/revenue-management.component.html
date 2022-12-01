@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group animationDuration="0ms" headerPosition="above" [selectedIndex]="0">
+      <mat-tab [label]="'REVENUE.MANUAL_INPUT' | translate">
+        <app-revenue-manual-input [publishersList]="publishersList"></app-revenue-manual-input>
+      </mat-tab>
+      <mat-tab [label]="'REVENUE.FORCE_UPDATE' | translate">
+        <app-revenue-force-update [publishersList]="publishersList"></app-revenue-force-update>
+      </mat-tab>
+      <mat-tab [label]="'REVENUE.REMOVE' | translate">
+        <app-revenue-delete [publishersList]="publishersList"></app-revenue-delete>
+      </mat-tab>
+    </mat-tab-group>
+<!--  DO NOT TOUCH - THIS IS SECRET TOOL TO REWRITE ALL REVENUES!!!  START  -->
+    <mat-card *ngIf="user.role === 'ADMIN'">
+      <div id="temp-update">
+        <mat-form-field>
+          <input type="text" matInput #date>
+        </mat-form-field>
+        <button type="button" mat-raised-button (click)="rewriteSelectedRevenues(date.value)">Update</button>
+      </div>
+    </mat-card>
+    <!--  DO NOT TOUCH  END  -->
+  </mat-card-content>
+</mat-card>

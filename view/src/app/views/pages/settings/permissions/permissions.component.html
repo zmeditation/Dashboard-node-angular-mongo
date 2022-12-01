@@ -1,0 +1,69 @@
+<div fxLayout="row" fxLayout.lt-md="column">
+  <section fxLayout="column" fxFlex="25%" fxFlex.lt-md="100" class="actions m-333 mat-box-shadow">
+    <button mat-button [class.selected]="item === 'permission'" (click)="selectItem('permission')">Permission</button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button [class.selected]="item === 'roles'" (click)="selectItem('roles')">Roles</button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button [class.selected]="item === 'perm-del'" (click)="selectItem('perm-del')">Permission-Deletion</button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button [class.selected]="item === 'perm-add'" (click)="selectItem('perm-add')">Permission-Addition</button>
+  </section>
+
+  <mat-card
+    [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }"
+    *ngIf="item !== '' && rows !== undefined"
+    fxFlex="75%"
+    fxFlex.lt.md="100"
+    fxLayoutAlign="stretch flex-start"
+  >
+    <mat-card-content [ngSwitch]="item" fxFlex="100">
+      <app-permissions-list
+        *ngSwitchCase="'permission'"
+        [permissions]="permissions"
+        [roleList]="roleList"
+        [rows]="rows"
+        [types]="types"
+        [arrayofRolesToSend]="arrayOfRolesToSend"
+        (getPermissions)="getPermissions()"
+        (manageArrays)="manageArrays()"
+      ></app-permissions-list>
+
+      <app-permissions-roles
+        *ngSwitchCase="'roles'"
+        [arrayofRolesToSend]="arrayOfRolesToSend"
+        [objectReadyToAdd]="objectReadyToAdd"
+        [roleRows]="roleRows"
+        [arrayOftypesOfPermissionSet]="arrayOfTypesOfPermissionSet"
+        [arrayOFobjectPermissions]="arrayOfObjectPermissions"
+        (getPermissions)="getPermissions()"
+        (manageArrays)="manageArrays()"
+      ></app-permissions-roles>
+
+      <app-permissions-deletion
+        *ngSwitchCase="'perm-del'"
+        [roleList]="roleList"
+        [permissionsArray]="permissionsArray"
+        [publishersArray]="publishersArray"
+        [rolesArray]="rolesArray"
+        (getPublishers)="getPublishers()"
+        (getPermissions)="getPermissions()"
+      ></app-permissions-deletion>
+
+      <app-permissions-addition
+        *ngSwitchCase="'perm-add'"
+        [roleList]="roleList"
+        [permissionsArray]="permissionsArray"
+        [publishersArray]="publishersArray"
+        [rolesArray]="rolesArray"
+        (getPublishers)="getPublishers()"
+        (getPermissions)="getPermissions()"
+      ></app-permissions-addition>
+    </mat-card-content>
+  </mat-card>
+</div>

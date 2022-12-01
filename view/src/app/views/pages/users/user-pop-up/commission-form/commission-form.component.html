@@ -1,0 +1,30 @@
+<div class="wrapper-commission-form">
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap">
+    <div fxFlex="100">
+      <mat-card-title class="m-1 title-of-form">
+        {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.COMMISSION.NAME' | translate }}
+      </mat-card-title>
+    </div>
+  </div>
+  <form [formGroup]="commissionForm" *ngIf="showForm">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" fxLayoutAlign="space-around">
+      <div fxFlex="10">
+        <mat-form-field class="full-width">
+          <input formControlName="commission_number" matInput type="number" placeholder="Number" name="commission_number" />
+          <mat-error *ngIf="commissionForm.get('commission_number').invalid">
+            {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.COMMISSION' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="80">
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Type" formControlName="commission_type" [(value)]="selected">
+            <mat-option *ngFor="let commission of commissionValues" [value]="commission">
+              {{ commission }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

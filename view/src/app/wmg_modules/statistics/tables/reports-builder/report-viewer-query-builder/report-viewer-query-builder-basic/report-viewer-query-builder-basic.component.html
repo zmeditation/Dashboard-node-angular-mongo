@@ -1,0 +1,120 @@
+<div class="mb-1" fxLayout="column">
+  <div class="query-builder-block-title">
+    <h4>
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.BASIC' | translate }}
+    </h4>
+  </div>
+
+  <form [formGroup]="basicForm">
+    <section class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="canSeeReportTypeSelector">
+      <div fxFlex="30" fxLayoutAlign="start center">
+        <p class="text-gray text-sm basic-form-p">{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.TYPE' | translate }}:</p>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="center" >
+        <mat-form-field class="basic-form-width">
+          <mat-select #typesSelector formControlName="type" [value]="basicForm.get('type').value" (selectionChange)="changeType(typesSelector.value)">
+            <mat-option *ngFor="let type of possibleTypes" [value]="type">
+              {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.' + type | uppercase | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxFlex="30" fxLayoutAlign="start center">
+        <p class="text-gray text-sm basic-form-p">{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.RANGE.RANGE' | translate }}:</p>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="center">
+        <mat-form-field class="basic-form-width">
+          <mat-select formControlName="range" required>
+            <mat-option *ngFor="let range of rangeObjectArray" [value]="range.value">
+              <div class="smaller-font-size">
+                {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.RANGE.' + range.name | translate }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section *ngIf="customRange" [@animate]="{ value: '*', params: { y: '-50px', delay: '100ms' } }">
+      <div class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="30" fxLayoutAlign="start center">
+          <p class="text-gray text-sm basic-form-p">{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.FROM' | translate }}:</p>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="center">
+          <mat-form-field class="basic-form-width">
+            <input
+              matInput
+              formControlName="dateFrom"
+              [matDatepicker]="pickerFrom"
+              [max]="unavailabilityRange.maxPermanent"
+              [min]="unavailabilityRange.minPermanent"
+              placeholder="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.CHOOSE_DATE' | translate }}"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFrom disabled="false" [touchUi]="isMobile"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="30" fxLayoutAlign="start center">
+          <p class="text-gray text-sm basic-form-p">{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.TO' | translate }}:</p>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="center">
+          <mat-form-field class="basic-form-width">
+            <input
+              matInput
+              formControlName="dateTo"
+              [matDatepicker]="pickerTo"
+              [max]="unavailabilityRange.max"
+              [min]="unavailabilityRange.min"
+              placeholder="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.CHOOSE_DATE' | translate }}"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+            <mat-datepicker #pickerTo disabled="false" [touchUi]="isMobile"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+
+    <section class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxFlex="30" fxLayout="row" fxLayoutAlign="start center">
+        <p class="text-gray text-sm basic-form-p">{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.INTERVAL.INTERVAL' | translate }}:</p>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="center">
+        <mat-form-field class="basic-form-width">
+          <mat-select formControlName="interval">
+            <mat-option *ngFor="let interval of intervalObjectArray"
+                        [value]="interval.value"
+                        [disabled]="!interval.enabled">
+              <div class="smaller-font-size">
+                {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.INTERVAL.' + interval.name | translate }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section class="basic-form-list-item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="basic-form-fill-missing-checkbox smaller-font-size" fxFlex fxLayout="column" style="padding: 16px 0">
+        <div class="chart-toggle-btn">
+          <mat-slide-toggle formControlName="fillMissing" [color]="'primary'">{{
+            'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.FILL_MISSING' | translate
+          }}</mat-slide-toggle>
+        </div>
+        <div class="chart-toggle-btn mt-1">
+          <mat-slide-toggle formControlName="enumerate" [color]="'primary'">{{
+            'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.ENUMERATION' | translate
+          }}</mat-slide-toggle>
+        </div>
+        <!--<mat-checkbox [labelPosition]="'before'" formControlName="fillMissing">-->
+        <!--<p class="text-gray text-sm basic-form-p checkbox-text">{{'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.FILL_MISSING' | translate}}:</p>-->
+        <!--</mat-checkbox>-->
+      </div>
+    </section>
+  </form>
+</div>

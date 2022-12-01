@@ -1,0 +1,155 @@
+table {
+  width: 100%;
+}
+
+.table-head {
+  background-color: #577d88;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 0.7rem;
+}
+
+:host ::ng-deep .mat-sort-header-button {
+  text-align: left;
+}
+
+.table-head:first-child {
+  border-top-left-radius: 5px;
+  padding: 0 0 0 10px;
+}
+
+.table-head:last-child {
+  border-top-right-radius: 5px;
+  padding: 0 7px 0 5px;
+}
+
+mat-row.mat-row {
+  align-items: stretch;
+  color: black;
+  justify-content: space-between;
+  min-width: min-content;
+}
+
+mat-row.mat-row:nth-child(even) {
+  mat-cell {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+mat-footer-row {
+  min-width: min-content;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.02);
+
+  mat-footer-cell {
+    font-size: 0.7rem;
+  }
+}
+
+mat-footer-cell.mat-footer-cell {
+  display: flex;
+  justify-content: flex-start;
+  word-wrap: anywhere;
+}
+
+mat-footer-cell:first-child {
+  padding: 0 0 0 10px;
+}
+
+mat-cell.mat-cell {
+  display: flex;
+  user-select: text !important;
+  padding: 0 5px 0 5px;
+  font-size: 0.7rem!important;
+  justify-content: flex-start;
+  word-wrap: anywhere;
+}
+
+.mat-cell:last-child {
+  margin: 0;
+}
+
+.mat-cell:first-child {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 0 0 10px;
+}
+
+.tooltip {
+  user-select: text !important;
+}
+
+::ng-deep mat-footer-cell.mat-footer-cell {
+  word-wrap: anywhere;
+}
+
+.w-50 {
+  min-width: 50px !important;
+  max-width: 200px !important;
+  padding: 0 5px;
+}
+
+.w-70 {
+  min-width: 70px !important;
+  max-width: 220px !important;
+  padding: 0 5px;
+}
+
+.w-90 {
+  min-width: 90px !important;
+  max-width: 220px !important;
+  padding: 0 5px;
+}
+
+.w-160 {
+  min-width: 160px !important;
+  max-width: 100% !important;
+  padding: 0 5px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#report-table-header-container {
+  display: flex;
+  justify-content: space-between;
+
+  #download-report-button {
+    align-self: center;
+  }
+}
+
+@media (max-width: 767px) {
+  table {
+    min-width: 600px;
+  }
+
+  mat-row.mat-row {
+    border-bottom-width: 0;
+  }
+  mat-footer-row {
+    mat-footer-cell {
+      font-size: 0.7rem;
+    }
+  }
+
+  .table-row {
+    border-bottom-width: 0;
+
+    .mat-cell {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  .responsive-table {
+    overflow: scroll;
+  }
+}

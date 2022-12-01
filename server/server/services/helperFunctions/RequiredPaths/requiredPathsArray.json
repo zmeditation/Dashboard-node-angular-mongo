@@ -1,0 +1,7 @@
+[
+  "server/server/modules/reporting/APIUpload/AppNexus/report",
+  "server/server/modules/reporting/APIUpload/Google_Ad_Manager_HB/gam-reports",
+  "server/server/public/attachments",
+  "server/server/public/images/pp",
+  "server/server/dist/reports"
+]

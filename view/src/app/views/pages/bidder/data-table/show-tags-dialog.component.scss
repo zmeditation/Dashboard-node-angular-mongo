@@ -1,0 +1,26 @@
+.border-for-beautify {
+  border-right: 0.5px solid lightgrey;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+textarea {
+  min-height: 400px;
+  height: auto;
+  width: 95%;
+  font-size: 13px;
+  padding: 5px 5px;
+}
+
+#hint > span {
+  font-weight: 400;
+  color: #396673;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.mat-dialog-actions {
+  justify-content: space-between;
+}

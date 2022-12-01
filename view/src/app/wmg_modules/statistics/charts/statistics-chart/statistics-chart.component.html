@@ -1,0 +1,36 @@
+<div
+  class="block_charts"
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+>
+  <div class="full-width" *ngIf="sumRevenue.length < 1 && accountManagersData === 'undefined'">
+    <mat-card>
+      <h4 class="text-center">
+        {{ 'STATISTICS.ANALYTICS.NO_DATA' | translate }}
+      </h4>
+    </mat-card>
+  </div>
+
+  <div class="spinner-container" *ngIf="sumRevenue.length < 1 && accountManagersData !== 'undefined'">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div fxLayout="row wrap" fxLayoutAlign="space-between" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }" *ngIf="sumRevenue.length >= 1">
+    <mat-card fxLayout="row wrap" fxFlex="100" fxLayoutAlign="center start" class="default">
+      <mat-card-content fxFlex="75" fxFlex.lt-md="100" class="p-0" [style.height]="setChartContainerHeight" *ngIf="lineChartSteppedData.length > 1">
+        <canvas
+          baseChart
+          id="analytic-chart-account-managers"
+          class="chart m-0"
+          [datasets]="lineChartSteppedData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+        ></canvas>
+      </mat-card-content>
+      <app-analytic-table fxFlex="25" fxFlex.lt-md="100" [dataBaseSet]="sumRevenue"> </app-analytic-table>
+    </mat-card>
+  </div>
+</div>

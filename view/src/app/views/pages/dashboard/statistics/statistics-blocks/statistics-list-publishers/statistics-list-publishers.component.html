@@ -1,0 +1,108 @@
+<div *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']" class="example-container">
+  <mat-spinner *ngIf="publishersOfManagers.length === 0 || revenueLoading === true" [diameter]="90" style="margin: auto"></mat-spinner>
+
+  <mat-card-title fxLayout="column" fxLayoutAlign="center" *ngIf="publishersOfManagers.length !== 0 && revenueLoading === false">
+    {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.LIST_MANAGERS_PUBS' | uppercase | translate }}
+    <mat-slide-toggle
+      fxFlex="100"
+      class="slide-toggle-ena-dis-pubs"
+      checked
+      #togglePubs
+      labelPosition="after"
+      (change)="hideDisabledPubs(togglePubs)"
+      matTooltipClass="color-for-tooltip-title"
+      matTooltipPosition="left"
+      matTooltipHideDelay="1000"
+      [matTooltip]="
+        togglePubs.checked
+          ? ('STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.SHOW_ALL_PUBS' | translate)
+          : ('STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.ONLY_ENABLED' | translate)
+      "
+    >
+    </mat-slide-toggle>
+    <mat-error fxFlex="100" class="text-sm" *ngIf="revenueError.length > 0">{{ revenueError | titlecase }}</mat-error>
+  </mat-card-title>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z0" *ngIf="publishersOfManagers.length !== 0 && revenueLoading === false">
+    <!-- Position Column -->
+    <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+      <ng-container *ngIf="column === 'manager'">
+        <mat-header-cell *matHeaderCellDef fxFlex="25" class="right-border-header">
+          {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.' + column | uppercase | translate }}
+        </mat-header-cell>
+      </ng-container>
+      <ng-container *ngIf="column === 'publishers'">
+        <mat-header-cell *matHeaderCellDef fxFlex="75" class="ml-1">
+          {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.' + column | uppercase | translate }}
+        </mat-header-cell>
+      </ng-container>
+      <ng-container *ngIf="column === 'manager'">
+        <mat-cell *matCellDef="let element" fxFlex="25" class="right-border-cell">
+          <p *ngIf="element[column] !== null">{{ element[column] }}</p>
+          <span *ngIf="element[column] === null" class="column-pubs-without-manager">{{
+            'STATISTICS.ANALYTICS.BLOCKS.PLACEHOLDERS.NO_MANAGER' | translate
+          }}</span>
+          <img
+            *ngIf="element[column] !== null"
+            class="mat-cell-photo"
+            src="{{ element.photo ? userImgFolder + element.photo : '/assets/images/avatar-placeholder-colored.png' }}"
+            alt="Photo"
+          />
+        </mat-cell>
+      </ng-container>
+      <ng-container *ngIf="column === 'publishers'">
+        <mat-cell *matCellDef="let element" fxFlex="75" class="ml-1 right-column-cell">
+          <ng-container *ngIf="element[column].length && element['manager'] !== null">
+            <div *ngFor="let pub of element[column]" class="mat-chip-list-self-styles" [ngClass]="{ 'm-0': pub.hidden }">
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip
+                  [color]="pub.enabled.status ? 'primary' : 'accent'"
+                  fxFlex="100"
+                  fxLayoutAlign="center"
+                  class="h-100"
+                  *ngIf="!pub.hidden"
+                  selected
+                  [@animate]="{
+                    value: '*',
+                    params: { x: '50px', delay: '300ms' }
+                  }"
+                  >{{ pub.name }}</mat-chip
+                >
+              </mat-chip-list>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="element[column].length && element['manager'] === null">
+            <div *ngFor="let pub of element[column]" class="mat-chip-list-self-styles">
+              <mat-chip-list aria-label="Fish selection">
+                <mat-chip
+                  fxFlex="100"
+                  fxLayoutAlign="center"
+                  class="h-100"
+                  [color]="pub.enabled.status ? 'primary' : 'accent'"
+                  class="opacity-without-manager"
+                  selected
+                  *ngIf="!pub.hidden"
+                  [@animate]="{
+                    value: '*',
+                    params: { x: '50px', delay: '300ms' }
+                  }"
+                  >{{ pub.name }}</mat-chip
+                >
+              </mat-chip-list>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!element[column].length">
+            <mat-chip-list aria-label="Fish selection">
+              <mat-chip fxFlex="100" fxLayoutAlign="center" class="h-100" color="warn" selected>
+                {{ 'STATISTICS.ANALYTICS.BLOCKS.PLACEHOLDERS.NO_PUBLISHERS' | translate }}
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+        </mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns" class="less-height-for-header-row"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns" class="less-height-for-row"></mat-row>
+  </mat-table>
+</div>

@@ -1,0 +1,43 @@
+<div
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+  class="example-container"
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+>
+  <mat-table class="full-width" [dataSource]="managersDataBase" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+    <!-- Name Column -->
+    <ng-container matColumnDef="Account Manager">
+      <mat-header-cell *matHeaderCellDef class="table-account-manager-performance-header" fxFlex="100">{{
+        'STATISTICS.ANALYTICS.TABLE.TITLE' | translate
+      }}</mat-header-cell>
+      <mat-cell *matCellDef="let manager" fxFlex="70" class="cell-account">
+        <img
+          class="mat-cell-photo"
+          src="{{ manager.account.photo ? userImgFolder + manager.account.photo : '/assets/images/avatar-placeholder.png' }}"
+          alt="Photo"
+        />
+        <p fxFlex="60">{{ manager.account.name }}</p>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef fxFlex="70">
+        {{ 'STATISTICS.ANALYTICS.TABLE.TOTAL' | translate }}
+      </mat-footer-cell>
+    </ng-container>
+
+    <!-- Revenue Column -->
+    <ng-container matColumnDef="Revenue">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let manager">
+        {{ manager.revenue | currency }}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>
+        {{ getTotalCost() | currency }}
+      </mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns" style="background: rgba(242, 242, 242, 0.5)"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      [class.leader-of-accounters]="managersDataBase.data.indexOf(row) === 0"
+    ></mat-row>
+    <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+  </mat-table>
+</div>

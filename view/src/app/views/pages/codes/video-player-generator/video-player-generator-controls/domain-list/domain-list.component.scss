@@ -1,0 +1,30 @@
+:host {
+  display: contents;
+}
+
+.width {
+  &--half {
+    width: 50%;
+  }
+
+  &--full {
+    width: 100%;
+  }
+}
+
+.margin {
+  &--top-0 {
+    margin-top: 0 !important;
+  }
+}
+
+.chip {
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: 16px;
+  min-height: 24px;
+}
+
+.warn {
+  background: #b71c1c !important;
+}

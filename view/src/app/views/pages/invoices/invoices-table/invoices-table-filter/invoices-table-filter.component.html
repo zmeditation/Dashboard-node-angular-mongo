@@ -1,0 +1,51 @@
+<mat-card fxFlex="100" fxLayoutAlign="space-around">
+  <form fxFlex="100" fxLayoutAlign="space-around" [formGroup]="invoicesForm">
+    <mat-form-field>
+      <label>
+        <input matInput [placeholder]="'INVOICES.DATE_RANGE' | translate" [satDatepicker]="datepicker" formControlName="period" />
+      </label>
+      <sat-datepicker #datepicker [rangeMode]="true" startView="year"> </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="datepicker"> </sat-datepicker-toggle>
+    </mat-form-field>
+    <mat-form-field *ngxPermissionsOnly="['canEditInvoiceStatus', 'canSeeOwnInvoices', 'canSeeAllInvoices']">
+      <mat-select formControlName="publishers" [placeholder]="'INVOICES.PUBLISHERS' | translate" [multiple]="true">
+        <mat-select-search [formControl]="pubsFilter"></mat-select-search>
+        <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub">
+          {{ pub.name }}
+        </mat-option>
+      </mat-select>
+      <button
+        matSuffix
+        *ngIf="invoicesForm.controls.publishers.value.length"
+        mat-icon-button
+        aria-label="Clear"
+        (click)="_reset($event, 'publishers')"
+        class="mat-select-search-clear"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field *ngxPermissionsOnly="['canSeeAllInvoices']">
+      <mat-select formControlName="managers" [placeholder]="'INVOICES.MANAGERS' | translate" [multiple]="true">
+        <mat-select-search [formControl]="managersFilter"></mat-select-search>
+        <mat-option *ngFor="let manager of filteredManagers | async" [value]="manager">
+          {{ manager['manager'] }}
+        </mat-option>
+      </mat-select>
+      <button
+        matSuffix
+        *ngIf="invoicesForm.controls.managers.value.length"
+        mat-icon-button
+        aria-label="Clear"
+        (click)="_reset($event, 'managers')"
+        class="mat-select-search-clear"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+
+  <button mat-raised-button color="primary" [disabled]="!invoicesForm.valid" (click)="getInvoices()">
+    {{ 'INVOICES.GET' | translate }}
+  </button>
+</mat-card>

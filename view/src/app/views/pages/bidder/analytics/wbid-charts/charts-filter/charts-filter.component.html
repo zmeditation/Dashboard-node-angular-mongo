@@ -1,0 +1,140 @@
+<mat-card class="full-width pb-0 pt-05" fxFlex [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+  <form fxFlex="100" fxLayout="column wrap" fxLayoutAlign="space-between" [formGroup]="WbidChartsForm">
+    <div class="transition-class" fxLayoutAlign="space-between" fxLayout="row wrap" fxLayout.lt-md="column nowrap">
+      <mat-form-field fxFlex="25" fxFlex.lt-md="100" class="transition-class transition-class-third">
+        <mat-label>{{ 'WBID.ANALYTICS.CHARTS.' + limitsForChart.label | uppercase | translate }}</mat-label>
+        <mat-select formControlName="limit">
+          <mat-option *ngFor="let category of limitsForChart.limit" value="{{ category }}">{{
+            'WBID.ANALYTICS.CHARTS.TOP_' + category | uppercase | translate
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="25" fxFlex.lt-md="100" class="transition-class transition-class-fifth">
+        <mat-label>{{ 'WBID.ANALYTICS.CHARTS.' + periodChart.label | uppercase | translate }}</mat-label>
+        <mat-select formControlName="period">
+          <mat-option *ngFor="let period of periodChart.period" value="{{ period }}">{{
+            'WBID.ANALYTICS.CHARTS.' + period | uppercase | translate
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="25" fxFlex.lt-md="100" class="transition-class transition-class-fourth">
+        <mat-label>{{ 'WBID.ANALYTICS.CHARTS.' + labelMetrics.label | uppercase | translate }}</mat-label>
+        <mat-select formControlName="label_metric">
+          <mat-option *ngFor="let metric of labelMetrics.metric" value="{{ metric }}">{{
+            'WBID.ANALYTICS.CHARTS.' + metric | uppercase | translate
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div
+        class="button-submit-desktop transition-class"
+        fxFlex="17"
+        fxFlex.lt-md="100"
+        [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      >
+        <button
+          type="button"
+          mat-raised-button
+          style="border-radius: 4px;"
+          data-cy="button_submit"
+          class="mat-color-accent mat-box-shadow full-width mb-05"
+          (click)="sendRequest(WbidChartsForm.value)"
+        >
+          {{ 'STATISTICS.DASHBOARD_CHART.GET_DATA' | translate }}
+        </button>
+      </div>
+      <div #secondPartFilters fxFlex="100" fxLayout.lt-md="column nowrap" fxLayoutAlign="space-around" class="transition-class">
+        <mat-form-field
+          fxFlex="30"
+          fxFlex.lt-md="100"
+          class="transition-class transition-class-first"
+          *ngxPermissionsOnly="['canSeeAllWBidUsers', 'canSeeOwnWBidUsers']"
+        >
+          <mat-label>
+            {{ 'WBID.ANALYTICS.CHARTS.PUBLISHER' | translate }}
+          </mat-label>
+          <input
+            matInput
+            formControlName="publisher_id"
+            [matAutocomplete]="auto"
+            [value]="getShortenedPublishersList() ? getShortenedPublishersList() : ('WBID.ANALYTICS.CHARTS.PUBLISHER' | translate)"
+            (click)="clearPlaceholder(WbidChartsForm.get('publisher_id').value)"
+          />
+
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let publisher of filteredOptions | async" value="{{ namesArray }}">
+              <div (click)="optionClicked($event, publisher)">
+                <mat-checkbox [checked]="publisher.selected" (click)="$event.stopPropagation()" (change)="referenceToDomains(publisher)">
+                  {{ publisher.name | lowercase | titlecase }}
+                </mat-checkbox>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+          <button mat-button *ngIf="namesArray.length > 0" matSuffix mat-icon-button aria-label="Clear" (click)="resetPublishers()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="30" fxFlex.lt-md="100" class="transition-class transition-class-first">
+          <mat-label>
+            {{ 'WBID.ANALYTICS.CHARTS.DOMAIN' | translate }}
+          </mat-label>
+          <mat-select formControlName="site" multiple>
+            <mat-select-trigger>
+              {{ sitesArray.length > 0 ? sitesArray[0] : ('WBID.ANALYTICS.CHARTS.DOMAIN' | translate) }}
+              <span *ngIf="sitesArray.length > 1"> (+{{ sitesArray.length - 1 }} {{ sitesArray.length === 2 ? 'other' : 'others' }}) </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let site of usersDomains" value="{{ site.domain }}" (click)="referenceToAdUnits(site)">{{
+              site.domain | lowercase
+            }}</mat-option>
+          </mat-select>
+          <button mat-button *ngIf="sitesArray.length > 0" matSuffix mat-icon-button aria-label="Clear" (click)="resetSites()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="30" fxFlex.lt-md="100" class="transition-class transition-class-second">
+          <mat-label>{{ 'WBID.ANALYTICS.CHARTS.AD_UNIT' | translate }}</mat-label>
+          <mat-select formControlName="ad_unit" multiple>
+            <mat-select-trigger>
+              {{ WbidChartsForm.get('ad_unit').value?.length > 0 ? WbidChartsForm.get('ad_unit').value[0] : 'All placements' }}
+              <span *ngIf="WbidChartsForm.get('ad_unit').value?.length > 1">
+                (+{{ WbidChartsForm.get('ad_unit').value.length - 1 }}
+                {{ WbidChartsForm.get('ad_unit').value.length === 2 ? 'other' : 'others' }})
+              </span>
+            </mat-select-trigger>
+            <mat-optgroup *ngFor="let group of getKeysOfConfigs()" [label]="group">
+              <mat-option *ngFor="let unit of usersAdUnits[group]" value="{{ unit }}">{{ unit | lowercase | titlecase }}</mat-option>
+            </mat-optgroup>
+          </mat-select>
+          <button
+            mat-button
+            *ngIf="WbidChartsForm.get('ad_unit').value?.length > 0"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="resetPlacements()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div
+        class="button-submit-mobile transition-class"
+        fxFlex="17"
+        fxFlex.lt-md="100"
+        [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      >
+        <button
+          type="button"
+          mat-raised-button
+          data-cy="button_submit"
+          class="mat-color-accent mat-box-shadow full-width mb-05"
+          (click)="sendRequest(WbidChartsForm.value)"
+        >
+          {{ 'STATISTICS.DASHBOARD_CHART.GET_DATA' | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</mat-card>

@@ -1,0 +1,21 @@
+.position-absolute {
+  //position: absolute;
+  //right: -15px;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+mat-form-field {
+  textarea {
+    resize: none;
+    font-size: 1.2em;
+    line-height: 1.7rem;
+  }
+}
+
+.api-access-title {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}

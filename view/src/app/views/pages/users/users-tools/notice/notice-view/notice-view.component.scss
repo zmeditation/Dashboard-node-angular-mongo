@@ -1,0 +1,27 @@
+.notice-text {
+  resize: none;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+}
+
+.first-row-inputs {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.icon-clear-input {
+  position: absolute;
+  top: -0.8rem;
+  right: 0;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.clear-form {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}

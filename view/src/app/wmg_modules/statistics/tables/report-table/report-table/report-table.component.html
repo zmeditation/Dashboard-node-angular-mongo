@@ -1,0 +1,103 @@
+<div *ngIf="!noDataFound; else noData">
+  <div class="responsive-table">
+    <mat-table [hidden]="isLoading" [dataSource]="data" matSort matTableExporter #exporter="matTableExporter">
+      <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+        <mat-header-cell
+          class="table-head"
+          [ngClass]="{
+            'w-70': longestColumn.indexOf(column) === -1 && longColumn.indexOf(column) === -1 || longColumn.indexOf(column) !== -1,
+            'w-160': longestColumn.indexOf(column) !== -1,
+            'w-90': middleColumn.indexOf(column) !== -1,
+            'no-wrap': columnTextLength(column)
+          }"
+          *matHeaderCellDef
+          mat-sort-header
+          (click)="enumerating(data.sortData(data.filteredData, data.sort))"
+          [disabled]="column === 'enumeration'"
+          matTooltip="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_RESULTS.' + column | uppercase | translate }}"
+        >
+          {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_RESULTS.' + column | uppercase | translate }}
+        </mat-header-cell>
+        <mat-cell
+          class="mat-cell"
+          [ngClass]="{
+            'w-70': longestColumn.indexOf(column) === -1 && longColumn.indexOf(column) === -1 || longColumn.indexOf(column) !== -1,
+            'w-160': longestColumn.indexOf(column) !== -1,
+            'w-90': middleColumn.indexOf(column) !== -1
+          }"
+          *matCellDef="let element"
+          title="{{ element[column] }}"
+        >
+          <ng-container
+            *ngIf="
+              (column === 'requests' || column === 'bidder_requests') &&
+                element[column] === '0' &&
+                (element['impressions'] !== '0' || element['bids_won'] !== '0');
+              then error;
+              else success
+            "
+          ></ng-container>
+
+          <ng-template #error>
+            <div
+              class="tooltip"
+              [matTooltipDisabled]="
+                !(
+                  (column === 'requests' || column === 'bidder_requests') &&
+                  element[column] === '0' &&
+                  (element['impressions'] !== '0' || element['bids_won'] !== '0')
+                )
+              "
+              [matTooltip]="'Unidentified'"
+            >
+              0<span style="color: red">*</span>
+            </div>
+          </ng-template>
+
+          <ng-template #success>{{ element[column] }}</ng-template>
+        </mat-cell>
+
+        <ng-container *ngIf="totalData">
+          <mat-footer-cell
+            [ngClass]="{
+              'w-70': longestColumn.indexOf(column) === -1 && longColumn.indexOf(column) === -1 || longColumn.indexOf(column) !== -1,
+              'w-160': longestColumn.indexOf(column) !== -1,
+              'w-90': middleColumn.indexOf(column) !== -1
+            }"
+            *matFooterCellDef
+          >{{ totalData[column] }}</mat-footer-cell
+          >
+        </ng-container>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnsToDisplay"></mat-row>
+      <ng-container *ngIf="totalData">
+        <mat-footer-row *matFooterRowDef="columnsToDisplay"></mat-footer-row>
+      </ng-container>
+    </mat-table>
+  </div>
+  <!--to make it optional-->
+  <div [hidden]="hidePaginator" id="report-table-header-container">
+    <!--button to download report in different formats-->
+    <div id="download-report-button" *ngxPermissionsOnly="['canDownloadReports']">
+      <button mat-raised-button color="primary" *ngIf="isDownloadButtonShown" [mat-menu-trigger-for]="downloadOptions" style="margin: 5px 0">
+        {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.DOWNLOAD_REPORT' | translate | uppercase }}
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #downloadOptions="matMenu">
+        <button mat-menu-item (click)="exporter.exportTable('csv', { fileName: reportFileName })">CSV</button>
+        <button mat-menu-item (click)="exporter.exportTable('xlsx', { fileName: reportFileName })">XLSX</button>
+        <button mat-menu-item (click)="exporter.exportTable('txt', { fileName: reportFileName })">TXT</button>
+        <button mat-menu-item (click)="exporter.exportTable('json', { fileName: reportFileName })">JSON</button>
+      </mat-menu>
+    </div>
+    <mat-paginator [pageSize]="paginatorSize" [hidePageSize]="isMobile" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="not-found-table-data">
+    {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_RESULTS.NO_DATA' | translate }}
+  </div>
+</ng-template>

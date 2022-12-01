@@ -1,0 +1,68 @@
+<mat-card>
+  <mat-card-header>
+    <div class="title-background">
+      <h2>
+        {{ 'WBID.PROPERTIES.TRIAL.TITLE' | translate }}
+      </h2>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div id="content">
+      <div id="disclaimer">
+        <span id="main-text">
+          {{ 'WBID.PROPERTIES.TRIAL.MAIN_TEXT' | translate }}
+        </span>
+      </div>
+      <button mat-button mat-raised-button color="primary" (click)="checkAdsTxt()" [disabled]="checking">
+        {{ 'WBID.PROPERTIES.TRIAL.BUTTON_TEXT' | translate }}
+      </button>
+    </div>
+    <div id="check-results" *ngIf="result">
+      <mat-expansion-panel *ngFor="let res of results.result">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="status-icon non-success" *ngIf="res.success === false" [matTooltip]="'WBID.PROPERTIES.TRIAL.NOTGOOD' | translate">
+              report_problem
+            </mat-icon>
+            <mat-icon class="status-icon success" *ngIf="res.success === true" [matTooltip]="'WBID.PROPERTIES.TRIAL.GOOD' | translate"> done </mat-icon>
+            <span class="title">
+              {{ res.domain }}
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="adstxt-results">
+          <div id="results-title">
+            <div>
+              <div>
+                {{ 'WBID.PROPERTIES.TRIAL.CHECK_RESULT' | translate }}
+              </div>
+              <strong> {{ res.status }} {{ res.error ? ':' : '' }} {{ res.error }} </strong>
+            </div>
+            <button
+              [disabled]="copying"
+              mat-button
+              mat-flat-button
+              color="accent"
+              *ngIf="res.status === 'Some lines absent' && res['adsTxtStrings'] && res['adsTxtStrings'].length"
+              (click)="copyAdsTxtLines(res.domain)"
+            >
+              {{ 'WBID.PROPERTIES.TRIAL.COPY_LINES' | translate }}
+            </button>
+          </div>
+          <div class="result-details">
+            {{ res.error && ['Timeout', 'Not Found'].includes(res.error) ? ('WBID.PROPERTIES.TRIAL.FIX_FILE' | translate) + res.domain + '/ads.txt' : '' }}
+            <div id="ads-txt-lines-container" *ngIf="res.status === 'Some lines absent' && res['adsTxtStrings'] && res['adsTxtStrings'].length">
+              <div class="ads-txt-line" *ngFor="let line of res['adsTxtStrings']">
+                <mat-icon *ngIf="!line['present']" class="non-success"> clear </mat-icon>
+                <mat-icon *ngIf="line['present']" class="success"> done </mat-icon>
+                {{ line['domain'] }}, {{ line['publisherAccountID'] }}, {{ line['accountType'] }}{{ line['certificateAuthorityID'] ? ',' : '' }}
+                {{ line['certificateAuthorityID'] }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </mat-card-content>
+</mat-card>
+<app-console></app-console>

@@ -1,0 +1,38 @@
+.notification-blocks {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.top-header {
+  min-height: 2.5rem;
+}
+
+.footer-button {
+  min-height: 2.5rem;
+  margin: 0.5rem 0rem;
+  button {
+    height: 2.5rem;
+  }
+}
+
+.create-notification {
+  position: relative;
+}
+
+.h-5 {
+  height: 5rem;
+  width: 5rem;
+}
+
+@media only screen and (max-width: 959px) {
+  .notification-blocks {
+    height: 74%;
+  }
+
+  .footer-button {
+    height: 20%;
+    button {
+      height: 2.5rem;
+    }
+  }
+}

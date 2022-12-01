@@ -1,0 +1,162 @@
+<div class="header-topnav mat-elevation-z2">
+  <div class="container">
+    <div class="topnav" fxFlex="100">
+      <!-- App Logo -->
+      <a fxFlex="40px" class="topbar-branding" [routerLink]="prebidUserOnlyPerm ? ['/wbid/analytics-charts'] : ['/dashboard']">
+        <img src="assets/images/logo.svg" alt="logo" class="app-logo" />
+      </a>
+
+      <ul class="menu container-drop-down-lists" *ngIf="!layoutConf.isMobile" fxFlex="84" fxLayoutAlign="start center" fxLayout="row nowrap">
+        <ng-container *ngFor="let item of menuItems; let i = index">
+          <li *ngxPermissionsOnly="item.permission">
+            <div class="ref-to-component" *ngIf="item.type !== 'separator'" routerLinkActive="open">
+              <a matRipple routerLink="/{{ item.state }}" *ngIf="item.type === 'link'">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                {{ item.name | translate }}
+              </a>
+              <div *ngIf="item.type === 'dropDown'">
+                <label matRipple for="drop-{{ i }}" class="toggle">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  {{ item.name | translate }}</label
+                >
+                <a matRipple routerLink="/{{ item.state }}">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  {{ item.name | translate }}</a
+                >
+                <input type="checkbox" id="drop-{{ i }}" />
+                <ul>
+                  <li *ngFor="let itemLvL2 of item.sub; let j = index" routerLinkActive="open">
+                    <ng-container *ngxPermissionsOnly="itemLvL2.permission">
+                      <a
+                        matRipple
+                        routerLink="{{ item.state ? '/' + item.state : '' }}/{{ itemLvL2.state }}"
+                        *ngIf="itemLvL2.type !== 'dropDown'"
+                      >
+                        <mat-icon *ngIf="itemLvL2.icon">{{ itemLvL2.icon }}</mat-icon>
+                        {{ itemLvL2.name | translate }}
+                      </a>
+
+                      <div *ngIf="itemLvL2.type === 'dropDown'">
+                        <label matRipple for="drop-{{ i }}{{ j }}" class="toggle">{{ itemLvL2.name | translate }}</label>
+                        <a matRipple>
+                          <mat-icon *ngIf="itemLvL2.icon">{{ itemLvL2.icon }}</mat-icon>
+                          {{ itemLvL2.name | translate }}</a
+                        >
+                        <input type="checkbox" id="drop-{{ i }}{{ j }}" />
+                        <!-- Level 3 -->
+                        <ul>
+                          <li *ngFor="let itemLvL3 of itemLvL2.sub" routerLinkActive="open">
+                            <ng-container *ngxPermissionsOnly="itemLvL3.permission">
+                              <a
+                                matRipple
+                                routerLink="{{ item.state ? '/' + item.state : '' }}{{ itemLvL2.state ? '/' + itemLvL2.state : '' }}/{{
+                                  itemLvL3.state
+                                }}"
+                              >
+                                <mat-icon *ngIf="itemLvL3.icon">{{ itemLvL3.icon }}</mat-icon>
+                                {{ itemLvL3.name | translate }}
+                              </a>
+                            </ng-container>
+                          </li>
+                        </ul>
+                      </div>
+                    </ng-container>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="user.am">
+          <li class="publisher-account-contact-information">
+            <span>{{ 'YOUR_MANAGER' | translate }} {{ user.am.name }}: {{ user.am.email }}</span>
+          </li>
+        </ng-container>
+      </ul>
+      <span fxFlex></span>
+      <!-- End Navigation -->
+
+      <!-- Language Switcher -->
+      <mat-select
+        fxFlex="6rem"
+        *ngIf="!layoutConf.isMobile"
+        placeholder=""
+        id="langToggle"
+        name="appTranslation.lang"
+        [(ngModel)]="appTranslation.lang"
+        [ngClass]="appTranslation.lang"
+        class="text-right lang"
+      >
+        <mat-option *ngFor="let lang of appTranslation.availableLangs" [value]="lang.code" ngDefaultControl class="styles-not-for-text">
+          <img class="max-width-img" src="{{ 'assets/images/' + lang.name + '.svg' }}" alt="{{ 'LANGUAGES.' + lang.name | translate }}" />
+          {{ 'LANGUAGES.' + lang.name | translate }}
+        </mat-option>
+      </mat-select>
+
+      <!-- Theme Switcher -->
+      <!-- <button
+      mat-icon-button
+      id="schemeToggle"
+      [style.overflow]="'visible'"
+      matTooltip="Color Schemes"
+      [matMenuTriggerFor]="themeMenu"
+      class="topbar-button-right">
+        <mat-icon>format_color_fill</mat-icon>
+      </button>
+      <mat-menu #themeMenu="matMenu">
+        <mat-grid-list
+        class="theme-list"
+        cols="2"
+        rowHeight="48px">
+          <mat-grid-tile
+          *ngFor="let theme of egretThemes"
+          (click)="changeTheme(theme)">
+            <div mat-menu-item [title]="theme.name">
+              <div [style.background]="theme.baseColor" class="egret-swatch"></div>
+              <mat-icon class="active-icon" *ngIf="theme.isActive">check</mat-icon>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-menu> -->
+
+      <!-- Notification toggle button -->
+
+      <button
+        fxFlex="40px"
+        *ngIf="notificationPerm"
+        mat-icon-button
+        matTooltip="Notifications"
+        (click)="toggleNotices()"
+        [style.overflow]="'visible'"
+        class="topbar-button-right"
+      >
+        <mat-icon *ngIf="!animateAlert">notifications</mat-icon>
+        <mat-icon *ngIf="animateAlert" [ngClass]="{ 'animate-alert': animateAlert }">notifications_active</mat-icon>
+
+        <span *ngIf="notWatchedNotices" class="notification-number mat-bg-warn">{{
+          notWatchedNotices > 99 ? '99+' : notWatchedNotices
+        }}</span>
+      </button>
+
+      <!-- Top left user menu -->
+      <button fxFlex="40px" mat-icon-button [matMenuTriggerFor]="accountMenu" class="topbar-button-right mr-1 img-button">
+        <img src="{{ userAvatar ? imgFolderURL + userAvatar : 'assets/images/avatar-placeholder.png' }}" alt="user photo" />
+      </button>
+      <mat-menu #accountMenu="matMenu">
+        <button mat-menu-item [routerLink]="['/settings/profile/overview']">
+          <mat-icon>account_box</mat-icon>
+          <span>{{ 'PROFILE' | translate }}</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/sessions/sign-in']" (click)="logOut()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>{{ 'SIGNOUT' | translate }}</span>
+        </button>
+      </mat-menu>
+      <!-- Mobile screen menu toggle -->
+      <button mat-icon-button class="mr-1" (click)="toggleSidenav()" *ngIf="layoutConf.isMobile">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

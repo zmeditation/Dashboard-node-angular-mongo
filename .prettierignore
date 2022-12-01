@@ -1,0 +1,23 @@
+# Ignore artifacts:
+node_modules
+package-lock.json
+view/dist
+view/node_modules
+view/cypress
+view/package-lock.json
+view/src/environments/*
+view/src/assets/*
+view/Dockerfile
+view/README.md
+view/bitbucket-pipelines.yml
+view/default.conf
+view/debug.log
+view/karma.conf.js
+view/protractor.conf.js
+view/src/app/shared/tests_materials/*
+view/tsconfig.json
+view/angular.json
+bitbucket-pipelines.yml
+default.conf
+Dockerfile
+old_bitbucket-pipelines.yml

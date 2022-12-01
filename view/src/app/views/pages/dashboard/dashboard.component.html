@@ -1,0 +1,21 @@
+<ng-container [@animate]="{ value: '*', params: { y: '50px', delay: '700ms' } }">
+  <app-message-card></app-message-card>
+  <app-main-filter (reportType)="setReportType($event)"></app-main-filter>
+
+  <app-main-chart [userid]="user" [reportType]="typeReportSubj.asObservable()"></app-main-chart>
+
+  <mat-card *ngIf="dataLoaded" [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+    <app-report-table
+      [tableData]="tableData"
+      [totalData]="totalData"
+      [enablePagination]="false"
+      [customPaginationSize]="60"
+      [typeReport]="reportType"
+    >
+    </app-report-table>
+  </mat-card>
+</ng-container>
+
+<div *ngIf="!dataLoaded" fxFlexAlign="row" fxLayoutAlign="center center" style="margin: 20%">
+  <mat-spinner [diameter]="120"></mat-spinner>
+</div>

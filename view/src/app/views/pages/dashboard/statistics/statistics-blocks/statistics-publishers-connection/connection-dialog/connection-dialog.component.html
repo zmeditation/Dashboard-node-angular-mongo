@@ -1,0 +1,8 @@
+
+<h6>{{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.' + data.header | uppercase | translate }}</h6>
+
+<ul>
+	<li *ngFor="let publisher of data.publisherNames"> 
+		{{ publisher }}
+	</li>
+</ul>

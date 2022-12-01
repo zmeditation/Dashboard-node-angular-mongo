@@ -1,0 +1,24 @@
+<div class="block_charts" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-between"
+    [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+    *ngIf="lineChartSteppedData.length > 0"
+  >
+    <div fxFlex="100" fxFlex.xs="100">
+      <mat-card-content class="p-0" [style.height]="setChartContainerHeight">
+        <canvas
+          height="300"
+          baseChart
+          class="chart m-0"
+          [datasets]="lineChartSteppedData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+        ></canvas>
+      </mat-card-content>
+    </div>
+  </div>
+</div>

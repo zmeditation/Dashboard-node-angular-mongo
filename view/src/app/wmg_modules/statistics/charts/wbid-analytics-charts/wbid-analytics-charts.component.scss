@@ -1,0 +1,71 @@
+canvas {
+  margin: auto auto !important;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.flex-for-revenue-chart {
+  flex: 1 1 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  mat-card-content {
+    justify-content: center;
+    canvas {
+      max-width: 65%;
+      max-height: 100%;
+    }
+  }
+}
+
+.select-chart-type {
+  opacity: 0.7;
+  overflow: hidden;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 0.8rem;
+  flex: 1 1 40%;
+  mat-form-field {
+    max-width: 40% !important;
+  }
+}
+
+.chart-title {
+  border-bottom: 1px inset;
+  padding-bottom: 0.3rem;
+  text-align: center;
+}
+
+.chart-min-width {
+  min-width: 420px;
+}
+
+@media screen and (max-width: 959px) {
+  mat-label {
+    font-size: 0.7rem;
+  }
+
+  mat-card-content {
+    canvas {
+      max-width: 90% !important;
+      height: 50vh;
+    }
+  }
+
+  .chart-title {
+    font-size: 1rem;
+  }
+
+  .m-chart-scroll-width {
+    width: 100%;
+  }
+}
+
+@media all and (max-width: 420px) {
+  .scroll-chart {
+    overflow: scroll;
+  }
+}

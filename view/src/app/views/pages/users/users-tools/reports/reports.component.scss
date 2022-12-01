@@ -1,0 +1,80 @@
+.reports-users-tools {
+  .reports-users-tools__filter {
+    display: flex;
+    margin: 1rem;
+    justify-content: flex-end;
+
+    .reports-users-tools__user-select {
+      margin-right: 1rem;
+    }
+  }
+
+  .table-wrapper {
+    overflow: auto;
+
+    .reports-users-tools__info-table {
+      width: 100%;
+      min-width: 850px;
+
+      thead {
+        color: black;
+        tr {
+          th:nth-child(3) {
+            width: 10%;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td:nth-child(3) {
+            width: 10%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.search-user {
+  width: 100%;
+}
+
+.get-user-button {
+  height: 2.5rem;
+  min-width: 10rem;
+}
+
+tr.expand-detail-row {
+  height: 0;
+}
+
+.expand-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.expanded-false {
+  display: none;
+}
+
+app-programmatics-reports-counts-table {
+  width: 100%;
+}
+
+.count-of-reports-row {
+  position: relative;
+
+  .progress-bar {
+    position: absolute;
+    left: 0;
+  }
+}
+
+@media all and (max-width: 750px) {
+  .reports-users-tools {
+    .reports-users-tools__filter {
+      flex-direction: column !important;
+    }
+  }
+}

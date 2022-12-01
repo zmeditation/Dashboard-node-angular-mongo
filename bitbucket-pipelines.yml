@@ -1,0 +1,124 @@
+# @format
+
+image: node:14.16.0
+
+options:
+  docker: true
+  size: 2x
+
+pipelines:
+  branches:
+    development:
+     - parallel:
+       - step:
+           name: build and Test
+           caches:
+             - node
+           script:
+             - WBID_ENDPOINT=45.76.85.245:9999
+             - npm run i-serv 
+             - npm run test:server
+       - step:
+           name: Build docker front
+           #        size: 2x
+           caches:
+             - docker
+           script:
+             - IMAGE_NAME_FRONT=dashboard_front
+             - docker build . --file view/Dockerfile --tag ${IMAGE_NAME_FRONT}
+             - docker save ${IMAGE_NAME_FRONT} --output "${IMAGE_NAME_FRONT}.tar"
+           services:
+             - docker
+           size: 2x
+           artifacts:
+             - '*.tar'
+       - step:
+          name: Build docker back
+          script:
+           - IMAGE_NAME_SERVER=dashboard_server
+           - docker build . --file server/Dockerfile --tag ${IMAGE_NAME_SERVER}
+           - docker save ${IMAGE_NAME_SERVER} --output "${IMAGE_NAME_SERVER}.tar"
+          services:
+           - docker
+          caches:
+          - docker
+          artifacts:
+            - "*.tar"
+     - step:
+         name: Deploy to Docker front
+         deployment: development
+         script:
+             - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+             - IMAGE_NAME_FRONT=dashboard_front
+             - IMAGE_NAME_SERVER=dashboard_server #account name
+             - docker load --input "${IMAGE_NAME_FRONT}.tar"
+             - docker load --input "${IMAGE_NAME_SERVER}.tar"
+             - VERSION="dev_full.${BITBUCKET_BUILD_NUMBER}"
+             - IMAGE_FRONT=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME_FRONT}
+             - IMAGE_SERVER=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME_SERVER}
+             - docker tag "${IMAGE_NAME_FRONT}" "${IMAGE_FRONT}:${VERSION}"
+             - docker tag "${IMAGE_NAME_SERVER}" "${IMAGE_SERVER}:${VERSION}"
+             - docker push "${IMAGE_FRONT}:${VERSION}"
+             - docker push "${IMAGE_SERVER}:${VERSION}"          
+         services:
+             - docker
+
+  tags:
+   '*':
+     - parallel:
+       - step:
+           name: build and Test
+           caches:
+             - node
+           script:
+             - npm run i-serv 
+             - npm run test:server
+       - step:
+           name: Build docker front
+           #        size: 2x
+           caches:
+             - docker
+           script:
+             - IMAGE_NAME_FRONT=dashboard_front
+             - docker build . --file view/Dockerfile_staging --tag ${IMAGE_NAME_FRONT}
+             - docker save ${IMAGE_NAME_FRONT} --output "${IMAGE_NAME_FRONT}.tar"
+           services:
+             - docker
+           size: 2x
+           artifacts:
+             - '*.tar'
+       - step:
+          name: Build docker back
+          script:
+           - IMAGE_NAME_SERVER=dashboard_server
+           - docker build . --file server/Dockerfile --tag ${IMAGE_NAME_SERVER}
+           - docker save ${IMAGE_NAME_SERVER} --output "${IMAGE_NAME_SERVER}.tar"
+          services:
+           - docker
+          caches:
+          - docker
+          artifacts:
+            - "*.tar"
+     - step:
+         name: Deploy to Docker front
+         deployment: development
+         script:
+             - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+             - IMAGE_NAME_FRONT=dashboard_front
+             - IMAGE_NAME_SERVER=dashboard_server #account name
+             - docker load --input "${IMAGE_NAME_FRONT}.tar"
+             - docker load --input "${IMAGE_NAME_SERVER}.tar"
+             - VERSION="dev_full.${BITBUCKET_TAG}"
+             - IMAGE_FRONT=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME_FRONT}
+             - IMAGE_SERVER=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME_SERVER}
+             - docker tag "${IMAGE_NAME_FRONT}" "${IMAGE_FRONT}:${VERSION}"
+             - docker tag "${IMAGE_NAME_SERVER}" "${IMAGE_SERVER}:${VERSION}"
+             - docker push "${IMAGE_FRONT}:${VERSION}"
+             - docker push "${IMAGE_SERVER}:${VERSION}"          
+         services:
+             - docker
+
+definitions:
+  services:
+    docker:
+      memory: 7000 # reduce memory for docker-in-docker from 1GB to 512MB

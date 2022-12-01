@@ -1,0 +1,144 @@
+<mat-progress-bar *ngIf="loading"></mat-progress-bar>
+
+<div *ngIf="!loading">
+  <div class="mt-1 mb-1" fxLayout="row" fxLayoutAlign="space-between">
+    <div fxLayout="flex" fxLayoutAlign="center center">
+      <h4 class="properties-title">
+        {{ user?.name.toUpperCase() }}
+      </h4>
+    </div>
+    <div fxLayout="row">
+      <button color="warn" class="btn-back" fxFlex="5" mat-raised-button (click)="backToUsers()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button
+        *ngxPermissionsOnly="['canConnectUnitWithPub']"
+        [disabled]="disableButtonToSendToServer || !propertiesAddForm.invalid"
+        (click)="sendToServer()"
+        class="btn-save"
+        color="primary"
+        fxFlex="5"
+        mat-raised-button
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-card class="m-0 mb-05 p-05" *ngxPermissionsOnly="['canConnectUnitWithPub']">
+    <!-- pass vacantProperties -->
+    <app-add-property-form
+      [searchFormControl]="searchFormControl"
+      [originProps]="originProps"
+      [displayedExpansionPanel]="displayedExpansionPanel"
+      [vacantProperties]="vacantProperties"
+      [propertiesAddForm]="propertiesAddForm"
+    >
+    </app-add-property-form>
+
+    <button (click)="addProperties(propertiesAddForm)" [disabled]="propertiesAddForm.invalid" mat-button>
+      Add
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </mat-card>
+  <div fxLayout="column wrap" fxLayout.sm="column" fxLayout.xs="column" class="m-0">
+    <mat-accordion class="full-width" *ngFor="let panel of displayedExpansionPanel">
+      <mat-expansion-panel (opened)="sendKeyOfPlacement(panel)" [expanded]="panel.open">
+        <mat-expansion-panel-header class="transition-bg-color" [class.some-changes]="panel.save">
+          <mat-panel-title class="h5" fxFlex="40%">
+            <span>
+              {{ panel.name }}
+            </span>
+          </mat-panel-title>
+          <mat-panel-description fxFlex="60%">
+            <span *ngIf="panel.save">
+              {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.NEED_SAVE' | translate }}
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent class="full-width">
+          <mat-table fxLayout="column nowrap" [dataSource]="dataSource[panel.name]" [hidden]="!displayedColumns.length" class="padding-reset-background">
+            <!-- Position Column -->
+            <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns" class="padding-reset">
+              <mat-header-cell class="table-head" *matHeaderCellDef>
+                {{
+                  'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.' + column
+                    | uppercase
+                    | translate
+                }}
+              </mat-header-cell>
+              <form [formGroup]="propertiesForm">
+                <ng-container *ngIf="column !== 'actions'">
+                  <mat-cell *matCellDef="let element" class="transition-bg-color mat-cell-text" [class.mat-bg-warn]="willDelete[element['_id']]">
+                    <span *ngIf="!showEdit[element['_id']]">{{ element[column] }}</span>
+                    <ng-container *ngIf="showEdit[element['_id']]">
+                      <mat-form-field>
+                        <input
+                          *ngIf="column !== 'property_origin'"
+                          [formControl]="propertiesForm.controls[column]"
+                          matInput
+                          name="{{ column }}"
+                          placeholder="{{
+                            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.' + column
+                              | uppercase
+                              | translate
+                          }}"
+                        />
+                        <mat-select
+                          *ngIf="column === 'property_origin'"
+                          [formControl]="propertiesForm.controls[column]"
+                          placeholder="{{
+                            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.SELECT_ORIGIN'
+                              | translate
+                          }}"
+                        >
+                          <mat-option *ngFor="let origin of originProps" [value]="origin">
+                            {{ origin }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+                  </mat-cell>
+                </ng-container>
+                <ng-container *ngIf="column === 'actions'">
+                  <mat-cell fxLayout="row nowrap" *matCellDef="let element" class="transition-bg-color" [class.mat-bg-warn]="willDelete[element['_id']]">
+                    <div *ngIf="!showEdit[element['_id']]" fxLayout="row">
+                      <button (click)="editProperties(element, element['_id'])" *ngIf="!willDelete[element['_id']]" color="primary" mat-button mat-sm-button>
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button (click)="deleteProperties(element)" color="warn" mat-button mat-sm-button>
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="showEdit[element['_id']]" fxLayout="row">
+                      <button
+                        (click)="saveProperties(propertiesForm, element['_id'])"
+                        [disabled]="propertiesForm.invalid"
+                        color="primary"
+                        mat-button
+                        mat-sm-button
+                      >
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button (click)="resetProperties()" color="warn" mat-button mat-sm-button>
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+              </form>
+            </ng-container>
+            <mat-header-row fxLayout="row nowrap" *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row fxFlex="100" fxLayout="row nowrap" class="table-row" *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <ng-container *ngIf="vacantProperties">
+    <!-- pass vacantProperties -->
+    <app-vacant-properties
+      *ngxPermissionsOnly="['canReadAllUsers', 'canReadAllPubs', 'canReadOwnPubs']"
+      [vacantProperties]="vacantProperties"
+    ></app-vacant-properties>
+  </ng-container>
+</div>

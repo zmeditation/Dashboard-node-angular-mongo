@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Select Marketplace adapters</h2>
+<mat-dialog-content class="mat-typography">
+  <form action="" id="form" #form>
+    <app-adapters-select-component></app-adapters-select-component>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-stroked-button mat-dialog-close color="warn">{{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}</button>
+  <button mat-button mat-stroked-button color="primary" [mat-dialog-close]="form">{{ 'WBID.PROPERTIES.PLACEMENTS.SAVE' | translate }}</button>
+</mat-dialog-actions>

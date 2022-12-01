@@ -1,0 +1,299 @@
+<mat-card class="safari_only" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+  <mat-card-title>
+    <div class="card-title-text">
+      {{ 'CODES_PAGES.CODES_GEN.CODES_GEN_TITLE' | translate }}
+    </div>
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <div id="codes-generator-container">
+      <div id="code-type-selector" [formGroup]="codeFormService.mainForm">
+        <mat-form-field id="code-type">
+          <mat-label>
+            {{ 'CODES_PAGES.CODES_GEN.CODE_TYPE' | translate }}
+          </mat-label>
+          <mat-select required type="text" (selectionChange)="enablePubList()" formControlName="code_type">
+            <mat-option *ngFor="let type of codeTypes" [value]="type" [disabled]="type === 'Yandex'">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field id="publisher">
+          <mat-label>
+            {{ 'CODES_PAGES.CODES_GEN.PUBLISHER' | translate }}
+          </mat-label>
+          <input type="text" formControlName="publisher" matInput [matAutocomplete]="auto" (input)="filterPublishers()" />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updatePubId($event.option.value)">
+            <mat-option *ngFor="let pub of filteredPublishers" [value]="pub">
+              {{ pub }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field id="gpt-code-type" *ngIf="codeFormService.mainForm.controls.code_type.value === 'GPT'">
+          <mat-label>
+            {{ 'AdUnit' }}
+          </mat-label>
+          <mat-select required formControlName="is_new_adUnit">
+            <mat-option value="new">new</mat-option>
+            <mat-option value="exist">exist</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox
+          id="fluid"
+          *ngIf="codeFormService.mainForm.controls.code_type.value === 'GPT'"
+          formControlName="is_fluid"
+          [matTooltip]="'CODES_PAGES.CODES_GEN.FLUID_HINT' | translate"
+          matTooltipPosition="below"
+          matTooltipHideDelay="200"
+          (change)="fluidHandler($event)"
+        >
+          Fluid
+        </mat-checkbox>
+      </div>
+      <form [formGroup]="codeFormService.GPTCodesGenForm" *ngIf="codeFormService.mainForm.controls.code_type.value
+        && codeFormService.mainForm.controls.code_type.value === 'GPT' && codeFormService.mainForm.controls.is_new_adUnit.value">
+        <div id="gpt-settings">
+          <mat-form-field id="network-id">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.NETWORK_ID' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              required
+              matInput
+              [placeholder]="'112081842'"
+              formControlName="network_id"
+              [matTooltip]="'CODES_PAGES.CODES_GEN.NETWORK_ID_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            />
+          </mat-form-field>
+          <mat-form-field id="child-network-id">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.CHILD_NETWORK_ID' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              required
+              matInput
+              formControlName="child_network_id"
+              [matTooltip]="'CODES_PAGES.CODES_GEN.CHILD_NETWORK_ID_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            />
+          </mat-form-field>
+          <mat-form-field id="placement-id">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.PLACEMENT_ID' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              matInput
+              [placeholder]="'ok_ru_240x400'"
+              formControlName="placement_id"
+              required
+              [matTooltip]="'CODES_PAGES.CODES_GEN.PLACEMENT_ID_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            />
+          </mat-form-field>
+          <mat-form-field id="page-url">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.PAGE_URL' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              matInput
+              [placeholder]="'https://google.com'"
+              formControlName="page_url"
+              required
+              [matTooltip]="'CODES_PAGES.CODES_GEN.PAGE_URL_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            />
+          </mat-form-field>
+          <mat-form-field id="slot-element-id">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.SLOT_ELEMENT_ID' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              matInput
+              [placeholder]="'div-wmg-ad-1'"
+              formControlName="slot_element_id"
+              required
+              [matTooltip]="'CODES_PAGES.CODES_GEN.SLOT_ELEMENT_ID_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            />
+          </mat-form-field>
+          <mat-form-field id="pub-id">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.PUBLISHER_ID' | translate }}
+            </mat-label>
+            <input
+              type="text"
+              matInput
+              [placeholder]="'CODES_PAGES.CODES_GEN.PUBLISHER_ID' | translate"
+              formControlName="pub_id"
+              required
+              [matTooltip]="'CODES_PAGES.CODES_GEN.PUBLISHER_ID_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+              [value]="selectedPub"
+            />
+          </mat-form-field>
+          <mat-form-field id="ad-type">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.AD_TYPE' | translate }}
+            </mat-label>
+            <mat-select
+              required
+              type="text"
+              formControlName="ad_type"
+              [matTooltip]="'CODES_PAGES.CODES_GEN.AD_TYPE_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            >
+              <mat-option value="banner">banner</mat-option>
+              <mat-option value="inBannerVideo">inBannerVideo</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field id="sizes" *ngIf="isFluidBanner !== true; else fluidHeight">
+            <mat-label>
+              {{ 'CODES_PAGES.CODES_GEN.SIZES' | translate }}
+            </mat-label>
+            <mat-select
+              required
+              type="text"
+              formControlName="sizes"
+              [matTooltip]="'CODES_PAGES.CODES_GEN.SIZES_HINT' | translate"
+              matTooltipPosition="below"
+              matTooltipHideDelay="200"
+            >
+              <mat-option *ngFor="let size of allowedSizes" [value]="size">
+                {{ size }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ng-template #fluidHeight>
+            <mat-form-field id="fluid-height">
+              <mat-label>
+                {{ 'CODES_PAGES.CODES_GEN.FLUID_HEIGHT' | translate }}
+              </mat-label>
+              <input
+                type="number"
+                max="250"
+                matInput
+                placeholder="90"
+                formControlName="fluid_height"
+                required
+                [matTooltip]="'CODES_PAGES.CODES_GEN.FLUID_HEIGHT_HINT' | translate"
+                matTooltipPosition="below"
+                matTooltipHideDelay="200"
+              />
+            </mat-form-field>
+          </ng-template>
+          <mat-checkbox
+            formControlName="collapse_empty_divs"
+            [matTooltip]="'CODES_PAGES.CODES_GEN.COLLAPSE_DIVS_HINT' | translate"
+            matTooltipPosition="below"
+            matTooltipHideDelay="200"
+          >
+            {{ 'CODES_PAGES.CODES_GEN.COLLAPSE_DIVS' | translate }}
+          </mat-checkbox>
+          <mat-checkbox
+            formControlName="centered"
+            [matTooltip]="'CODES_PAGES.CODES_GEN.CENTERED_HINT' | translate"
+            matTooltipPosition="below"
+            matTooltipHideDelay="200"
+          >
+            {{ 'CODES_PAGES.CODES_GEN.CENTERED' | translate }}
+          </mat-checkbox>
+          <mat-checkbox
+            formControlName="analytics"
+            [matTooltip]="'CODES_PAGES.CODES_GEN.ANALYTICS_HINT' | translate"
+            matTooltipPosition="below"
+            matTooltipHideDelay="200"
+          >
+            {{ 'CODES_PAGES.CODES_GEN.ANALYTICS' | translate }}
+          </mat-checkbox>
+          <mat-checkbox
+            formControlName="logo"
+            [matTooltip]="'CODES_PAGES.CODES_GEN.LOGO_HINT' | translate"
+            matTooltipPosition="below"
+            matTooltipHideDelay="200"
+          >
+            {{ 'CODES_PAGES.CODES_GEN.LOGO' | translate }}
+          </mat-checkbox>
+          <mat-checkbox
+            formControlName="pm"
+            [matTooltip]="'CODES_PAGES.CODES_GEN.PM_HINT' | translate"
+            matTooltipPosition="below"
+            matTooltipHideDelay="200"
+          >
+            {{ 'CODES_PAGES.CODES_GEN.PM' | translate }}
+          </mat-checkbox>
+        </div>
+      </form>
+    </div>
+    <form [formGroup]="codeFormService.fluidSettings" *ngIf="codeFormService.mainForm.controls.is_fluid
+      && codeFormService.mainForm.controls.is_fluid.value === true && codeFormService.mainForm.controls.is_new_adUnit.value">
+      <div id="fluid-settings">
+        <mat-form-field id="banner-position">
+          <mat-label>
+            {{ 'CODES_PAGES.CODES_GEN.FLUID_BANNER_POSITION' | translate }}
+          </mat-label>
+          <mat-select type="text" formControlName="position">
+            <mat-option value="">not set</mat-option>
+            <mat-option value="top">top</mat-option>
+            <mat-option value="bottom">bottom</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox
+          formControlName="closeButton"
+          [matTooltip]="'CODES_PAGES.CODES_GEN.FLUID_CLOSE_BUTTON_HINT' | translate"
+          matTooltipPosition="below"
+          matTooltipHideDelay="200"
+        >
+          {{ 'CODES_PAGES.CODES_GEN.FLUID_CLOSE_BUTTON' | translate }}
+        </mat-checkbox>
+        <mat-checkbox
+          formControlName="background"
+          [matTooltip]="'CODES_PAGES.CODES_GEN.FLUID_BACKGROUND_HINT' | translate"
+          matTooltipPosition="below"
+          matTooltipHideDelay="200"
+        >
+          {{ 'CODES_PAGES.CODES_GEN.FLUID_BACKGROUND' | translate }}
+        </mat-checkbox>
+      </div>
+    </form>
+    <div id="code-result">
+      <mat-form-field id="generated-code" *ngIf="isGenerated">
+        <mat-label>
+          {{ 'CODES_PAGES.CODES_GEN.RESULT' | translate }}
+        </mat-label>
+        <textarea
+          id="code-result-area"
+          matInput
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="2"
+          cdkAutosizeMaxRows="7"
+          [value]="code"
+        >
+        </textarea>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <div>
+      <button mat-raised-button color="primary" (click)="copy()" [disabled]="isCopied" *ngIf="isGenerated">
+        {{ isCopied ? ('CODES_PAGES.CODES_GEN.COPIED' | translate) : ('CODES_PAGES.CODES_GEN.CODE_COPY' | translate) }}
+      </button>
+      <button mat-raised-button color="primary" (click)="generateCode()" [disabled]="!checkFormValidity()">
+        {{ 'CODES_PAGES.CODES_GEN.CODE_GENERATE' | translate }}
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

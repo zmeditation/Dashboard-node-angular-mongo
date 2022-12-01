@@ -1,0 +1,124 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+$breakpoint-small-phone: 359px;
+
+::ng-deep .ngx-datatable.invoices-list {
+  .datatable-header {
+    background-color: #577d88 !important;
+    border-radius: 5px 5px 0 0 !important;
+    font-weight: 500;
+    width: 100%;
+
+    .datatable-row-center {
+      width: 100% !important;
+    }
+
+    .datatable-header-inner {
+      width: 100% !important;
+    }
+
+    .datatable-header-cell {
+      color: #fff !important;
+      width: 100% !important;
+    }
+  }
+
+  .datatable-scroll:last-child {
+    border-bottom: 1px solid #d1d4d7;
+  }
+
+  .datatable-row-center {
+    width: 100% !important;
+  }
+
+  .datatable-body-cell {
+    width: 100% !important;
+  }
+
+  .datatable-scroll {
+    width: 100% !important;
+  }
+
+  .datatable-body-row {
+    min-height: 44px;
+    width: 100% !important;
+  }
+
+  .datatable-footer {
+    background: #fff;
+    color: #424242;
+    font-size: 12px;
+
+    .page-count {
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    .datatable-pager {
+      ul li:not(.disabled):hover a {
+        background-color: rgba(158, 158, 158, 0.2) !important;
+      }
+
+      a {
+        color: rgba(0, 0, 0, 0.54);
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+mat-form-field {
+  padding: 5px 15px;
+}
+
+mat-card-content {
+  align-items: baseline;
+}
+
+#revenue-search-button {
+  max-height: 40px;
+}
+
+.revenue-value {
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+
+@media (max-width: $breakpoint-phone) {
+
+  mat-card-content {
+    flex-direction: column !important;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  #revenues-filter {
+
+    mat-form-field {
+      padding: 0;
+      width: 100%;
+    }
+  }
+
+ ::ng-deep #revenue-datatable datatable-footer {
+
+    font-size: 9px!important;
+
+    .datatable-footer-inner .page-count {
+      padding: 0!important;
+    }
+
+    .datatable-footer-inner datatable-pager {
+      margin: 0!important;
+      ul li {
+        margin: 0!important;
+
+        a {
+          min-width: 16px!important;
+          margin: 0!important;
+        }
+      }
+    }
+  }
+}

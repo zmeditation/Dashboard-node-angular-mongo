@@ -1,0 +1,342 @@
+<mat-card>
+  <mat-card-header
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around center"
+    fxLayout.lt-md="column wrap"
+    fxLayoutAlign.lt-md="stretch center"
+    *ngIf="usersReady || sitesReady || configsReady"
+    [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  >
+    <button
+      color="primary"
+      class="btn-back m-0"
+      fxFlex="5"
+      fxFlex.lt-md="2"
+      mat-stroked-button
+      *ngIf="(sitesReady && role !== 'PUBLISHER') || configsReady"
+      (click)="back()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <mat-card-title-group>
+      <mat-card-title class="m-0">
+        <h5 class="m-0">
+          {{ title === 'All users' ? ('WBID.PROPERTIES.TABLE.USERS' | translate) : title }}
+        </h5>
+      </mat-card-title>
+    </mat-card-title-group>
+    <mat-form-field fxFlex="40" fxFlex.lt-md="100" class="user-search-field">
+      <input (keyup)="search($event)" matInput [placeholder]="'WBID.PROPERTIES.TABLE.SEARCH' | translate" value="" />
+    </mat-form-field>
+    <div class="add-button-container" *ngIf="sitesReady || configsReady">
+      <a
+        mat-raised-button
+        color="primary"
+        class="add uppercase"
+        *ngIf="isVisibleNewButton"
+        [routerLink]="'new'"
+        [disabled]="buttonDisabled"
+        [queryParams]="{
+          name: currentUser,
+          userId: currentUserId,
+          siteId: currentSiteId,
+          domain: currentRoute.includes('configs') ? title : ''
+        }"
+      >
+        {{ (currentRoute.includes('configs') ? 'WBID.PROPERTIES.TABLE.NEW_PLACEMENT' : 'WBID.PROPERTIES.TABLE.NEW_SITE') | translate }}
+        <mat-icon>add_box</mat-icon>
+      </a>
+      <a
+        href="https://adwmg.com/docs/wiki/wbid/publisher-guide/"
+        target="_blank"
+        style="margin-top: -25px"
+        *ngIf="currentRoute.includes('sites') && isVisibleNewButton"
+      >
+        <mat-icon
+          style="font-size: 24px; margin-left: 5px; margin-top: -20px"
+          [matTooltip]="'WBID.PROPERTIES.TABLE.NEW_SITE_HELP' | translate"
+          matTooltipPosition="below"
+          color="primary"
+          >help_outline
+        </mat-icon>
+      </a>
+    </div>
+  </mat-card-header>
+  <mat-card-content [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+    <mat-spinner *ngIf="loading" [diameter]="90" style="margin: auto"></mat-spinner>
+    <!--USERS DATATABLE-->
+    <ngx-datatable
+      id="users-table"
+      *ngIf="usersReady"
+      [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      [columnMode]="'flex'"
+      [footerHeight]="50"
+      [headerHeight]="50"
+      [scrollbarH]="false"
+      [limit]="15"
+      [rowHeight]="'auto'"
+      [rows]="users"
+      [sorts]="[{ prop: 'name', dir: 'asc' }]"
+      class="bootstrap users-list"
+      (activate)="onActivateUsers($event)"
+    >
+      <ngx-datatable-column [sortable]="true" prop="name" [name]="'WBID.PROPERTIES.TABLE.NAME' | translate | uppercase" [flexGrow]="2" class="users-list-row">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['name'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [sortable]="true" prop="sites" [name]="'WBID.PROPERTIES.TABLE.SITES' | translate | uppercase" [flexGrow]="1" class="users-list-row">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['sites'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [sortable]="false" prop="type" [name]="'WBID.PROPERTIES.TABLE.TYPE' | translate | uppercase" [flexGrow]="2" class="users-list-row">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ !!row['type'] ? row['type'].toString() : '' }}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+    <!--SITES DATATABLE-->
+    <ngx-datatable
+      *ngIf="sitesReady"
+      [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      [columnMode]="'flex'"
+      [footerHeight]="50"
+      [headerHeight]="50"
+      [scrollbarH]="false"
+      [limit]="15"
+      [rowHeight]="'auto'"
+      [rows]="sites"
+      [sorts]="[{ prop: 'name', dir: 'asc' }]"
+      class="bootstrap sites-list"
+      (activate)="onActivateSites($event)"
+    >
+      <ngx-datatable-column [sortable]="true" prop="domain" [name]="'WBID.PROPERTIES.TABLE.DOMAIN' | translate" [flexGrow]="3">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['domain'] }}
+          <mat-icon
+            class="status-icon non-success"
+            *ngIf="row.disabled === true"
+            style="color: #f44336"
+            [matTooltip]="'WBID.PROPERTIES.TABLE.SITE_DISABLE' | translate"
+            >report_problem
+          </mat-icon>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [sortable]="true" prop="configs" [name]="'WBID.PROPERTIES.TABLE.PLACEMENTS' | translate" [flexGrow]="1.75">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['configs'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="false"
+        *ngxPermissionsOnly="['canSeeWBidStatusAdsTxt']"
+        [name]="'WBID.PROPERTIES.TABLE.ADSTXT' | translate"
+        [flexGrow]="1.5"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <mat-icon *ngIf="row['ebda'] === false" style="color: #f44336" [matTooltip]="'WBID.PROPERTIES.TABLE.NOTGOOD' | translate">clear </mat-icon>
+          <mat-icon *ngIf="row['ebda'] === true" style="color: #008e7a" [matTooltip]="'WBID.PROPERTIES.TABLE.GOOD' | translate">done </mat-icon>
+          <mat-icon [matTooltip]="'WBID.PROPERTIES.TABLE.ADSTXTINFO' | translate" (click)="$event.stopPropagation(); showAdsTxt(row['adsTxt'])"
+            >list_alt
+          </mat-icon>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [name]="'WBID.PROPERTIES.TABLE.ACTIONS' | translate"
+        [sortable]="false"
+        [flexGrow]="1.5"
+        *ngxPermissionsOnly="['canSeeWBidActions']"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template style="z-index: 1000">
+          <div class="edit-icons-block">
+            <mat-icon
+              [matTooltip]="'WBID.PROPERTIES.TABLE.EDIT_SITE' | translate"
+              matTooltipPosition="below"
+              (click)="editSiteDomain(row)"
+              color="primary"
+              *ngxPermissionsOnly="['canEditWBidSites']"
+              >edit
+            </mat-icon>
+            <mat-icon
+              [matTooltip]="'WBID.PROPERTIES.TABLE.DELETE_SITE' | translate"
+              matTooltipPosition="below"
+              (click)="deleteSite(row)"
+              color="warn"
+              *ngxPermissionsOnly="['canDeleteWBidSites']"
+              >delete
+            </mat-icon>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+    <ngx-datatable
+      #config
+      [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      *ngIf="configsReady"
+      [reorderable]="false"
+      [columnMode]="'flex'"
+      [footerHeight]="50"
+      [headerHeight]="50"
+      [limit]="25"
+      [rowHeight]="'auto'"
+      [rows]="configs"
+      [rowClass]="checkCopy"
+      [sorts]="[{ prop: 'name', dir: 'asc' }]"
+      [scrollbarH]="false"
+      class="bootstrap configs-list expandable"
+    >
+      <ngx-datatable-row-detail [rowHeight]="50">
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+          <div>
+            <mat-chip-list style="justify-content: center">
+              <mat-chip *ngFor="let adapter of row['adapters']" color="primary" selected>
+                {{ adapter }}
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </ng-template>
+      </ngx-datatable-row-detail>
+      <ngx-datatable-column [sortable]="true" prop="name" [draggable]="false" [name]="'WBID.PROPERTIES.TABLE.NAME' | translate" [flexGrow]="2">
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+          {{ row['name'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [sortable]="true" prop="sizes" [draggable]="false" [name]="'WBID.PROPERTIES.TABLE.SIZE' | translate" [flexGrow]="1.5">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['sizes'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        prop="adapters"
+        [draggable]="false"
+        [name]="'WBID.PROPERTIES.TABLE.ADAPTERS' | translate"
+        [sortable]="false"
+        [flexGrow]="2"
+        *ngIf="getCurrentWindowWidth() > 402"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="toggleExpandRow(row)"
+            style="margin: 0"
+            class="uppercase"
+            [matBadge]="row['adapters'].length"
+            matBadgePosition="after"
+            matBadgeColor="accent"
+          >
+            <span class="overflow-hidden" style="display: block; max-width: 100%">{{ 'WBID.PROPERTIES.TABLE.ADAPTERS' | translate }}</span>
+          </button>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        prop="addons"
+        *ngIf="!store.getState()['userType'].includes('prebid') && getCurrentWindowWidth() > 768"
+        [name]="'WBID.PROPERTIES.TABLE.ADDONS' | translate"
+        [sortable]="false"
+        [flexGrow]="2"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="add-ons-block">
+            <mat-icon *ngIf="row['cmp'] == 'true'" color="primary" matTooltip="CMP"> visibility_off </mat-icon>
+            <mat-icon *ngIf="row['server'] && row['server'] !== 'undefined'" color="primary" matTooltip="Prebid Server"> cloud_queue </mat-icon>
+            <mat-icon *ngIf="row['currency'] && row['currency'] !== 'undefined'" color="primary" matTooltip="Currency"> attach_money </mat-icon>
+            <mat-icon *ngIf="row['schain'] && row['schain'] === 'true'" color="primary" matTooltip="Supply Chain"> link </mat-icon>
+            <mat-icon *ngIf="row['analytics'] === true" color="primary" matTooltip="adWMG Analytics"> trending_up </mat-icon>
+            <mat-icon *ngIf="row['shortTag'] && row['shortTag'] === true" color="primary" matTooltip="CDN Tag"> settings_ethernet </mat-icon>
+            <mat-icon *ngIf="row['dev'] && row['dev'] === 'true'" color="primary" matTooltip="Dev config"> developer_mode </mat-icon>
+            <mat-icon svgIcon="amazon" *ngIf="row['amazon'] === 'true'" matTooltip="Amazon"></mat-icon>
+            <mat-icon style="height: 22px; width: 22px" svgIcon="WMG" *ngIf="row['marketplace'] === 'true'" matTooltip="WMG Marketplace"></mat-icon>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [name]="'WBID.PROPERTIES.TABLE.ACTIONS' | translate"
+        [sortable]="false"
+        [flexGrow]="2.5"
+        *ngxPermissionsOnly="['canSeeWBidActions']"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="actions-icons-block" *ngIf="role !== 'PUBLISHER' || row['type'] === 'prebid'">
+            <div *ngxPermissionsOnly="['canEditWBidPlacements']">
+              <mat-icon
+                [matTooltip]="'WBID.PROPERTIES.TABLE.COPY' | translate"
+                matTooltipPosition="below"
+                (click)="copy(row)"
+                *ngIf="!row['isCopy']"
+                color="primary"
+              >
+                file_copy
+              </mat-icon>
+            </div>
+            <a
+              [routerLink]="'edit'"
+              [queryParams]="{
+                id: row['id'],
+                copy: row['isCopy'],
+                name: currentUser
+              }"
+            >
+              <mat-icon
+                [matTooltip]="'WBID.PROPERTIES.TABLE.EDIT_PLACEMENT' | translate"
+                matTooltipPosition="below"
+                color="primary"
+                *ngxPermissionsOnly="['canEditWBidPlacements']"
+              >
+                edit
+              </mat-icon>
+            </a>
+            <a
+              [routerLink]="'edit'"
+              [queryParams]="{
+                id: row['id'],
+                copy: row['isCopy'],
+                name: currentUser,
+                preview: true
+              }"
+            >
+              <mat-icon
+                svgIcon="preview"
+                [matTooltip]="'WBID.PROPERTIES.TABLE.PREVIEW_PLACEMENT' | translate"
+                matTooltipPosition="below"
+                color="primary"
+                style="width: 21px; height: 19px"
+                *ngxPermissionsOnly="['canPreviewWBidPlacements']"
+              >
+              </mat-icon>
+            </a>
+            <mat-icon
+              [matTooltip]="'WBID.PROPERTIES.TABLE.DELETE_PLACEMENT' | translate"
+              matTooltipPosition="below"
+              (click)="deleteConfig(row)"
+              color="warn"
+              *ngxPermissionsOnly="['canDeleteWBidPlacements']"
+            >
+              delete
+            </mat-icon>
+            <mat-icon
+              (click)="showCode(row)"
+              [matTooltip]="'WBID.PROPERTIES.TABLE.CODES' | translate"
+              matTooltipPosition="below"
+              *ngIf="!row['isCopy']"
+              color="primary"
+            >
+              code
+            </mat-icon>
+            <mat-icon
+              (click)="getConfigInfo(row)"
+              [matTooltip]="'WBID.PROPERTIES.TABLE.HISTORY' | translate"
+              matTooltipPosition="below"
+              *ngxPermissionsOnly="['canSeeWBidPlacementHistory']"
+              color="primary"
+            >
+              info
+            </mat-icon>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </mat-card-content>
+</mat-card>
+<app-console></app-console>

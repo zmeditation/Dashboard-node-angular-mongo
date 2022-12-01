@@ -1,0 +1,98 @@
+<mat-card>
+  <mat-card-content>
+    <div class="title-background">
+      <h2>{{ 'WBID.PROPERTIES.INTEGRATION.WAIT_TITLE' | translate }}</h2>
+    </div>
+    <div class="shadow-card">
+      <div id="bottom-margin"></div>
+      <section class="integration-progress-bar">
+        <mat-progress-bar color="primary" mode="determinate" [value]="value"> </mat-progress-bar>
+      </section>
+      <div id="progress-line">
+        <span id="progress-percent"> {{ 'WBID.PROPERTIES.INTEGRATION.PROGRESS' | translate }}: {{ value.toFixed() }}% </span>
+        <span id="alert" *ngIf="error !== true">
+          {{ 'WBID.PROPERTIES.INTEGRATION.DO_NOT_CLOSE' | translate }}
+        </span>
+        <a *ngIf="error === true" mat-button color="warn" mat-raised-button style="text-transform: uppercase; margin-right: 10px" routerLink="../"
+          >{{ 'WBID.PROPERTIES.INTEGRATION.TRY_AGAIN' | translate }}
+        </a>
+      </div>
+    </div>
+    <div class="shadow-card">
+      <div id="stages-container">
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 2"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value < 2"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.CHECK' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 2"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value == 2"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.NETWORK' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 3"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value == 3"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.ADUNIT' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 4"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value == 4"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.COMPANY' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 5"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value == 5"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.USER' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 7"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value > 5 && value <= 7"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.ORDER' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 11"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value > 7 && value <= 11"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.SIZES' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 14"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value > 11 && value <= 14"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.LINEITEMS' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 16"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value > 14 && value <= 16"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.CREATIVES' | translate }}</span>
+        </div>
+        <div>
+          <div class="empty-24px-div">
+            <mat-icon color="accent" *ngIf="value >= 100"> done </mat-icon>
+            <mat-icon color="warn" *ngIf="error === true && value > 16 && value <= 100"> clear </mat-icon>
+          </div>
+          <span>{{ 'WBID.PROPERTIES.INTEGRATION.CONNECTIONS' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<app-console></app-console>

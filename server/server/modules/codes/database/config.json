@@ -1,0 +1,35 @@
+{
+  "development": {
+    "username": "wbiddb",
+    "password": "test_test",
+    "database": "codesdb",
+    "host": "45.76.85.245",
+    "port": "5444",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": false
+    },
+    "logging": false
+  },
+   "staging": {
+      "username": "wbiddb",
+      "password": "test_test",
+      "database": "codesdb",
+      "host": "45.76.85.245",
+      "port": "5444",
+      "dialect": "postgres",
+      "dialectOptions": {
+        "ssl": false
+      },
+      "logging": false
+    },
+  "production": {
+    "username": "wbiddb",
+    "password": "5txB6kbVBASkfmNj",
+    "database": "codesdb",
+    "host": "45.76.85.95",
+    "port":"5444",
+    "dialect": "postgres",
+    "logging": false
+  }
+}

@@ -1,0 +1,25 @@
+<div class="version">
+  <button mat-flat-button (click)="showPopup()">Version: {{ currentVersion }}</button>
+</div>
+
+<app-versions-popup
+  *ngIf="isShowPopup"
+  [isLoading]="isLoading"
+  [versions]="versions"
+  [currentVersionReleaseDate]="currentVersionReleaseDate"
+  [currentVersionDescription]="currentVersionDescription"
+  [isClearCreateForm]="isClearCreateForm"
+  (changeVersion)="changeVersion($event)"
+  (createVersion)="createVersion($event)"
+  (updateVersion)="updateVersion($event)"
+  (deleteVersion)="deleteVersion($event)"
+  (close)="isShowPopup = false"
+></app-versions-popup>
+
+<div *ngIf="isLoadingVersionList" class="versions-popup-loading-overlay">
+  <div class="loader">
+    <mat-card>
+      <mat-progress-bar mode="buffer"></mat-progress-bar>
+    </mat-card>
+  </div>
+</div>

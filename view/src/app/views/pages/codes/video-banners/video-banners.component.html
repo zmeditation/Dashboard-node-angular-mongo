@@ -1,0 +1,217 @@
+<mat-card class="p-0" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{ 'CODES_PAGES.VIDEO_BANNERS.SPOTX_VIDEO_BANNER_GENERATOR' | translate }}
+    </div>
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-horizontal-stepper [linear]="true" #stepper>
+      <mat-step>
+        <ng-template matStepLabel>{{ 'CODES_PAGES.VIDEO_BANNERS.CHOOSE_PROGRAMMATIC' | translate }}</ng-template>
+        <mat-form-field class="mt-1 mb-1 full-width">
+          <mat-select
+            placeholder="{{ 'CODES_PAGES.VIDEO_BANNERS.PROGRAMMATIC' | translate }}"
+            (selectionChange)="generateParamFields()"
+            [(ngModel)]="value"
+            class="mb-1"
+            required
+          >
+            <mat-option [value]="'googlePassback'">Google Passback</mat-option>
+            <mat-option [value]="'googleAdExchange'">Google AdExchange/AdSense</mat-option>
+            <mat-option [value]="'googleGPT'">Google GPT/DFP</mat-option>
+            <mat-option [value]="'googleGPTShort'">Google GPT/DFP Short</mat-option>
+            <mat-option [value]="'criteo'">Criteo</mat-option>
+            <mat-option [value]="'yandex'">Yandex</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="full-width mt-1" *ngIf="showChannelInput">
+          <input matInput [(ngModel)]="spotxChannelId" placeholder="Spotx Channel ID" />
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="space-between" *ngIf="showWidthHeightPanel">
+          <div fxFlex="100" fxFlex.gt-sm="48" fxFlex.sm="100" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="width" placeholder="{{ 'CODES_PAGES.VIDEO_BANNERS.WIDTH' | translate }}" />
+            </mat-form-field>
+          </div>
+          <div fxFlex="100" fxFlex.gt-sm="48" fxFlex.sm="100" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+            <mat-form-field class="full-width">
+              <input matInput [(ngModel)]="height" placeholder="{{ 'CODES_PAGES.VIDEO_BANNERS.HEIGHT' | translate }}" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" matStepperNext>
+            {{ 'CODES_PAGES.VIDEO_BANNERS.NEXT' | translate }}
+          </button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <form>
+          <ng-template matStepLabel>{{ 'CODES_PAGES.VIDEO_BANNERS.INSERT_CODE' | translate }}</ng-template>
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              name="code"
+              [disabled]="disableCodeInput"
+              [(ngModel)]="code"
+              placeholder="{{ 'CODES_PAGES.VIDEO_BANNERS.PASTE_YOUR_CODE' | translate }}"
+              matTextareaAutosize
+              matAutosizeMinRows="15"
+              matAutosizeMaxRows="15"
+              required
+            ></textarea>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button color="accent" matStepperPrevious *ngIf="showTransformBtn">
+              {{ 'CODES_PAGES.VIDEO_BANNERS.BACK' | translate }}
+            </button>
+
+            <button mat-raised-button class="mat-primary" (click)="transform(stepper)" *ngIf="showTransformBtn">
+              {{ 'CODES_PAGES.VIDEO_BANNERS.NEXT' | translate }}
+            </button>
+
+            <div id="spinner-div" *ngIf="enableSpinner" fxLayoutAlign="center">
+              <mat-progress-spinner [diameter]="40" mode="indeterminate" color="accent"></mat-progress-spinner>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>{{ 'CODES_PAGES.VIDEO_BANNERS.DONE' | translate }}</ng-template>
+        <form>
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              [(ngModel)]="result"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="{{ 'CODES_PAGES.VIDEO_BANNERS.RESULT' | translate }}"
+              matTextareaAutosize
+              matAutosizeMinRows="15"
+              matAutosizeMaxRows="15"
+            ></textarea>
+          </mat-form-field>
+        </form>
+
+        <div>
+          <button mat-raised-button color="accent" matStepperPrevious>
+            {{ 'CODES_PAGES.VIDEO_BANNERS.BACK' | translate }}
+          </button>
+
+          <button mat-raised-button class="mat-primary" (click)="showPreview()" *ngIf="showPreviewBtn">
+            {{ 'CODES_PAGES.VIDEO_BANNERS.PREVIEW' | translate }}
+          </button>
+
+          <button mat-raised-button class="mat-warn ml-05" (click)="destroyPreview()" *ngIf="showDestroyPreviewBtn">
+            {{ 'CODES_PAGES.VIDEO_BANNERS.DESTROY_PREVIEW' | translate }}
+          </button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card-content>
+</mat-card>
+
+<!--<div fxLayout="row" fxLayoutWrap="wrap">-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="50" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-card>-->
+<!--<mat-form-field class="full-width">-->
+<!--<textarea matInput name="code" [disabled]="disableCodeInput" [(ngModel)]="code" placeholder="Past Your Code" matTextareaAutosize matAutosizeMinRows="15" matAutosizeMaxRows="15"></textarea>-->
+<!--</mat-form-field>-->
+<!--</mat-card>-->
+<!--</div>-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="50" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-card>-->
+<!--<mat-select placeholder="Programmatic" (selectionChange)="generateParamFields()" [(ngModel)]="value" class="full-width mb-1">-->
+<!--<mat-option [value]="'googlePassback'">Google Passback</mat-option>-->
+<!--<mat-option [value]="'googleAdExchange'">Google AdExchange/AdSense</mat-option>-->
+<!--<mat-option [value]="'googleGPT'">Google GPT/DFP</mat-option>-->
+<!--<mat-option [value]="'googleGPTShort'">Google GPT/DFP Short</mat-option>-->
+<!--<mat-option [value]="'criteo'">Criteo</mat-option>-->
+<!--<mat-option [value]="'yandex'">Yandex</mat-option>-->
+<!--</mat-select>-->
+
+<!--<mat-divider></mat-divider>-->
+
+<!--<mat-form-field class="full-width mt-1" *ngIf="showChannelInput">-->
+<!--<input matInput [(ngModel)]="spotxChannelId" placeholder="Spotx Channel ID">-->
+<!--</mat-form-field>-->
+
+<!--<div fxLayout="row" fxLayoutWrap="wrap"  *ngIf="showWidthHeightPanel">-->
+<!--<div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="100" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-form-field>-->
+<!--<input matInput [(ngModel)]="width" placeholder="Width">-->
+<!--</mat-form-field>-->
+<!--</div>-->
+<!--<div fxFlex="100" fxFlex.gt-sm="50" fxFlex.sm="100" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-form-field>-->
+<!--<input matInput [(ngModel)]="height" placeholder="Height">-->
+<!--</mat-form-field>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="mt-1" fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="center">-->
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-primary"-->
+<!--(click)="transform()"-->
+<!--*ngIf="showTransformBtn">-->
+
+<!--<mat-icon>forward</mat-icon>-->
+<!--</button>-->
+
+<!--<div id="spinner-div" *ngIf="enableSpinner">-->
+<!--<mat-progress-spinner [diameter]="40" mode="indeterminate" color="accent"></mat-progress-spinner>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="center">-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="100" class="mt-1 mb-1">-->
+<!--<mat-divider></mat-divider>-->
+<!--</div>-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="100">-->
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-accent full-width"-->
+<!--(click)="showPreview()"-->
+<!--*ngIf="showPreviewBtn">Preview</button>-->
+
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-warn full-width"-->
+<!--(click)="destroyPreview()"-->
+<!--*ngIf="showDestroyPreviewBtn">Destroy Preview</button>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</mat-card>-->
+<!--</div>-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="50" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-card>-->
+<!--<form>-->
+<!--<mat-form-field class="full-width">-->
+<!--<textarea matInput [(ngModel)]="result" [ngModelOptions]="{standalone: true}" placeholder="Result" matTextareaAutosize matAutosizeMinRows="15" matAutosizeMaxRows="15"></textarea>-->
+<!--</mat-form-field>-->
+<!--</form>-->
+<!--</mat-card>-->
+<!--</div>-->
+
+<!--</div>-->
+
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div fxFlex="100" fxFlex.gt-sm="100">
+    <app-ad-preview *ngIf="showPreviewContainer" [resultCode]="result"></app-ad-preview>
+  </div>
+</div>
+
+<div>
+  <h4>Sample</h4>
+  <div [innerText]="sample"></div>
+</div>

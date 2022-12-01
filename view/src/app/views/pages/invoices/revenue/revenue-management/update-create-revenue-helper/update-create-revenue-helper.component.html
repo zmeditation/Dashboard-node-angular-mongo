@@ -1,0 +1,81 @@
+<mat-card>
+  <mat-card-content>
+    <div id="revenue-input-form">
+      <mat-form-field>
+        <label>
+          <input
+            matInput
+            [max]="maxDate"
+            [min]="minDate"
+            [placeholder]="('REVENUE.PERIOD' | translate) + ' *'"
+            (click)="revenueDateRange.clearValidators(); revenueDateRange.setErrors(null);"
+            [satDatepicker]="datepicker"
+            readonly
+            [formControl]="revenueDateRange"
+          />
+        </label>
+        <sat-datepicker #datepicker [rangeMode]="true" startView="year"
+                        (monthSelected)="onMonthSelected($event, datepicker)">
+        </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="datepicker"></sat-datepicker-toggle>
+        <mat-error *ngIf="revenueDateRange.invalid">
+          {{ getValidationErrorMessage('revenueDateRange', revenueDateRange) | translate }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="{{ mode === 'delete' && deleteMode.value !== 'byPublisher'
+        ? ('REVENUE.PUBLISHER' | translate)
+        : ('REVENUE.PUBLISHER' | translate) + ' *' }}" [formControl]="publishersListControl"
+                    disableOptionCentering>
+          <mat-select-search [formControl]="pubsFilter"></mat-select-search>
+          <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub">
+            {{ pub.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="publishersListControl.invalid">
+          {{ getValidationErrorMessage('publishersListControl', publishersListControl) | translate }}
+        </mat-error>
+        <button matSuffix *ngIf="publishersListControl.value" mat-icon-button aria-label="Clear"
+                (click)="_reset($event)" class="mat-select-search-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="small-field" *ngIf="mode !== 'delete'">
+        <input matInput
+               [formControl]="revenue"
+               [placeholder]="('REVENUE.REVENUE_VALUE' | translate) + ' *'"
+        />
+        <mat-error *ngIf="revenue.invalid">{{ getValidationErrorMessage('revenue', revenue) | translate }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="small-field" *ngIf="mode !== 'delete'">
+        <input matInput
+               [formControl]="revenue_rtb"
+               [placeholder]="'REVENUE.REVENUE_RTB_VALUE' | translate"
+        />
+        <mat-error
+          *ngIf="revenue.invalid">{{ getValidationErrorMessage('revenue_rtb', revenue_rtb) | translate }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="small-field" *ngIf="mode !== 'delete'">
+        <input matInput
+               [formControl]="deduction"
+               [placeholder]="'REVENUE.DEDUCTION_VALUE' | translate"
+        />
+        <mat-error
+          *ngIf="revenue.invalid">{{ getValidationErrorMessage('deduction', deduction) | translate }}</mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="mode === 'delete'">
+        <mat-select required [formControl]="deleteMode" [placeholder]="'REVENUE.DELETE_MODE' | translate">
+          <mat-option value="byPublisher">byPublisher</mat-option>
+          <mat-option value="byDate">byDate</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button [color]="mode !== 'delete' ? 'primary' : 'warn'" class="margin--left-15"
+            (click)="setRevenue(mode)"
+            [disabled]="!isButtonActive"
+            id="revenue-submit-button">
+      {{ 'REVENUE.' + mode | uppercase | translate | uppercase }}
+      <mat-icon>{{ buttonIconState[mode] }}</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>

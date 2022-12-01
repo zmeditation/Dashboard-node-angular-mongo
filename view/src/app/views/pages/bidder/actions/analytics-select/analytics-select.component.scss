@@ -1,0 +1,55 @@
+.example-chip-list {
+  width: 100%;
+}
+
+.mat-form-field-wrapper {
+  padding-top: 1.25em !important;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+h2 {
+  margin-top: 8px;
+}
+
+.mat-chip {
+  display: inherit;
+}
+
+mat-chip-list mat-chip.chip-selected {
+  background-color: #396673 !important;
+  color: #fff !important;
+}
+
+mat-chip-list mat-chip.chip-selected mat-icon {
+  color: #fff !important;
+}
+
+$breakpoint-phone: 576px;
+
+@media (max-width: $breakpoint-phone) and (min-width: 300px) {
+  mat-form-field,
+  label,
+  mat-select,
+  body .mat-select-trigger {
+    font-size: 12px !important;
+  }
+
+  .mat-option {
+    height: 32px;
+    line-height: 32px;
+  }
+
+  mat-chip {
+    min-height: 32px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+
+  ::ng-deep mat-form-field .mat-form-field-wrapper {
+    padding-top: 1.25em !important;
+  }
+}

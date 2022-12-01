@@ -1,0 +1,25 @@
+<mat-card [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }" class="p-0">
+  <mat-card-content class="pb-0">
+    <app-users-search-add-form
+      (searchAll)="searchAll($event)"
+      (createUser)="createUser()"
+    ></app-users-search-add-form>
+
+    <mat-tab-group [selectedIndex]="currentTabIndex" [@.disabled]="true" (focusChange)="changeTab($event)">
+      <mat-tab *ngFor="let tab of rolesTabs | async">
+        <ng-template mat-tab-label>{{ tab }}</ng-template>
+
+        <mat-progress-bar *ngIf="isLoadingResults" class="mt-1 mb-1" [mode]="'indeterminate'"></mat-progress-bar>
+        <app-users-role-table
+          *ngIf="tab === roles[currentTabIndex]"
+          [role]="tab"
+          (loading)="toggleLoading($event)"
+          (editUser)="editUser($event)"
+          (details)="userDetails($event)"
+          (properties)="propertiesUser($event)"
+          (deleteUser)="deleteUser($event)"
+        ></app-users-role-table>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

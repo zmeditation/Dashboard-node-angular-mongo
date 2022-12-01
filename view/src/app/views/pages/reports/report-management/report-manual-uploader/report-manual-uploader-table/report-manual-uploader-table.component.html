@@ -1,0 +1,113 @@
+<div class="example-container mat-elevation-z8 datatable-row-center ng-star-inserted container-upload">
+  <div *ngIf="!isTable" class="text-center p-1 fz-1">
+    {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.NO_DATA' | translate }}
+  </div>
+  <table *ngIf="isTable" mat-table [dataSource]="dataSource" class="full-width">
+    <ng-container matColumnDef="Delete">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-icon color="warn">delete_forever</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button>
+          <mat-icon color="warn" (click)="deleteOneRow(dataSource.data.indexOf(row))">clear</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="№">
+      <th mat-header-cell *matHeaderCellDef>№</th>
+      <td mat-cell *matCellDef="let row">
+        {{ dataSource.data.length - dataSource.data.lastIndexOf(row) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Publisher">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PUBLISHER' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.publisher.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Property">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PROPERTY' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.property['property_id'] }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Domain">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.DOMAIN' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.property['domain'] }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Type">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.TYPE' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.inventory.inventory_type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Programmatic">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PROGRAMMATIC' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.report_origin }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Day">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.DATE' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.day }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Sizes">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.SIZES' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.inventory.sizes }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Requests">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.AD_REQUESTS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.ad_request }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Impressions">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.IMPRESSIONS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.matched_request }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Clicks">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.CLICKS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.clicks }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="eCPM">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.ECPM' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.ecpm }}</td>
+    </ng-container>
+    <ng-container>
+      <mat-icon fontSet="fa" fontIcon="alarm"></mat-icon>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <button *ngIf="isTable" mat-raised-button (click)="sendDataToServer()" class="m-1" color="primary" type="submit">
+    {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.BUTTON_SUBMIT' | translate }}
+  </button>
+  <button *ngIf="isTable" mat-raised-button class="m-1" color="warn" (click)="clearAllTable()" type="reset">
+    {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.BUTTON_RESET' | translate }}
+  </button>
+</div>

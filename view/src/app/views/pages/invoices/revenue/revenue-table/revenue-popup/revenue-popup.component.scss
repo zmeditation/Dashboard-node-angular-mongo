@@ -1,0 +1,17 @@
+
+span{
+
+  font-weight: bold;
+
+  &.positive {
+    color: darkgreen;
+  }
+
+  &.negative {
+    color: red
+  }
+}
+
+ul {
+  margin-top: 0;
+}

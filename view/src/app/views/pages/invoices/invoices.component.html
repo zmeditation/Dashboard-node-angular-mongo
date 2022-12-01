@@ -1,0 +1,2 @@
+<app-add-invoice *ngxPermissionsOnly="['canUploadInvoices']" [invoices]="invoices" (uploaded)="invoiceUploaded($event)"> </app-add-invoice>
+<app-invoices-table (invoiceList)="sendInvoices($event)" [uploaded]="uploaded"> </app-invoices-table>

@@ -1,0 +1,215 @@
+<mat-card [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }" id="main-report-filter-container">
+  <!--templates -->
+  <ng-template #periodSelector let-form="form">
+    <div fxFlex="100" fxFlex.gt-sm="19" fxFlex.sm="100" fxFlex.xs="100">
+      <div class="input-container pr-for-closebar">
+        <mat-form-field class="full-width">
+          <mat-select placeholder="{{ 'STATISTICS.DASHBOARD_CHART.PERIOD' | translate }}" [formControl]="formPeriodData">
+            <mat-option *ngFor="let day of days" [value]="day.value" (click)="PrepareObject({ day: day.value })" data-cy="period">
+              {{ 'STATISTICS.DASHBOARD_CHART.' + day.value | uppercase | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #sortSelector let-form="form">
+    <div fxFlex="100" fxFlex.gt-sm="19" fxFlex.sm="100" fxFlex.xs="100">
+      <div class="input-container pr-for-closebar">
+        <mat-form-field class="full-width">
+          <mat-select placeholder="{{ 'STATISTICS.DASHBOARD_CHART.SORT' | translate }}" [formControl]="formSortData">
+            <mat-option *ngFor="let query of queryType" [value]="query.optionName" (click)="PrepareObject({ query: query.optionName })" data-cy="type">
+              {{ 'STATISTICS.DASHBOARD_CHART.' + query.optionName | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #getQueryButton>
+    <div fxFlex="100" fxFlex.gt-sm="19" fxFlex.sm="100" fxFlex.xs="100">
+      <button
+        type="button"
+        style="border-radius: 4px;"
+        mat-raised-button
+        data-cy="button_submit"
+        color="primary"
+        class="mat-color-accent mat-box-shadow full-width"
+        (click)="currentReportType === 'oRTB' ? getQuery(currentReportType) : getQuery(currentReportType, objectReadyToSend)"
+      >
+        {{ 'STATISTICS.DASHBOARD_CHART.GET_DATA' | translate }}
+      </button>
+    </div>
+  </ng-template>
+  <!--templates end-->
+
+  <form fxLayout="row wrap" fxLayoutAlign="space-around center" *ngIf="currentReportType === 'main'; else rtbFiltersForm" [formGroup]="inputFilterForm">
+    <!-- publishers -->
+    <div
+      id="publishers-list"
+      fxFlex="100"
+      fxFlex.gt-sm="19"
+      fxFlex.sm="100"
+      fxFlex.xs="100"
+      *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+    >
+      <div class="pr-for-closebar input-container">
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            placeholder="{{ 'STATISTICS.DASHBOARD_CHART.USERS' | translate }}"
+            [matAutocomplete]="auto"
+            #form
+            formControlName="usersForm"
+            (click)="clearFormInputUsers()"
+            (keyup)="searchPublishers($event.target.value)"
+            data-cy="users"
+          />
+          <button
+            data-cy="clear_button_1"
+            mat-icon-button
+            matTooltip="Clear"
+            class="icon-clear-input"
+            *ngIf="showClearCheckList"
+            (click)="clearInputChecks(this.allSelectedUsersObj)"
+          >
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option data-cy="autocomplete_users" *ngFor="let user of publishers" [value]="displaySelectedUsers">
+            <div (click)="optionClicked($event, user, currentReportType)">
+              <mat-checkbox [checked]="user.selected" (change)="toggleSelection(user, currentReportType)" (click)="$event.stopPropagation()">
+                {{ user.name }}
+              </mat-checkbox>
+            </div>
+          </mat-option>
+          <ng-container *ngIf="usersFromDB.length > publishers.length && !isSearchPublishers">
+            <button [disabled]="load" mat-raised-button color="primary" (click)="loadPublishers($event)" class="width--full">
+              {{ 'MAT_AUTOCOMPLETE_PAGINATION.LOAD_MORE' | translate }}
+            </button>
+          </ng-container>
+        </mat-autocomplete>
+      </div>
+    </div>
+    <!-- publishers -->
+
+    <div
+      id="domains-list"
+      fxFlex="100"
+      fxFlex.gt-sm="19"
+      fxFlex.sm="100"
+      fxFlex.xs="100"
+      *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports', 'canReadOwnReports']"
+    >
+      <div class="pr-for-closebar input-container">
+        <mat-form-field class="full-width pr-for-closebar">
+          <input
+            matInput
+            placeholder="{{ 'STATISTICS.DASHBOARD_CHART.DOMAINS' | translate }}"
+            [matAutocomplete]="auto_2"
+            #form
+            formControlName="domainsForm"
+            (click)="clearFormInputDomains()"
+            data-cy="domains"
+          />
+          <button
+            data-cy="clear_button_2"
+            mat-icon-button
+            matTooltip="Clear"
+            class="icon-clear-input"
+            *ngIf="showClearCheckListDomains"
+            (click)="clearInputChecksDomains(domainsFromDB)"
+          >
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <div id="132414123412324">
+          <mat-autocomplete #auto_2="matAutocomplete">
+            <mat-option data-cy="autocomplete_domains" *ngFor="let domain of filteredDomainsStates" [value]="displaySelectedDomains">
+              <div (click)="optionClickedDomain($event, domain)">
+                <mat-checkbox [checked]="domain.selected" (change)="toggleSelectionDomains(domain)" (click)="$event.stopPropagation()">
+                  {{ domain.domain }}
+                </mat-checkbox>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="sortSelector"></ng-container>
+    <ng-container *ngTemplateOutlet="periodSelector"></ng-container>
+    <ng-container *ngTemplateOutlet="getQueryButton"></ng-container>
+  </form>
+
+  <ng-template #rtbFiltersForm>
+    <form fxLayout="row wrap" fxLayoutAlign="space-around center" [formGroup]="inputFilterForm">
+<!--      <div
+        id="rtb-publishers-list"
+        fxFlex="100"
+        fxFlex.gt-sm="19"
+        fxFlex.sm="100"
+        fxFlex.xs="100"
+        *ngxPermissionsOnly="['canReadAllOrtbReports']"
+      >
+        <div class="pr-for-closebar input-container">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="{{ 'STATISTICS.DASHBOARD_CHART.USERS' | translate }}"
+              [matAutocomplete]="auto"
+              formControlName="oRTBUsersForm"
+              (click)="clearFormInputUsers()"
+              data-cy="users"
+            />
+            <button
+              data-cy="clear_button_1"
+              mat-icon-button
+              matTooltip="Clear"
+              class="icon-clear-input"
+              *ngIf="showClearCheckList"
+              (click)="clearInputChecks(this.allSelectedUsersObj)"
+            >
+              <mat-icon>clear</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option data-cy="autocomplete_users" *ngFor="let user of filteredRtbUsers" [value]="displaySelectedUsers">
+              <div (click)="optionClicked($event, user, currentReportType)">
+                <mat-checkbox [checked]="user.selected" (change)="toggleSelection(user, currentReportType)" (click)="$event.stopPropagation()">
+                  {{ user.name }}
+                </mat-checkbox>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+
+      <div
+        id="rtb-domains-list"
+        fxFlex="100"
+        fxFlex.gt-sm="19"
+        fxFlex.sm="100"
+        fxFlex.xs="100"
+        *ngxPermissionsOnly="['canReadAllOrtbReports']"
+      >
+        <div class="pr-for-closebar input-container">
+          <mat-form-field class="full-width pr-for-closebar">
+            <input matInput placeholder="{{ 'STATISTICS.DASHBOARD_CHART.DOMAINS' | translate }}" value="All Domains" formControlName="domainsForm" />
+          </mat-form-field>
+        </div>
+      </div>-->
+      <ng-container *ngTemplateOutlet="sortSelector"></ng-container>
+      <ng-container *ngTemplateOutlet="periodSelector"></ng-container>
+      <ng-container *ngTemplateOutlet="getQueryButton"></ng-container>
+    </form>
+  </ng-template>
+  <div class="report-type-selector" *ngxPermissionsOnly="['canReadAllOrtbReports', 'canReadOwnOrtbReports']">
+    <mat-button-toggle-group name="reportType" aria-label="Report Type" [value]="currentReportType" (change)="reportTypeSelector($event)">
+      <mat-button-toggle value="main">MAIN</mat-button-toggle>
+      <mat-button-toggle value="oRTB">RTB</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</mat-card>

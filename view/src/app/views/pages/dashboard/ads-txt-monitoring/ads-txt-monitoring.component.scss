@@ -1,0 +1,91 @@
+.padding-reset-background {
+  border-top: 0.5px solid rgba(191, 191, 191, 0.8);
+}
+.icons-color-ok {
+  color: #008e7a;
+  font-size: 1.8rem;
+}
+.icons-color-false {
+  color: #f44336;
+  font-size: 1.8rem;
+}
+.transition-bg-color {
+  transition: background-color 300ms linear;
+}
+
+.need_your_attention {
+  color: #f44336;
+}
+
+.mat-button-toggle-checked {
+  background-color: rgba(12, 90, 98, 0.3);
+}
+
+::ng-deep mat-panel-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+mat-header-cell {
+  min-width: 6rem;
+  padding: 0 0.3rem;
+}
+
+mat-cell {
+  min-width: 6rem;
+  padding: 0 0.3rem;
+}
+
+mat-header-cell:last-of-type {
+  min-width: 7rem;
+}
+
+mat-cell:last-of-type {
+  min-width: 7rem;
+}
+
+::ng-deep .mat-expansion-panel-content {
+  overflow: auto !important;
+
+  .mat-expansion-panel-body {
+    min-width: min-content;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  mat-panel-title {
+    margin-right: 10px;
+    margin-bottom: 0;
+
+    span {
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+  }
+
+  mat-panel-description span {
+    font-size: 0.8rem;
+  }
+  :first-of-type mat-table {
+    mat-cell {
+      span {
+        font-size: 0.7rem;
+      }
+      mat-chip {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+        min-height: 20px;
+        height: 1px;
+        overflow: hidden;
+      }
+    }
+  }
+
+  mat-header-cell:first-of-type {
+    padding-left: 0.3rem;
+  }
+
+  mat-cell:first-of-type {
+    padding-left: 0.3rem;
+  }
+}

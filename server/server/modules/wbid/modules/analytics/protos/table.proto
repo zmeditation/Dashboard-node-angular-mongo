@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package wbid.analytics.charts;
+
+message Filters {
+    string name = 1; // manager_id | publisher_id| site | ad_unit_code | bidder | ad_unit_type | ad_unit_size | country | device | os | browser
+    repeated string data = 2;
+    string type = 3; //inc OR exc
+}
+
+message TableResponse {
+    repeated Filters filters = 1;
+    repeated string groups = 2;//day | manager_id | publisher_id| site | ad_unit_code | bidder | ad_unit_type | ad_unit_size | country | device | os | browser
+    string period_start = 3;//"2019-11-01"
+    string period_end = 4;//"2019-11-07"
+
+}
+
+message Metrics {
+    int64 impressions = 1;
+    int64 requests = 2;
+    float fill_rate = 3;
+    float revenue = 4;
+    float cpm = 5;
+    int64 call = 6;
+    int64 show = 7;
+    int64 click = 8;
+}
+
+message TableRow {
+    repeated string groupMetricsData = 1;
+    Metrics metrics = 2;
+}
+
+message TableRequest {
+    repeated TableRow data = 1;
+    TableRow totalData = 2;
+    repeated string metrics = 3;
+}
+
+service AnalyticTable {
+    rpc GetData (TableResponse) returns (TableRequest) {}
+}

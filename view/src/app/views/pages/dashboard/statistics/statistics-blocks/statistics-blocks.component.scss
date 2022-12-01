@@ -1,0 +1,37 @@
+mat-card {
+  overflow: visible !important;
+  padding: 0.8rem;
+}
+
+::ng-deep mat-row {
+  mat-cell {
+    font-size: 0.75rem !important;
+  }
+
+  mat-cell:first-of-type {
+    padding-left: 0.5rem;
+  }
+
+  mat-cell:last-of-type {
+    padding-right: 0.5rem;
+  }
+}
+
+::ng-deep mat-header-row {
+  mat-header-cell:first-of-type {
+    padding-left: 0.5rem;
+  }
+  mat-header-cell:last-of-type {
+    padding-right: 0.5rem;
+  }
+}
+
+::ng-deep div mat-card-title.mat-card-title {
+  font-size: 0.8rem !important;
+}
+
+@media only screen and (min-width: 960px) and (max-width: 970px) {
+  mat-card {
+    padding: 5px;
+  }
+}

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package rtb.analytics;
+
+message Filters {
+  string name = 1; // dsp_name | ad_unit | pub_id | ssp_pub_id | country | device_type | size | is_hb | model | os | source_type | imp_type | cur | connectiontype | domain | site_err
+  repeated string data = 2;
+  string type = 3; //inc OR exc
+}
+
+message TableResponse {
+  repeated Filters filters = 1; // dsp_name | ad_unit | pub_id | ssp_pub_id | country | device_type | size | is_hb | model | os | source_type | imp_type | cur | connectiontype | domain | site_err
+  repeated string groups = 2; //month | day | dsp_name | ad_unit | pub_id | ssp_pub_id | country | device_type | size | is_hb | model | os | source_type | imp_type | cur | connectiontype | domain | site_err
+  string period_start = 3; //"2019-11-01"
+  string period_end = 4; //"2019-11-07"
+
+}
+
+message Metrics {
+  float revenue_imp = 1;
+  float cpm_imp = 2;
+  float cpm_win = 3;
+  float cpm_all = 4;
+  int64 ssp_requests = 5;
+  int64 ssp_responses = 6;
+  int64 dsp_requests = 7;
+  int64 dsp_win = 8;
+  int64 dsp_response = 9;
+  int64 dsp_timeout = 10;
+  int64 dsp_no_content = 11;
+  int64 dsp_err = 12;
+  int64 init = 13;
+  int64 click = 14;
+  int64 view = 15;
+  int64 impression = 16;
+  float ssp_fill_rate = 17;
+  float ssp_imp_fill_rate = 18;
+  float dsp_fill_rate = 19;
+  float dsp_win_fill_rate = 20;
+  float dsp_imp_fill_rate = 21;
+}
+
+message TableRow {
+  repeated string groupMetricsData = 1;
+  Metrics metrics = 2;
+}
+
+message TableRequest {
+  repeated TableRow data = 1;
+  TableRow totalData = 2;
+  repeated string metrics = 3;
+}
+
+service AnalyticTable {
+  rpc GetData (TableResponse) returns (TableRequest) {
+  }
+}

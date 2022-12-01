@@ -1,0 +1,25 @@
+.format-list-of-stings {
+  overflow: auto;
+  border: 0.5px solid rgba(190, 190, 190, 0.6);
+}
+
+.format-list-of-stings mat-list-item {
+  border-bottom: 0.5px solid rgba(160, 170, 160, 0.6);
+  transition: background-color 300ms linear;
+  min-height: 4vh;
+  height: 100%;
+}
+
+.format-list-of-stings mat-list-item:hover {
+  background-color: rgba(220, 220, 230, 0.8);
+}
+
+.actions-container {
+  height: 15vh;
+  padding: 1rem 0 0 0;
+}
+
+.absent-string {
+  color: rgba(240, 240, 240, 1);
+  background-color: rgba(239, 64, 55, 0.9);
+}

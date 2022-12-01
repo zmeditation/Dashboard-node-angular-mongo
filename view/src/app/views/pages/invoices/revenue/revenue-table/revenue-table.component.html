@@ -1,0 +1,110 @@
+<mat-card *ngIf="role && role !== 'PUBLISHER'">
+  <mat-card-content fxLayout="row">
+    <div id="revenues-filter">
+      <mat-form-field>
+        <label>
+          <input
+            matInput
+            [max]="maxDate"
+            [min]="minDate"
+            [placeholder]="'REVENUE.PERIOD' | translate"
+            (click)="revenueDateRange.clearValidators(); revenueDateRange.setErrors(null)"
+            [satDatepicker]="datepicker"
+            readonly
+            [formControl]="revenueDateRange"
+          />
+        </label>
+        <sat-datepicker #datepicker [rangeMode]="true" startView="year"
+                        (monthSelected)="onMonthSelected($event, datepicker)">
+        </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="datepicker"></sat-datepicker-toggle>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select [placeholder]="'REVENUE.PUBLISHER' | translate" [formControl]="publishersListControl"
+                    disableOptionCentering>
+          <mat-select-search [formControl]="pubsFilter"></mat-select-search>
+          <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub">
+            {{ pub.name }}
+          </mat-option>
+        </mat-select>
+        <button matSuffix *ngIf="publishersListControl.value" mat-icon-button aria-label="Clear"
+                (click)="_reset($event)" class="mat-select-search-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" class="margin--left-15"
+            (click)="searchRevenuesByQuery(revenueDateRange.value, publishersListControl.value)"
+            [disabled]="!revenueDateRange.value && !publishersListControl.value" id="revenue-search-button">
+      {{ 'REVENUE.SEARCH' | translate }}
+      <mat-icon>manage_search</mat-icon>
+    </button>
+    <div id="spinner">
+      <mat-progress-bar mode="buffer" *ngIf="!loaded"></mat-progress-bar>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-content>
+    <ngx-datatable
+      id="revenue-datatable"
+      [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      [reorderable]="false"
+      [columnMode]="'force'"
+      [footerHeight]="50"
+      [headerHeight]="50"
+      [limit]="10"
+      [rowHeight]="'auto'"
+      [rows]="revenues"
+      [sorts]="[{ prop: 'publisher.name', dir: 'asc' }]"
+      [scrollbarH]="false"
+      [messages]="{
+      emptyMessage: 'INVOICES.EMPTY' | translate,
+      totalMessage: 'INVOICES.TOTAL' | translate
+      }"
+      class="bootstrap invoices-list"
+    >
+      <ngx-datatable-column
+        [sortable]="true"
+        [resizeable]="false"
+        prop="publisher.name"
+        *ngIf="role && role !== 'PUBLISHER'"
+        [draggable]="false"
+        [name]="'REVENUE.PUBLISHER' | translate | uppercase"
+        [canAutoResize]="false"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['publisher']['name'] }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [sortable]="true"
+        [resizeable]="false"
+        prop="begin"
+        [draggable]="false"
+        [name]="'REVENUE.PERIOD' | translate | uppercase"
+        [canAutoResize]="false"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ parseDatePeriod(row['begin'], row['end']) }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [sortable]="true"
+        [resizeable]="false"
+        prop="total"
+        [draggable]="false"
+        [name]="'REVENUE.REVENUE_SUM' | translate | uppercase"
+        [canAutoResize]="false"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span (click)="showDetailedRevenue(row)" class="revenue-value">
+          {{ calculateSum(row['revenue'], row['revenue_rtb'], row['deduction']) }}
+            </span>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </mat-card-content>
+</mat-card>

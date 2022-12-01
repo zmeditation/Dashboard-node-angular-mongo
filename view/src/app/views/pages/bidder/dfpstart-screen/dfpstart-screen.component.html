@@ -1,0 +1,27 @@
+<app-console></app-console>
+<mat-card>
+  <mat-card-header>
+    <div class="title-background" style="display: flex">
+      <h2>{{ 'WBID.PROPERTIES.INTEGRATION.TITLE' | translate }}</h2>
+      <a href="https://adwmg.com/docs/wiki/wbid/publisher-guide/" target="_blank">
+        <mat-icon [matTooltip]="'WBID.PROPERTIES.INTEGRATION.TOOLTIP' | translate" matTooltipPosition="after" color="warn">help_outline </mat-icon>
+      </a>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div id="content">
+      <form class="setup-form">
+        <mat-form-field id="network-id">
+          <input type="text" matInput placeholder="Network ID" [formControl]="networkForm" />
+          <mat-error *ngIf="networkForm.hasError('pattern') && !networkForm.hasError('required')">
+            {{ 'WBID.PROPERTIES.INTEGRATION.NETWORK_ID_ERROR' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </form>
+      <button mat-button mat-raised-button color="primary" style="margin-top: 5px" (click)="integrate()" [disabled]="!networkForm.valid">
+        {{ 'WBID.PROPERTIES.INTEGRATION.LOGIN' | translate }}
+      </button>
+      <span>{{ 'WBID.PROPERTIES.INTEGRATION.NETWORK_TIP' | translate }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

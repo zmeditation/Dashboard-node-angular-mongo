@@ -1,0 +1,11 @@
+<mat-form-field class="full-width">
+  <input
+    matInput
+    type="text"
+    class="form-control"
+    [(ngModel)]="value"
+    (keyup)="searchEvent($event.target.value)"
+    (keyup.enter)="domainSearchEvent($event, value)"
+    placeholder="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.SEARCH' | translate }}"
+  />
+</mat-form-field>

@@ -1,0 +1,71 @@
+image: node:14.15.1
+
+pipelines:
+  branches:
+    development:
+     - step:
+        name: build and Test
+        caches:
+         - node
+        script:
+           - npm install
+           - npm test
+     - step:
+        name: Build docker 
+        script:
+          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+          - docker build . --file Dockerfile --tag ${IMAGE_NAME}
+          - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+        services:
+          - docker
+        caches:
+          - docker
+        artifacts:
+           - "*.tar"
+     - step:
+            name: Deploy to Docker
+            deployment: development
+            script:
+            - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG #account name
+            - docker load --input "${IMAGE_NAME}.tar"
+            - VERSION="dev_back-0.1.${BITBUCKET_BUILD_NUMBER}"
+            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+            - docker push "${IMAGE}:${VERSION}"
+            services:
+            - docker
+  tags:
+   '*':
+     - step:
+        name: build and Test
+        caches:
+         - node
+        script:
+           - npm install
+           - npm test
+     - step:
+        name: Build docker 
+        script:
+          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+          - docker build . --file Dockerfile --tag ${IMAGE_NAME}
+          - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+        services:
+          - docker
+        caches:
+          - docker
+        artifacts:
+           - "*.tar"
+     - step:
+            name: Deploy to Docker
+            deployment: Staging
+            script:
+            - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG #account name
+            - docker load --input "${IMAGE_NAME}.tar"
+            - VERSION="staging-${BITBUCKET_TAG}"
+            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+            - docker push "${IMAGE}:${VERSION}"
+            services:
+            - docker  

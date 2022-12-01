@@ -1,0 +1,235 @@
+<div class="api-deletion-container">
+  <form
+    [formGroup]="apiDeletionForm"
+    fxLayout="row wrap"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="space-around"
+  >
+    <section
+      fxFlex="31"
+      fxLayout="row"
+      fxLayoutAlign="space-around center"
+      fxLayout.lt-md="column"
+      fxFlex.lt-md="100"
+    >
+      <div fxFlex="35" class="input-label-container">
+        <p>
+          {{
+            "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.SELECT_PROGRAMMATIC"
+              | translate
+              | uppercase
+          }}
+        </p>
+      </div>
+      <mat-form-field fxFlex class="full-width">
+        <mat-select
+          formControlName="programmatic"
+          (selectionChange)="requestPublisherList($event.value)"
+          placeholder="{{
+            'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.PLACEHOLDER_PROGRAMMATIC'
+              | translate
+          }}"
+        >
+          <mat-option
+            *ngFor="let programmatic of programmaticsArray"
+            [value]="programmatic.value"
+            ngDefaultControl
+          >
+            {{ programmatic.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+
+    <section
+      fxFlex="31"
+      fxLayout="row"
+      fxLayoutAlign="space-around center"
+      fxLayout.lt-md="column"
+      fxFlex.lt-md="100"
+    >
+      <div fxFlex="35" class="input-label-container">
+        <p>
+          {{
+            "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.SELECT_PUBLISHER"
+              | translate
+              | uppercase
+          }}
+        </p>
+      </div>
+      <mat-form-field fxFlex class="full-width">
+        <input
+          type="text"
+          placeholder="{{
+            'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.PLACEHOLDER_PUBLISHER'
+              | translate
+          }}"
+          aria-label="String"
+          matInput
+          formControlName="publisher"
+          [matAutocomplete]="auto_pub"
+        />
+        <mat-autocomplete #auto_pub="matAutocomplete">
+          <mat-option
+            *ngFor="let publisher of filteredPublisher | async"
+            [value]="publisher.name"
+          >
+            <div (click)="requestPropertiesList(publisher)">
+              {{ publisher.name }}
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </section>
+
+    <section
+      fxFlex="31"
+      fxLayout="row"
+      fxLayoutAlign="space-around center"
+      fxLayout.lt-md="column"
+      fxFlex.lt-md="100"
+    >
+      <div fxFlex="35" class="input-label-container">
+        <p>
+          {{
+            "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.SELECT_PROPERTIES"
+              | translate
+              | uppercase
+          }}
+        </p>
+      </div>
+      <mat-form-field fxFlex class="full-width">
+        <input
+          type="text"
+          placeholder="{{
+            'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.PLACEHOLDER_PROPERTIES'
+              | translate
+          }}"
+          aria-label="Number"
+          matInput
+          formControlName="properties"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let property of filteredOptions | async"
+            [value]="finishPropertiesList"
+          >
+            <div (click)="optionClicked($event, property)">
+              <mat-checkbox
+                [checked]="property['selected']"
+                (change)="toggleSelection(property)"
+                (click)="$event.stopPropagation()"
+              >
+                {{ property["property_id"] }}
+              </mat-checkbox>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+        <!--        <mat-select formControlName="properties"-->
+        <!--                    placeholder="{{'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.PLACEHOLDER_PROPERTIES' | translate }}">-->
+        <!--          <mat-option [value]="" [style.color]="'red'">None</mat-option>-->
+        <!--          <mat-option *ngFor="let property of propertiesList" [value]="property" ngDefaultControl>-->
+        <!--            {{property['property_id']}}-->
+        <!--          </mat-option>-->
+        <!--        </mat-select>-->
+      </mat-form-field>
+    </section>
+
+    <section
+      fxFlex="45"
+      fxLayout="row"
+      fxLayoutAlign="flex-end center"
+      fxFlex.lt-md="100"
+      fxLayout.lt-md="column"
+      fxLayoutAlign.lt-md="stretch"
+    >
+      <div class="input-label-container">
+        <p class="text-sm basic-form-p">
+          {{
+            "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.FROM"
+              | translate
+              | uppercase
+          }}:
+        </p>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex="45" fxFlex.lt-md="100">
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            formControlName="dateFrom"
+            [matDatepicker]="pickerFrom"
+            [max]="unavailabilityRange.maxFrom || unavailabilityRange.max"
+            [(ngModel)]="unavailabilityRange.min"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.CHOOSE_DATE'
+                | translate
+            }}"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFrom"
+          ></mat-datepicker-toggle>
+          <mat-datepicker
+            #pickerFrom
+            disabled="false"
+            [touchUi]="isMobile"
+          ></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section
+      fxFlex="45"
+      fxLayout="row"
+      fxLayoutAlign="flex-start center"
+      fxFlex.lt-md="100"
+      fxLayout.lt-md="column"
+      fxLayoutAlign.lt-md="stretch"
+    >
+      <div class="input-label-container">
+        <p>
+          {{
+            "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.TO"
+              | translate
+              | uppercase
+          }}:
+        </p>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center" fxFlex="45" fxFlex.lt-md="100">
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            formControlName="dateTo"
+            [matDatepicker]="pickerTo"
+            [min]="unavailabilityRange.min"
+            [max]="unavailabilityRange.max"
+            [(ngModel)]="unavailabilityRange.maxFrom"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.CHOOSE_DATE'
+                | translate
+            }}"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerTo"
+          ></mat-datepicker-toggle>
+          <mat-datepicker
+            #pickerTo
+            disabled="false"
+            [touchUi]="isMobile"
+          ></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section fxFlex="100" fxLayoutAlign="center center" class="mt-1 mb-1">
+      <button color="warn" mat-stroked-button (click)="openDialog()">
+        {{
+          "REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.BUTTON_DELETE_RECORDS"
+            | translate
+        }}
+      </button>
+    </section>
+  </form>
+</div>

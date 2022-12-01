@@ -1,0 +1,12 @@
+$breakpoint-phone: 576px;
+
+button {
+  width: 170px;
+}
+
+
+@media (max-width: $breakpoint-phone) {
+  form {
+    flex-direction: column!important;
+  }
+}

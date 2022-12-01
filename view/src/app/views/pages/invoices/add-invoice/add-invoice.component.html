@@ -1,0 +1,76 @@
+<mat-card fxLayout="column">
+  <div fxLayout="column">
+    <div fxLayout="row">
+      <mat-form-field>
+        <label>
+          <input
+            matInput
+            #dateRange
+            [max]="maxDate"
+            [min]="minDate"
+            [placeholder]="'INVOICES.VALID' | translate"
+            (click)="invoiceDateRange.clearValidators()"
+            [satDatepicker]="datepicker"
+            readonly
+            [formControl]="invoiceDateRange"
+          />
+        </label>
+        <sat-datepicker #datepicker [rangeMode]="true" startView="year" (monthSelected)="onMonthSelected($event, datepicker, dateRange)"> </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="datepicker"> </sat-datepicker-toggle>
+      </mat-form-field>
+      <mat-form-field *ngxPermissionsOnly="['canEditInvoiceStatus']">
+        <mat-select [placeholder]="'INVOICES.PUBLISHERS' | translate" [formControl]="publishersListControl" disableOptionCentering>
+          <mat-select-search [formControl]="pubsFilter"></mat-select-search>
+          <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub">
+            {{ pub.name }}
+          </mat-option>
+        </mat-select>
+        <button matSuffix *ngIf="publishersListControl.value" mat-icon-button aria-label="Clear" (click)="_reset($event)" class="mat-select-search-clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="margin--left-15" (click)="inputRef.click()" [disabled]="!invoiceDateRange.value">
+        {{ 'INVOICES.UPLOAD' | translate }}
+        <mat-icon>publish</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" class="margin--left-15" (click)="loadExample()">
+        {{ 'INVOICES.EXAMPLE' | translate }}
+        <mat-icon>receipt_long</mat-icon>
+      </button>
+    </div>
+    <div id="files-container" fxLayout="column">
+      <div fxLayout="column" class="margin--bottom-15" *ngFor="let item of uploader.queue; index as index">
+        <div fxLayout="row" fxLayoutAlign="baseline center" class="font-size--20px" #item>
+          <ng-container *ngTemplateOutlet="(item.isCancel && fileCanceled) || (item.isReady && fileInProgress) || loaded; context: { item: item }">
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" #inputRef ng2FileSelect [uploader]="uploader" (click)="onFileClick($event)" hidden />
+
+  <ng-template #fileInProgress let-item="item">
+    <mat-spinner diameter="15"></mat-spinner>
+    <span class="font-size--15px file-name">{{ 'INVOICES.UPLOADING' | translate }}</span>
+    <mat-icon class="cursor--pointer" inline="true" color="warn" (click)="cancelFileUpload()"> close </mat-icon>
+  </ng-template>
+
+  <ng-template #fileCanceled let-item="item">
+    <mat-icon inline="true" color="warn" style="cursor: pointer"> close </mat-icon>
+    <span [translate]="'INVOICES.UPLOAD_CANCELLED'" [translateParams]="{ file: item.file.name }" class="font-size--15px file-name"></span>
+  </ng-template>
+
+  <ng-template #loaded let-item="item">
+    <mat-icon inline="true">insert_drive_file</mat-icon>
+    <span class="font-size--15px file-name">
+      {{ item.file.name }}
+    </span>
+    <!--        <mat-icon class="delete-icon cursor&#45;&#45;pointer" inline="true"
+                          (click)="removeInvoice(item)" color="warn"
+                >
+                    auto_delete
+                </mat-icon>-->
+    <mat-icon inline color="primary">done</mat-icon>
+  </ng-template>
+</mat-card>

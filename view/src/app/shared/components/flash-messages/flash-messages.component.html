@@ -1,0 +1,13 @@
+<div [ngClass]="containerClasses" *ngIf="showMessage">
+  <div [ngClass]="flashClasses" class="flashMessage mat-box-shadow" [@animate]="{ value: '*', params: { y: animPos, delay: '300ms' } }">
+    <span>{{ message | translate }}</span>
+    <div *ngIf="showPrompt">
+      <button mat-button="success" (click)="sendMessage(true)">
+        {{ 'YES' | translate }}
+      </button>
+      <button mat-button="warn" (click)="sendMessage(false)">
+        {{ 'NO' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

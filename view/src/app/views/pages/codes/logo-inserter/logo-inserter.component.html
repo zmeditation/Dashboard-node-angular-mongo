@@ -1,0 +1,197 @@
+<mat-card class="p-0" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{ 'CODES_PAGES.LOGO_INSERTER.WMG_LOGO_INSERTER' | translate }}
+    </div>
+    <mat-divider></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-horizontal-stepper [linear]="isLinear" #stepper>
+      <mat-step [stepControl]="firstFormGroup" editable="true">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>{{ 'CODES_PAGES.LOGO_INSERTER.INSERT_CODE' | translate }}</ng-template>
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              name="code"
+              placeholder="{{ 'CODES_PAGES.LOGO_INSERTER.PASTE_YOUR_CODE' | translate }}"
+              matTextareaAutosize
+              matAutosizeMinRows="15"
+              matAutosizeMaxRows="30"
+              formControlName="firstCtrl"
+              required
+              style="line-height: 1.6em"
+            ></textarea>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button class="mat-primary" (click)="transform_1(stepper)" *ngIf="showTransformBtn">
+              {{ 'CODES_PAGES.LOGO_INSERTER.NEXT' | translate }}
+            </button>
+
+            <div id="spinner-div" *ngIf="enableSpinner" fxLayoutAlign="center">
+              <mat-progress-spinner [diameter]="40" mode="indeterminate" color="accent"></mat-progress-spinner>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step editable="false" [stepControl]="secondFormGroup">
+        <ng-template matStepLabel>{{ 'CODES_PAGES.LOGO_INSERTER.WMG_LOGO_LOCATION' | translate }}</ng-template>
+        <form [formGroup]="secondFormGroup">
+          <mat-form-field class="full-width" style="display: none">
+            <textarea
+              matInput
+              placeholder="{{ 'CODES_PAGES.LOGO_INSERTER.RESULT' | translate }}"
+              matTextareaAutosize
+              matAutosizeMinRows="15"
+              matAutosizeMaxRows="30"
+              formControlName="secondCtrl"
+              required
+              readonly
+              style="line-height: 1.6em"
+            ></textarea>
+          </mat-form-field>
+
+          <ng-template matStepLabel>{{ 'CODES_PAGES.LOGO_INSERTER.WMG_LOGO_LOCATION' | translate }}</ng-template>
+
+          <mat-form-field class="full-width" (click)="resetChoseLocation()">
+            <mat-select placeholder="Location" formControlName="subSecondCtrl" required>
+              <mat-option *ngFor="let loca of logotypeLocations" [value]="loca" (click)="chooseLocation()">
+                {{ 'CODES_PAGES.LOGO_INSERTER.' + loca.viewValue | uppercase | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+        <div>
+          <button mat-raised-button color="accent" matStepperPrevious style="margin-right: 3px">
+            {{ 'CODES_PAGES.LOGO_INSERTER.BACK' | translate }}
+          </button>
+          <button mat-raised-button class="mat-primary" matStepperNext (click)="transform_2(stepper)" *ngIf="showTransformBtn">
+            {{ 'CODES_PAGES.LOGO_INSERTER.NEXT' | translate }}
+          </button>
+          <button mat-raised-button class="mat-warn" style="margin-left: 3px" (click)="destroyPreview()" *ngIf="showDestroyPreviewBtn">
+            {{ 'CODES_PAGES.LOGO_INSERTER.DESTROY_PREVIEW' | translate }}
+          </button>
+        </div>
+      </mat-step>
+      <mat-step editable="false" [stepControl]="thirdFormGroup">
+        <ng-template matStepLabel>{{ 'CODES_PAGES.LOGO_INSERTER.DONE' | translate }}</ng-template>
+        <form [formGroup]="thirdFormGroup">
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              placeholder="{{ 'CODES_PAGES.LOGO_INSERTER.RESULT' | translate }}"
+              matTextareaAutosize
+              matAutosizeMinRows="15"
+              matAutosizeMaxRows="30"
+              formControlName="thirdCtrl"
+              readonly
+              style="line-height: 1.6em"
+            ></textarea>
+          </mat-form-field>
+        </form>
+
+        <div>
+          <button mat-raised-button color="accent" (click)="resetForNewCode(stepper)" matStepperPrevious style="margin-right: 3px">
+            {{ 'CODES_PAGES.LOGO_INSERTER.NEW_CODE' | translate }}
+          </button>
+
+          <button mat-raised-button class="mat-primary" (click)="showPreview()" *ngIf="showPreviewBtn">
+            {{ 'CODES_PAGES.LOGO_INSERTER.PREVIEW' | translate }}
+          </button>
+
+          <button mat-raised-button class="mat-warn" (click)="destroyPreview()" *ngIf="showDestroyPreviewBtn">
+            {{ 'CODES_PAGES.LOGO_INSERTER.DESTROY_PREVIEW' | translate }}
+          </button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card-content>
+</mat-card>
+
+<app-ad-preview *ngIf="showPreviewContainer" [resultCode]="result"></app-ad-preview>
+
+<div>
+  <h4>Sample</h4>
+
+  <pre
+    matInput
+    [innerText]="sample"
+    matTextareaAutosize
+    matAutosizeMinRows="15"
+    matAutosizeMaxRows="30"
+    required
+    disabled
+    style="line-height: 1.5em; font-size: 0.8em"
+  ></pre>
+</div>
+
+<!--<div>-->
+<!--<h5 style="margin-top: 0;">Logo Inserter</h5>-->
+<!--<div fxLayout="row" fxLayoutWrap="wrap">-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="100">-->
+<!--<mat-card>-->
+<!--<mat-form-field class="full-width">-->
+<!--<textarea matInput name="code" [disabled]="disableCodeInput" [(ngModel)]="code" placeholder="Past Your Code" matTextareaAutosize matAutosizeMinRows="15" matAutosizeMaxRows="15"></textarea>-->
+<!--</mat-form-field>-->
+<!--</mat-card>-->
+<!--</div>-->
+
+<!--<mat-card fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="100">-->
+<!--<div class="mt-1" fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="center">-->
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-primary"-->
+<!--(click)="transform()"-->
+<!--*ngIf="showTransformBtn">-->
+
+<!--<mat-icon>forward</mat-icon>-->
+<!--</button>-->
+
+<!--<div id="spinner-div" *ngIf="enableSpinner">-->
+<!--<mat-progress-spinner [diameter]="40" mode="indeterminate" color="accent"></mat-progress-spinner>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="center">-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="100" class="mt-1 mb-1">-->
+<!--<mat-divider></mat-divider>-->
+<!--</div>-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="100">-->
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-accent full-width"-->
+<!--(click)="showPreview()"-->
+<!--*ngIf="showPreviewBtn">Preview</button>-->
+
+<!--<button-->
+<!--mat-raised-button-->
+<!--class="mat-warn full-width"-->
+<!--(click)="destroyPreview()"-->
+<!--*ngIf="showDestroyPreviewBtn">Destroy Preview</button>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</mat-card>-->
+
+<!--<div fxFlex="100" fxFlex.gt-sm="33" fxFlex.sm="50" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">-->
+<!--<mat-card>-->
+<!--<form>-->
+<!--<mat-form-field class="full-width">-->
+<!--<textarea matInput [(ngModel)]="result" [ngModelOptions]="{standalone: true}" placeholder="Result" matTextareaAutosize matAutosizeMinRows="15" matAutosizeMaxRows="15"></textarea>-->
+<!--</mat-form-field>-->
+<!--</form>-->
+<!--</mat-card>-->
+<!--</div>-->
+<!--</div>-->
+<!---->
+<!--<app-ad-preview *ngIf="showPreviewContainer" [resultCode]="result"></app-ad-preview>-->
+<!---->
+<!--<div #adb>-->
+<!--<div id="ad-2153542543"></div>-->
+<!--</div>-->
+
+<!--</div>-->

@@ -1,0 +1,42 @@
+<div class="h-100" fxLayout="column">
+  <div class="mat-bg-primary top-header" fxLayoutAlign="center center">
+    <h6 class="m-0">{{ 'NOTIFICATIONS.NOTIFICATIONS' | translate }}</h6>
+  </div>
+
+  <app-create-notification *ngIf="isCanAddNotice" class="create-notification"></app-create-notification>
+
+  <!-- When first loaded -->
+  <ng-container #outlet>
+    <div class="notification-blocks" fxFlex="100" *ngIf="!isRenderedComponent">
+      <app-notification-list
+        *ngFor="let noticeObj of notifications"
+        [noticeObj]="noticeObj"
+        [currentUserId]="currentUserId"
+        [notWatchedNotices]="notWatchedNotices"
+        (getNotices)="setNotificationsByUserId($event)"
+      >
+      </app-notification-list>
+    </div>
+  </ng-container>
+
+  <!-- After receive new notification data set block into #outlet  -->
+  <ng-template #content>
+    <div class="notification-blocks" fxFlex="100">
+      <app-notification-list
+        *ngFor="let noticeObj of notifications"
+        [noticeObj]="noticeObj"
+        [currentUserId]="currentUserId"
+        [notWatchedNotices]="notWatchedNotices"
+        [showNoticesCollection]="(openNoticeBlockName === noticeObj.typeDB) ? true : false"
+        (getNotices)="setNotificationsByUserId($event)"
+      >
+      </app-notification-list>
+    </div>
+  </ng-template>
+
+  <div class="footer-button" fxLayoutAlign="center flex-start">
+    <button mat-stroked-button (click)="deleteNoticesCollections($event)" [disabled]="noticesCount < 1">
+      {{ buttonText | translate }}
+    </button>
+  </div>
+</div>

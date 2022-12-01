@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ 'WBID.PROPERTIES.TABLE.ADSTXT' | translate }} for {{data[0].domain}}</h2>
+<mat-dialog-content class="mat-typography">
+  <div id="ads-txt-container" style="display: grid">
+    <div *ngIf="data[0]['adsTxtStrings'] === false">{{'WBID.PROPERTIES.TABLE.NOADSTXT' | translate}}</div>
+    <div *ngFor="let string of data[0]['adsTxtStrings']" style="display: flex; align-items: center">
+      <mat-icon *ngIf="!string['present']" style="color: #f44336">clear</mat-icon>
+      <mat-icon *ngIf="string['present']" style="color: #008e7a">done</mat-icon>
+      {{string['domain']}}, {{string['publisherAccountID']}}, {{string['accountType']}}, {{string['certificateAuthorityID']}}
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="copyAdsTxt()" [disabled]="clicked" *ngIf="data[0]['adsTxtStrings'] !== false">
+    {{ 'WBID.PROPERTIES.TABLE.ADSTXTCOPY' | translate }}
+  </button>
+  <button mat-button mat-dialog-close>{{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}</button>
+</mat-dialog-actions>

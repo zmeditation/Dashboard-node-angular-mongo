@@ -1,0 +1,31 @@
+<form [formGroup]="updateVersionModel">
+  <mat-form-field class="mr-1">
+    <mat-label>Version</mat-label>
+    <input matInput formControlName="version" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Release date</mat-label>
+    <input matInput formControlName="releaseDate" [matDatepicker]="updateReleaseDate" />
+    <mat-datepicker-toggle matSuffix [for]="updateReleaseDate"></mat-datepicker-toggle>
+    <mat-datepicker #updateReleaseDate></mat-datepicker>
+  </mat-form-field>
+  <mat-slide-toggle formControlName="isOutside">
+    {{ updateVersionModel.get('isOutside').value ? 'Outside' : 'Inside' }}
+  </mat-slide-toggle>
+  <br />
+  <mat-form-field *ngIf="!updateVersionModel.get('isOutside').value" class="w-100">
+    <mat-label>Inside description</mat-label>
+    <textarea matInput class="versions-popup-form__description" formControlName="insideDescription"></textarea>
+  </mat-form-field>
+  <mat-form-field *ngIf="updateVersionModel.get('isOutside').value" class="w-100">
+    <mat-label>Outside description</mat-label>
+    <textarea matInput class="versions-popup-form__description" formControlName="outsideDescription"></textarea>
+  </mat-form-field>
+  <div mat-dialog-actions class="versions-popup-form__actions">
+    <button type="button" mat-raised-button color="primary" (click)="updateEvent()">Save</button>
+    <span fxFlex></span>
+    <button type="button" mat-raised-button color="warn" (click)="deleteEvent()">Delete</button>
+    <span fxFlex></span>
+    <button type="button" color="accent" mat-raised-button (click)="closeEvent()">Close</button>
+  </div>
+</form>

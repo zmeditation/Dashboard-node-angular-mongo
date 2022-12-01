@@ -1,0 +1,72 @@
+<h6 class="pb-1 mat-color-accent fw-500">
+  {{ 'SETTINGS_PERMISSIONS.DELETION_BLOCK' | translate | uppercase }}
+</h6>
+
+<form [formGroup]="permissionsForm" #formDirective="ngForm" (ngSubmit)="delPermission(formDirective)" fxLayout="row wrap" fxLayoutAlign="space-between center">
+  <section fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="space-around flex-start">
+    <div fxFlex="35" class="input-label-container">
+      <p>{{ 'SETTINGS_PERMISSIONS.SELECT_ROLE' | translate | uppercase }}</p>
+    </div>
+
+    <mat-form-field fxFlex class="full-width">
+      <mat-select formControlName="roles" placeholder="{{ 'SETTINGS_PERMISSIONS.ROLE' | translate }}">
+        <mat-option *ngFor="let role of rolesArray" [value]="role">
+          {{ role }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <section fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="space-around flex-start">
+    <div fxFlex="35" class="input-label-container">
+      <p>{{ 'SETTINGS_PERMISSIONS.SELECT_PUB' | translate | uppercase }}</p>
+    </div>
+
+    <mat-form-field fxFlex class="full-width">
+      <input
+        type="text"
+        placeholder="{{ 'SETTINGS_PERMISSIONS.PUBLISHER' | translate }}"
+        aria-label="String"
+        matInput
+        formControlName="publishers"
+        [matAutocomplete]="publishers_"
+      />
+      <mat-autocomplete #publishers_="matAutocomplete">
+        <mat-option *ngFor="let publisher of publishersFilter | async" [value]="publisher">
+          {{ publisher }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </section>
+
+  <section fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="space-around flex-start">
+    <div fxFlex="35" class="input-label-container">
+      <p>{{ 'SETTINGS_PERMISSIONS.SELECT_PERM' | translate | uppercase }}</p>
+    </div>
+
+    <mat-form-field fxFlex class="full-width">
+      <input
+        type="text"
+        placeholder="{{ 'SETTINGS_PERMISSIONS.PERMISSION' | translate }}"
+        aria-label="String"
+        matInput
+        formControlName="permissions"
+        [matAutocomplete]="permissions_"
+      />
+
+      <mat-autocomplete #permissions_="matAutocomplete">
+        <mat-option *ngFor="let permission of permissionsFilter | async" [value]="selectedPermissions" (click)="optionClicked($event, permission)">
+          <mat-checkbox [checked]="selectedPermissions.indexOf(permission) !== -1" (change)="permissionChecked(permission)" (click)="$event.stopPropagation()">
+            {{ permission }}
+          </mat-checkbox>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </section>
+
+  <section fxFlex="100" fxLayoutAlign="center center" class="mt-1">
+    <button color="primary" type="submit" mat-stroked-button [disabled]="permissionsForm.invalid">
+      {{ 'SETTINGS_PERMISSIONS.DELETE_BUTTON' | translate }}
+    </button>
+  </section>
+</form>

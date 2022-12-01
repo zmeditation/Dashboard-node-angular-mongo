@@ -1,0 +1,9 @@
+<mat-card [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+  <div [ngSwitch]="selected">
+    <ng-template ngSwitchCase="main"><app-report-viewer></app-report-viewer></ng-template>
+    <ng-template ngSwitchCase="TAC"><app-tac-report></app-tac-report></ng-template>
+    <ng-template ngSwitchCase="WBID"><app-wbid-tables></app-wbid-tables></ng-template>
+    <ng-template ngSwitchCase="oRTB"><app-ortb-report [user]="user"></app-ortb-report></ng-template>
+    <ng-template ngSwitchDefault><app-report-viewer></app-report-viewer></ng-template>
+  </div>
+</mat-card>

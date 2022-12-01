@@ -1,0 +1,30 @@
+.statistics-table-styles {
+}
+
+.statistics-table-styles mat-header-cell {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.statistics-table-styles mat-cell {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-width: 767px) {
+  .statistics-table-styles mat-cell {
+    font-size: 0.8rem;
+    padding: 0;
+  }
+
+  .statistics-table-styles mat-header-cell {
+    font-size: 0.8rem;
+    padding: 0;
+  }
+
+  h5 {
+    font-size: 0.9rem;
+  }
+}

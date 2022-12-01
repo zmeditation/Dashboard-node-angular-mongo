@@ -1,0 +1,112 @@
+# @format
+
+image: node:14.16.0
+
+options:
+  docker: true
+  size: 2x
+
+pipelines:
+  branches:
+    development:
+      - step:
+          name: build and Test
+          caches:
+            - node
+          script:
+            - npm install 
+            - npm test 
+      - step:
+          name: Build docker 
+          #        size: 2x
+          caches:
+            - docker
+          script:
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+            - docker build . --file Dockerfile --tag ${IMAGE_NAME}
+            - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+          services:
+            - docker
+          size: 2x
+          artifacts:
+            - '*.tar'
+
+      - step:
+          name: Deploy to Docker 
+          deployment: development
+          script:
+            - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG #account name
+            - docker load --input "${IMAGE_NAME}.tar"
+            - VERSION="dev.${BITBUCKET_BUILD_NUMBER}"
+            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+            - docker push "${IMAGE}:${VERSION}"         
+          services:
+            - docker
+
+#      - step:
+#         name: build and Test front
+#         caches:
+#          - node
+#         script:
+#           - npm install
+#           - npm test
+
+#      - step:
+#            name: Deploy to Docker back
+#            deployment: development
+#            script:
+#            - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+#            - IMAGE_NAME=$BITBUCKET_REPO_SLUG #account name
+#            - docker load --input "${IMAGE_NAME}.tar"
+#            - VERSION="dev_back-0.1.${BITBUCKET_BUILD_NUMBER}"
+#            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+#            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+#            - docker push "${IMAGE}:${VERSION}"
+#            services:
+#            - docker
+
+
+  tags:
+   '*':
+      - step:
+          name: build and Test
+          caches:
+            - node
+          script:
+            - npm install
+            - npm install -g @angular/cli@9.1.12
+      #           - npm test
+      - step:
+          name: Build docker
+          #        size: 2x
+          caches:
+            - docker
+          script:
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+            - docker build . --file Dockerfile --tag ${IMAGE_NAME}
+            - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+          services:
+            - docker
+          size: 2x
+          artifacts:
+            - '*.tar'
+      - step:
+          name: Deploy to Docker
+          deployment: Staging
+          script:
+            - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+            - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+            - docker load --input "${IMAGE_NAME}.tar"
+            - VERSION="staging_front${BITBUCKET_TAG}"
+            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+            - docker push "${IMAGE}:${VERSION}"
+          services:
+            - docker
+
+definitions:
+  services:
+    docker:
+      memory: 4096 # reduce memory for docker-in-docker from 1GB to 512MB

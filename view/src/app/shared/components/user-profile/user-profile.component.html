@@ -1,0 +1,33 @@
+<div *ngIf="userDataLoaded" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutWrap="wrap">
+  <div fxFlex.gt-md="300px" fxFlex.sm="100" fxFlex.xs="100">
+    <mat-card class="profile-sidebar mb-1 pb-0">
+
+      <div class="propic text-center">
+        <img src="{{ user?.photo ? userImgFolder + user?.photo : 'assets/images/avatar-placeholder.png' }}" alt="" />
+      </div>
+
+      <div class="profile-title text-center mb-1">
+        <div class="main-title">{{ user?.name.toUpperCase() }}</div>
+        <div class="subtitle mb-05">{{ user?.role }}</div>
+        <div class="text-muted">{{ user?.email }}</div>
+      </div>
+      <div *ngIf="(event.managedUserInfo$ | async)?._id === user?._id" class="profile-nav">
+        <mat-nav-list>
+          <mat-list-item routerLink="/settings/profile/overview" routerLinkActive="list-item-active">
+            <mat-icon>home</mat-icon>
+            {{ 'OVERVIEW' | translate }}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item routerLink="/settings/profile/edit" routerLinkActive="list-item-active">
+            <mat-icon>settings</mat-icon>
+            {{ 'SETTINGS' | translate }}
+          </mat-list-item>
+        </mat-nav-list>
+      </div>
+    </mat-card>
+  </div>
+
+  <div fxFlex="100" fxFlex.gt-md="calc(100% - 300px)" fxFlex.sm="100" fxFlex.xs="100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

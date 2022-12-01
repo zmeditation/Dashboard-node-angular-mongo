@@ -1,0 +1,63 @@
+<div class="app-admin-wrap" [dir]="layoutConf.dir">
+  <!-- Header for top navigation layout -->
+  <!-- ONLY REQUIRED FOR **TOP** NAVIGATION LAYOUT -->
+
+  <!--    HAPPY NEW YEAR!!! HO-HO-HO!-->
+  <!--  <app-let-it-snow></app-let-it-snow>-->
+  <!--    HAPPY NEW YEAR!!! HO-HO-HO!-->
+
+  <!-- Main Container -->
+  <mat-sidenav-container
+    [dir]="layoutConf.dir"
+    class="app-admin-container"
+    [ngClass]="{
+      'navigation-top': layoutConf.navigationPos === 'top',
+      'sidebar-full': layoutConf.sidebarStyle === 'full',
+      'sidebar-compact': layoutConf.sidebarStyle === 'compact' && layoutConf.navigationPos === 'side',
+      'sidebar-compact-big': layoutConf.sidebarStyle === 'compact-big' && layoutConf.navigationPos === 'side',
+      'layout-intransition': layoutConf.layoutInTransition,
+      'sidebar-opened': layoutConf.sidebarStyle !== 'closed' && layoutConf.navigationPos === 'side',
+      'sidebar-closed': layoutConf.sidebarStyle === 'closed',
+      'fixed-topbar': layoutConf.topbarFixed && layoutConf.navigationPos === 'side'
+    }"
+  >
+    <app-header-top *ngIf="layoutConf.navigationPos === 'top'" [noticesPanel]="notificationPanel"> </app-header-top>
+    <!-- Top navigation layout (navigation for mobile screen) -->
+    <!-- ONLY REQUIRED FOR **TOP** NAVIGATION MOBILE LAYOUT -->
+    <app-sidebar-top *ngIf="layoutConf.navigationPos === 'top' && layoutConf.isMobile"></app-sidebar-top>
+
+    <!-- App content -->
+
+    <div class="main-content-wrap">
+      <div class="rightside-content-hold">
+        <!-- View Loader -->
+        <div class="view-loader" *ngIf="isModuleLoading">
+          <div class="spinner">
+            <div class="double-bounce1 mat-bg-accent"></div>
+            <div class="double-bounce2 mat-bg-primary"></div>
+          </div>
+        </div>
+        <!-- Breadcrumb -->
+        <app-breadcrumb></app-breadcrumb>
+        <!-- View outlet -->
+        <router-outlet></router-outlet>
+        <!-- Margin Bottom-->
+        <div style="margin-bottom: 50px"></div>
+      </div>
+    </div>
+
+    <!-- View overlay for mobile navigation -->
+    <div
+      class="sidebar-backdrop"
+      [ngClass]="{'visible': layoutConf.sidebarStyle !== 'closed' && layoutConf.isMobile}"
+      (click)="closeSidebar()"
+    ></div>
+
+    <!-- Notificaation bar -->
+    <mat-sidenav #notificationPanel class="notification-conteiner w-360 h-100" [ngClass.lt-sm]="'w-90pr'" mode="over" position="end">
+      <app-notifications [noticesPanel]="notificationPanel" class="h-100"></app-notifications>
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+  <app-versions *ngIf="!isModuleLoading"></app-versions>
+</div>

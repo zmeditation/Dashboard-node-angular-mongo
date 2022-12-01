@@ -1,0 +1,33 @@
+<mat-card *ngIf="isReady" [@animate]="{ value: 'opacity', params: { y: '0px', delay: '0ms' } }" class="mr-0 ml-0 mt-05 mb-05 p-0">
+  <ng-container>
+    <mat-accordion>
+      <mat-expansion-panel class="mb-0 mt-0" expanded>
+        <mat-expansion-panel-header class="mt-0 mb-0">
+          <mat-panel-title class="mt-0 mb-0 h5">{{ 'USERS_PAGE.ADS_TXT_MONITOR.ORIGINS_FILTER' | translate }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <form *ngIf="isReady" [formGroup]="formFilter">
+          <mat-form-field class="full-width p-0 mr-0 ml-0">
+            <mat-chip-list fxFlex="100" fxLayout="column wrap" #chipList formControlName="origins">
+              <div class="full-width mb-05 flex-settings-chip">
+                <mat-chip *ngFor="let origin of originsSelected" [selectable]="false" color="{{ origin === 'All' ? 'indigo' : 'teal' }}">
+                  {{ origin }}
+                </mat-chip>
+                <button mat-button *ngIf="originsSelected.length > 0" matSuffix mat-icon-button aria-label="Clear" (click)="resetChip()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <div #checkboxParent fxLayout="column wrap" class="flex-settings full-width">
+                <mat-checkbox *ngFor="let origin of originsList" value="{{ origin['name'] }}" (change)="selected(origin)" [checked]="origin['checked']">
+                  {{ origin['name'] | titlecase }}
+                </mat-checkbox>
+              </div>
+            </mat-chip-list>
+          </mat-form-field>
+          <button mat-raised-button class="h6 button-adapt" color="primary" (click)="csvDownload()">
+            {{ 'USERS_PAGE.BUTTONS.DOWNLOAD' | translate }}
+          </button>
+        </form>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+</mat-card>

@@ -1,0 +1,38 @@
+<div class="user-search" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
+  <mat-form-field class="user-search__field" fxFlex="100">
+    <input
+      matInput
+      placeholder="{{ 'USERS_PAGE.SEARCH.INPUT' | translate }}"
+      [formControl]="searchValue"
+      (keyup)="searchAllByValueEvent($event.target.value)"
+    />
+    <mat-error>
+      {{ 'USERS_PAGE.SEARCH.ERROR' | translate }}
+    </mat-error>
+    <mat-icon matSuffix class="pointer" (click)="showSettings($event)">settings</mat-icon>
+    <div *ngIf="isShowSettings" class="user-search__settings-menu" (click)="$event.stopPropagation()">
+      <mat-radio-group fxLayout="column" [formControl]="temporarySearchType">
+        <mat-radio-button *ngFor="let type of searchTypes" [value]="type">{{ type }}</mat-radio-button>
+      </mat-radio-group>
+      <div class="user-search__settings-manu__actions">
+        <button mat-stroked-button class="deny" color="primary" type="button" (click)="denySettings($event)">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <button mat-flat-button class="success" color="primary" type="button" (click)="successSettings($event)">
+          <mat-icon>done</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-form-field>
+  <button
+    class="add-user-btn"
+    *ngxPermissionsOnly="['canAddAllUsers', 'canAddAllPubs']"
+    (click)="createUserEvent()"
+    color="primary"
+    fxFlex="5"
+    mat-raised-button
+    mat-sm-button
+  >
+    <mat-icon>person_add</mat-icon>
+  </button>
+</div>

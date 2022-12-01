@@ -1,0 +1,111 @@
+<div
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports', 'canSeeWBidChartsPage']"
+>
+  <div *ngIf="allCharts.length < fullLengthOfData && isData" fxFlexAlign="row" fxLayoutAlign="center center" style="margin: 20%">
+    <mat-spinner [diameter]="120"></mat-spinner>
+  </div>
+
+  <div
+    *ngIf="allCharts.length >= fullLengthOfData && isData"
+    fxLayout="row wrap"
+    fxLayout.lt-md="column wrap"
+    fxLayoutAlign="space-between"
+    [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  >
+    <div class="w-100" fxFlex="100" fxLayout="row nowrap" fxLayout.lt-md="column nowrap" fxLayoutAlign="space-between">
+      <mat-card class="mat-elevation-z5" fxFlex="24" *ngFor="let summ of summOfMetrics">
+        <mat-card-title class="text-muted">{{ 'WBID.ANALYTICS.CHARTS.TOTAL.' + summ.title | translate }}</mat-card-title>
+        <h4 class="mb-0 mt-05">{{ summ.result }}</h4>
+      </mat-card>
+    </div>
+    <div
+      fxFlex="50"
+      *ngFor="let chart of allCharts"
+      [class.flex-for-revenue-chart]="chart['pie'].title === 'TOP_COUNTRIES_BY_REVENUE' || chart['pie'].title === 'TOP_BIDDERS_BY_REVENUE'"
+      class="scroll-chart m-chart-scroll-width"
+    >
+      <div *ngIf="isShowChart(chart)" class="chart-min-width">
+        <mat-card fxLayout="row wrap" fxLayoutAlign="center space-between" class="default " *ngIf="chart['pie']['isData']">
+          <h5 class="mt-05 chart-title">
+            {{ 'WBID.ANALYTICS.CHARTS.' + chart['pie'].title | translate }}
+          </h5>
+          <mat-card-content
+            fxFlex="100"
+            fxFlex.lt-md="100"
+            class="p-0"
+          >
+            <canvas
+              *ngIf="chart['pie']['chartOptions']['chartType'] !== 'line' && chart['pie']['chartOptions']['chartType'] !== 'horizontalBar'"
+              baseChart
+              id="{{ chart['pie'].title | lowercase }}"
+              class="chart m-0"
+              [datasets]="chart['pie']['datasets']"
+              [labels]="chart['pie']['labels']"
+              [options]="chart['pie']['chartOptions']"
+              [colors]="pieChartColors"
+              [legend]="selectedChartTypeLegend[chart['pie'].title]['type'] !== 'pie' ? false : selectedChartTypeLegend[chart['pie'].title]['legend']"
+              [chartType]="selectedChartTypeLegend[chart['pie'].title]['type']"
+            >
+            </canvas>
+            <canvas
+              *ngIf="chart['line']['chartOptions']['chartType'] === 'line' && chart['pie']['chartOptions']['chartType'] !== 'horizontalBar'"
+              baseChart
+              id="{{ chart['line'].title | lowercase }}"
+              class="chart m-0"
+              [datasets]="chart['line']['datasets']"
+              [labels]="chart['line']['labels']"
+              [options]="chart['line']['chartOptions']"
+              [colors]="lineChartColors"
+              [legend]="selectedChartTypeLegend[chart['line'].title]['type'] !== 'line' ? false : selectedChartTypeLegend[chart['line'].title]['legend']"
+              [chartType]="selectedChartTypeLegend[chart['pie'].title]['type']"
+            >
+            </canvas>
+            <canvas
+              *ngIf="chart['pie']['chartOptions']['chartType'] === 'horizontalBar'"
+              baseChart
+              id="{{ chart['line'].title | lowercase }}"
+              class="chart m-0"
+              [labels]="chart['pie']['labels']"
+              [datasets]="chart['pie']['datasets']"
+              [options]="horizontalBarOptions"
+              [legend]="false"
+              [chartType]="selectedChartTypeLegend[chart['pie'].title]['type']"
+            ></canvas>
+            <div class="pb-0 select-chart-type">
+              <mat-checkbox
+                [disabled]="selectedChartTypeLegend[chart['pie'].title]['type'] !== 'pie' && selectedChartTypeLegend[chart['line'].title]['type'] !== 'line'"
+                [(ngModel)]="selectedChartTypeLegend[chart['pie'].title]['legend']"
+              >
+                Leg.
+              </mat-checkbox>
+              <mat-form-field floatLabel="always">
+                <mat-label>{{ 'WBID.ANALYTICS.CHARTS.' + 'filter_type_chart' | uppercase | translate }}</mat-label>
+                <mat-select
+                  [(value)]="selectedChartTypeLegend[chart['pie'].title]['type']"
+                  (valueChange)="formattingChartData(chart, selectedChartTypeLegend[chart['pie'].title]['type'])"
+                >
+                  <mat-option *ngFor="let type of typesChart" value="{{ type }}">{{ 'WBID.ANALYTICS.CHARTS.' + type | uppercase | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+
+      <div fxFlex="100" *ngIf="!chart['pie']['isData']">
+        <mat-card fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center start" class="default">
+          <h5 align="center" class="mt-05">
+            {{ 'WBID.ANALYTICS.CHARTS.' + chart['pie'].title | translate }}
+          </h5>
+          <mat-card-content fxFlex="100">
+            <h5 align="center" class="m-1 text-muted">
+              {{ 'WBID.ANALYTICS.CHARTS.NO_DATA' | translate }}
+            </h5>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

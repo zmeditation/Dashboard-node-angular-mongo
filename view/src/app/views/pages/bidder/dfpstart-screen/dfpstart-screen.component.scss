@@ -1,0 +1,142 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 800px;
+
+.mat-card {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+::ng-deep .mat-card-header-text {
+  display: none;
+}
+
+$add: #396673;
+$cancel: #f44336;
+$save: #008e7a;
+
+.mat-progress-bar {
+  height: 25px;
+}
+
+h2 {
+  margin: 5px 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 1.5rem;
+}
+
+.title-background {
+  background-color: $add;
+  width: 100%;
+  height: auto;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.title-background h2 {
+  color: #fff;
+  border: none;
+}
+
+mat-card {
+  max-width: 1338px;
+  padding: 16px;
+  max-height: 400px;
+  min-height: 250px;
+  margin: 0;
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: center;
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+  margin: 20px;
+  padding: 15px;
+  align-items: center;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+  -moz-box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+  box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+}
+
+#network-id {
+  width: 300px;
+}
+
+.mat-button {
+  text-transform: uppercase;
+}
+
+span {
+  margin: 15px 0 0 0;
+  font-size: 0.75rem;
+  padding: 0 15px;
+}
+
+@media (max-width: $breakpoint-phone) and (min-width: 300px) {
+  h2 {
+    font-size: 1rem;
+  }
+
+  form {
+    width: 90%;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  #network-id {
+    width: 100%;
+  }
+
+  #content {
+    width: 100%;
+    height: auto;
+    padding: 5px;
+  }
+
+  .mat-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+
+  span {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: $breakpoint-tablet) and (min-width: $breakpoint-phone) {
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  form {
+    width: 90%;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  #network-id {
+    width: 100%;
+  }
+
+  #content {
+    width: 100%;
+    height: auto;
+    padding: 5px;
+  }
+
+  .mat-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+}

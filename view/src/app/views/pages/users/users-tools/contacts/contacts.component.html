@@ -1,0 +1,22 @@
+<mat-card-content fxLayout="column">
+  <form
+    #contactsFormId
+    id="form-contacts"
+    [formGroup]="contactsForm"
+    (ngSubmit)="sendRequest(contactsForm)"
+    fxFlex="100"
+    fxLayoutAlign="start center"
+    fxLayout="column"
+  >
+    <mat-checkbox [checked]="only_publishers" formControlName="only_publishers" *ngIf="false">
+      {{ 'TOOLS.CONTACTS.ONLY_PUBLISHERS' | translate }}
+    </mat-checkbox>
+    <h5>This button will upload all emails of publishers. More functionality in develop</h5>
+    <button color="primary" mat-raised-button type="submit">
+      {{ 'BUTTONS_TITLE.APPLY' | translate }}
+    </button>
+  </form>
+  <div *ngIf="response" class="mt-1">
+    <app-info-table [dataTable]="response"></app-info-table>
+  </div>
+</mat-card-content>

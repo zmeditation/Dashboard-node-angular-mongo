@@ -1,0 +1,53 @@
+<!--<div *ngIf="!readyToShow" fxFlexAlign="row" fxLayoutAlign="center center" style="margin: 20%">-->
+<!--<mat-spinner [diameter]="120"></mat-spinner>-->
+<!--</div>-->
+<div class="block_charts" *ngIf="readyToShow" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+  <div
+    [ngClass]="{
+      'flex-for-three-charts': hideReqAndFillPermission === true,
+      'flex-for-four-charts': hideReqAndFillPermission === false
+    }"
+  >
+    <div
+      fxFlex.lt-md="100"
+      [ngClass]="{
+        'flex-for-three-charts_item': hideReqAndFillPermission === true,
+        'flex-for-four-charts_item': hideReqAndFillPermission === false
+      }"
+      *ngFor="let dataChart of lineChartSteppedData"
+    >
+      <mat-card class="default" style="position: relative">
+        <mat-card-title class="pl-1">
+          <span class="h3">{{ 'STATISTICS.DASHBOARD_CHART.' + dataChart[0]['value_label'] | uppercase | translate }}</span>
+
+          <span fxFlex> </span>
+          <mat-card-content class="p-0">
+            <h4 class="m-0 font-normal" data-cy="value_for_chart">
+              {{ dataChart[0].consolidated !== NaN ? dataChart[0].consolidated : 0 }}
+            </h4>
+            <small class="text-muted">{{
+              dataChart[0]['value_label'] === 'REVENUE' || dataChart[0]['value_label'] === 'IMPRESSIONS'
+                ? ('STATISTICS.DASHBOARD_CHART.SUMM' | translate)
+                : ('STATISTICS.DASHBOARD_CHART.AVERAGE' | translate)
+            }}</small>
+          </mat-card-content>
+        </mat-card-title>
+        <div>
+          <mat-card-content class="p-0" [style.height]="setChartContainerHeight">
+            <canvas
+              height="300"
+              baseChart
+              class="chart m-0"
+              [datasets]="dataChart"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+            ></canvas>
+          </mat-card-content>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

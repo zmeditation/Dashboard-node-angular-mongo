@@ -1,0 +1,22 @@
+<div class="mb-1" fxLayout="column">
+  <div class="mb-1 query-builder-block-title">
+    <h4>
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DELIVERY.DELIVERY' | translate }}
+    </h4>
+  </div>
+  <div class="chart-toggle-btn" *ngIf="isOptionForCommission">
+    <mat-slide-toggle (change)="selectionForGoogleCommission($event)" [color]="'primary'" class="smaller-font-size">
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DELIVERY.SELECTION_GOOGLE_COMMISSION' | translate }}
+    </mat-slide-toggle>
+  </div>
+  <div class="chart-toggle-btn" *ngIf="isChartOption">
+    <mat-slide-toggle (change)="chartChanged($event)" [color]="'primary'" class="smaller-font-size">
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DELIVERY.SHOW_CHART' | translate }}
+    </mat-slide-toggle>
+  </div>
+  <div class="run-delivery-btn">
+    <button mat-raised-button id="run-report-btn" color="primary" (click)="runReport()" [disabled]="runReportBtn">
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DELIVERY.RUN_REPORT' | translate }}
+    </button>
+  </div>
+</div>

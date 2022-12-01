@@ -1,0 +1,60 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+
+mat-form-field {
+  width: 20%;
+}
+
+.mat-raised-button {
+  height: 36px;
+  width: 20%;
+  align-self: center;
+}
+
+h4 {
+  margin: 0;
+  display: block;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  align-self: flex-start;
+  font-size: 1rem;
+}
+
+// adaptive
+@media (max-width: $breakpoint-phone) {
+  mat-card {
+    flex-direction: column !important;
+
+    form {
+      flex-direction: column !important;
+
+      mat-form-field {
+        width: 100%;
+      }
+    }
+
+    .mat-raised-button {
+      width: 100%;
+    }
+  }
+
+  ::ng-deep svg.mat-datepicker-toggle-default-icon {
+    width: 1.5em !important;
+  }
+}
+
+@media (max-width: $breakpoint-tablet) and (min-width: $breakpoint-phone) {
+  mat-card {
+    flex-direction: column !important;
+
+    form {
+      mat-form-field {
+        width: 23%;
+      }
+    }
+
+    .mat-raised-button {
+      width: 100%;
+    }
+  }
+}

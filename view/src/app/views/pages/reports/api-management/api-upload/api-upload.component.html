@@ -1,0 +1,56 @@
+<mat-progress-bar mode="buffer" class="mt-1 mb-1" *ngIf="programmaticsList.length < 1"></mat-progress-bar>
+
+<div class="full-width mt-1" fxLayout="column" fxLayout.xs="column" *ngIf="programmaticsList.length > 0">
+  <form [formGroup]="apiUploadForm" fxFlex="1 1 30" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around">
+    <mat-form-field class="styles-for-edge">
+      <mat-select
+        placeholder="{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.PLACEHOLDER_PROGRAMMATIC' | translate }}"
+        formControlName="programmatic"
+        [(value)]="selected"
+      >
+        <mat-option *ngFor="let programmatic of programmaticsList" [value]="programmatic" (click)="settingsForRequest()">
+          {{ programmatic.programmatic }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        readonly
+        matInput
+        [matDatepicker]="dateFrom"
+        [min]="unavailabilityRange.min"
+        [max]="unavailabilityRange.max"
+        placeholder="{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.UPLOAD_RECORDS.FROM' | translate }}"
+        formControlName="dateFrom"
+      />
+      <mat-error *ngIf="apiUploadForm.get('dateFrom').invalid">{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.ERRORS.DATE_INVALID' | translate }}</mat-error>
+      <mat-datepicker-toggle matSuffix [for]="dateFrom">
+        <mat-icon matDatepickerToggleIcon>date_range</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #dateFrom></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        readonly
+        matInput
+        [matDatepicker]="dateTo"
+        [min]="unavailabilityRange.minPermanent"
+        [max]="unavailabilityRange.maxPermanent"
+        placeholder="{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.UPLOAD_RECORDS.TO' | translate }}"
+        formControlName="dateTo"
+      />
+      <mat-error *ngIf="apiUploadForm.get('dateTo').invalid">{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.ERRORS.DATE_INVALID' | translate }}</mat-error>
+      <mat-datepicker-toggle matSuffix [for]="dateTo">
+        <mat-icon matDatepickerToggleIcon>date_range</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #dateTo></mat-datepicker>
+    </mat-form-field>
+  </form>
+  <section fxFlexAlign="center" class="mt-1 mb-1">
+    <button mat-stroked-button color="primary" [disabled]="apiUploadForm.invalid" (click)="uploadNewData(apiUploadForm.value)">
+      {{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.UPLOAD_RECORDS.BUTTON_UPLOAD_RECORDS' | translate }}
+    </button>
+  </section>
+</div>

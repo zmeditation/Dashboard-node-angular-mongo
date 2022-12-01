@@ -1,0 +1,177 @@
+<div *ngIf="noData; else mainBlock">
+  <mat-card-content>
+    <mat-card-title>
+      <h2 class="text-center">
+        {{ 'USERS_PAGE.ADS_TXT_MONITOR.NO_DATA' | translate }}
+      </h2>
+    </mat-card-title>
+  </mat-card-content>
+</div>
+
+<ng-template #mainBlock [@animate]="{ value: 'opacity', params: { y: '0px', delay: '300ms' } }">
+  <app-table-statistics-domains [checkedDomains]="checkedDomains" [lastUpdate]="lastUpdate"></app-table-statistics-domains>
+
+  <mat-button-toggle-group
+    class="mr-0 ml-0 mt-05 mb-05"
+    #group="matButtonToggleGroup"
+    *ngxPermissionsOnly="['canReadAllUsers', 'canReadAllPubs', 'canReadAllPubsReports']"
+  >
+    <mat-button-toggle fxFlex="100" checked aria-label="All publishers" (click)="filterPubsByAmId('all')">
+      <mat-card-title>{{ 'USERS_PAGE.ADS_TXT_MONITOR.ALL_PUBLISHERS' | translate }}</mat-card-title>
+    </mat-button-toggle>
+    <mat-button-toggle fxFlex="100" aria-label="Own publishers" (click)="filterPubsByAmId('mine')">
+      <mat-card-title>{{ 'USERS_PAGE.ADS_TXT_MONITOR.MY_PUBLISHERS' | translate }}</mat-card-title>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <mat-card-content *ngIf="noPublishers">
+    <mat-card-title>
+      <h2 class="text-center">
+        {{ 'USERS_PAGE.ADS_TXT_MONITOR.I_DONT_HAVE_PUBLISHERS' | translate }}
+      </h2>
+    </mat-card-title>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="isUploading">
+    <mat-card-title>
+      <h2 class="text-center">
+        {{ 'USERS_PAGE.ADS_TXT_MONITOR.DATA_UPLOADING' | translate }}
+      </h2>
+    </mat-card-title>
+  </mat-card-content>
+
+  <app-programmatics-filter [list]="checkedDomains"></app-programmatics-filter>
+
+  <div>
+    <div fxLayout="column wrap" fxLayout.sm="column" fxLayout.xs="column" class="m-0">
+
+      <mat-accordion class="full-width" *ngFor="let panel of checkedDomains">
+        <mat-expansion-panel (opened)="setPanelStatus(panel)" [expanded]="panel.expandPanel">
+
+          <mat-expansion-panel-header class="transition-bg-color">
+            <mat-panel-title class="h5" fxFlex="40%">
+              <span>
+                {{ panel.name }}
+              </span>
+            </mat-panel-title>
+            <mat-panel-description fxFlex="60%">
+              <span [class.need_your_attention]="!panel.validDomainObject">
+                {{
+                  panel?.validDomainObject
+                    ? ('USERS_PAGE.ADS_TXT_MONITOR.PUBLISHER_STATUS.FINE' | translate)
+                    : ('USERS_PAGE.ADS_TXT_MONITOR.PUBLISHER_STATUS.NOT_FINE' | translate)
+                }}
+              </span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-template matExpansionPanelContent class="full-width">
+            <mat-table 
+              fxLayout="column nowrap" 
+              [dataSource]="dataSource[panel.name]" 
+              [hidden]="!checkedDomains.length" 
+              class="padding-reset-background"
+            >
+              <!-- Position Column -->
+              <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns" class="padding-reset">
+                <mat-header-cell fxFlex="1 1 18" fxLayoutAlign="center center" fxFlex.lt-md="1 1 24" *matHeaderCellDef mat-sort-header>
+                  {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.COLUMNS.' + column | uppercase | translate }}
+                </mat-header-cell>
+                <!--<form [formGroup]="propertiesForm">-->
+                <ng-container *matCellDef="let element">
+                  <mat-cell
+                    *ngIf="column !== 'origins'"
+                    fxFlex="1 1 18"
+                    fxLayoutAlign="center center"
+                    fxFlex.lt-md="1 1 24"
+                    class="transition-bg-color pt-05 pb-05"
+                    [hidden]="element['adsTxt'] === 'false'"
+                  >
+                    <span *ngIf="column === 'domain'">
+                      {{ element[column] }}
+                    </span>
+
+                    <span *ngIf="column === 'adsTxt'">
+                      <i
+                        *ngIf="element.adsTxt === 'true' 
+                          || element?.origin_adstxt === 'true'; else disAdsTxt"
+                        class="material-icons icons-color-ok"
+                        aria-hidden="false"
+                        aria-label="Domain has ads.txt"
+                      >sentiment_very_satisfied</i>
+
+                      <ng-template #disAdsTxt>
+                        <i
+                          class="material-icons icons-color-false"
+                          aria-hidden="false"
+                          aria-label="Domain has not ads.txt"
+                          >sentiment_very_dissatisfied</i
+                        >
+                      </ng-template>
+                    </span>
+
+                    <span *ngIf="column === 'checked'">
+                      <i
+                        *ngIf="element.checked === 'true' 
+                          || element?.origin_checked === 'true'; else disDomain"
+                        class="material-icons icons-color-ok"
+                        aria-hidden="false"
+                        aria-label="Domain passed the test"
+                      >sentiment_very_satisfied</i>
+
+                      <ng-template #disDomain>
+                        <i
+                          class="material-icons icons-color-false"
+                          aria-hidden="false"
+                          aria-label="Domain didn't pass the test"
+                        >sentiment_very_dissatisfied</i>
+                      </ng-template>
+                    </span>
+                  </mat-cell>
+
+                  <mat-cell 
+                    *ngIf="column === 'origins'"
+                    fxFlex="1 1 45" 
+                    class="transition-bg-color pt-1 pb-1 ml-1"
+                  >
+                    <mat-chip-list aria-label="Color selection">
+                      <ng-container *ngFor="let chip of element[column]">
+
+                        <mat-chip 
+                          *ngIf="chip.status === 'undefined'; else anotherChip"
+                          selected 
+                          color="grey" 
+                          (click)="openPopup.openDialog(chip)"
+                        >
+                          {{ chip.status === null 
+                            ? ('USERS_PAGE.ADS_TXT_MONITOR.DOMAIN_STATUS.' + chip.name | translate) 
+                            : chip.name }}
+                        </mat-chip>
+
+                        <ng-template #anotherChip>
+                          <mat-chip 
+                            selected 
+                            [color]="chip.status === 'true' ? 'primary' : 'warn'" 
+                            (click)="openPopup.openDialog(chip)"
+                          >
+                            {{ chip.status === null 
+                              ? ('USERS_PAGE.ADS_TXT_MONITOR.DOMAIN_STATUS.' + chip.name | translate) 
+                              : chip.name }}
+                          </mat-chip>
+                        </ng-template>
+
+                      </ng-container>
+                    </mat-chip-list>
+                  </mat-cell>
+
+                </ng-container>
+              </ng-container>
+              <mat-header-row fxLayout="row nowrap" *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row fxFlex="100" fxLayout="row nowrap" class="table-row" *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</ng-template>

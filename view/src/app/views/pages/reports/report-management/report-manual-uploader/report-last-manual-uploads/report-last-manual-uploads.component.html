@@ -1,0 +1,108 @@
+<div class="example-container mat-elevation-z8 datatable-row-center ng-star-inserted container-upload">
+  <div *ngIf="!isLastUploads" class="full-width text-center p-1 fz-1">
+    {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.NO_DATA' | translate }}
+  </div>
+  <table mat-table [dataSource]="lastUploadsSource" class="full-width" *ngIf="isLastUploads">
+    <ng-container matColumnDef="Delete">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-icon class="center-all" color="warn">delete_forever</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let prop">
+        <button mat-button (click)="deleteLastUploadsProperties(prop)">
+          <mat-icon color="warn">clear</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="№">
+      <th mat-header-cell *matHeaderCellDef>№</th>
+      <td mat-cell *matCellDef="let prop">
+        {{ lastUploadsSource.data.length - lastUploadsSource.data.lastIndexOf(prop) }}
+      </td>
+    </ng-container>
+
+    <!--<ng-container matColumnDef="Publisher">-->
+    <!--<th mat-header-cell *matHeaderCellDef> {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PUBLISHER' | translate}} </th>-->
+    <!--<td mat-cell *matCellDef="let prop"> {{prop.publisher}} </td>-->
+    <!--</ng-container>-->
+
+    <ng-container matColumnDef="Property">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PROPERTY' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">
+        {{ prop.property['property_id'] }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Domain">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.DOMAIN' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.property['domain'] }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Type">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.TYPE' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">
+        {{ prop.inventory ? prop.inventory.inventory_type : '' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Programmatic">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.PROGRAMMATIC' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.report_origin }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Day">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.DATE' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.day }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Sizes">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.SIZES' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">
+        {{ prop.inventory ? prop.inventory.sizes : '' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Requests">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.AD_REQUESTS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.ad_request }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Impressions">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.IMPRESSIONS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.matched_request }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Clicks">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.CLICKS' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.clicks }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="eCPM">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.ECPM' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let prop">{{ prop.ecpm }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsForLastUploads; sticky: true"></tr>
+    <tr mat-row *matRowDef="let prop; columns: columnsForLastUploads"></tr>
+  </table>
+</div>

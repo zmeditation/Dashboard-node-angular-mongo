@@ -1,0 +1,10 @@
+.history-record {
+  margin: 10px 0;
+  font-size: 0.8rem;
+}
+
+.mat-dialog-actions {
+  &[align='end'] {
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,29 @@
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="{{ 'TOOLS.CONTACTS.TITLE' | translate }}">
+        <div>
+          <app-contacts></app-contacts>
+        </div>
+      </mat-tab>
+      <mat-tab #noticeTab label="{{ 'TOOLS.NOTICE.TITLE' | translate }}">
+        <div *ngIf="noticeTab.isActive">
+          <app-notice></app-notice>
+        </div>
+      </mat-tab>
+      <mat-tab label="{{ 'TOOLS.USERS_REPORTS_TITLE' | translate }}" *ngxPermissionsOnly="['canEditAllPubs', 'canEditAllUsers']">
+        <app-reports-users-tools></app-reports-users-tools>
+      </mat-tab>
+      <mat-tab label="{{ 'TOOLS.PARTNERS_LIST' | translate }}">
+        <div>
+          <app-rtb-partners-list></app-rtb-partners-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="{{ 'TOOLS.ADD_RTB_PARTNER' | translate }}">
+        <div>
+          <app-add-rtb-partner></app-add-rtb-partner>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

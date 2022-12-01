@@ -1,0 +1,19 @@
+<form [formGroup]="titleNoticeForm" class="mb-05">
+  <mat-card-title>{{ 'TOOLS.NOTICE.FORM.EXISTING_NOTICES' | translate }}</mat-card-title>
+  <mat-form-field class="full-width">
+    <input type="text"
+           matInput
+           placeholder="Notice Group"
+           formControlName="noticeGroup"
+           [matAutocomplete]="autoGroup"
+           (click)="clearValue()">
+    <mat-autocomplete #autoGroup="matAutocomplete">
+      <mat-optgroup *ngFor="let group of titleGroupOptions | async" [label]="group.notice_type">
+        <mat-option *ngFor="let title of group.titles" [value]="title">
+          {{ title }}
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-divider></mat-divider>
+</form>

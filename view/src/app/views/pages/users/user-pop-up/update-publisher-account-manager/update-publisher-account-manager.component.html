@@ -1,0 +1,28 @@
+<div class="add-account-manager-to-publisher">
+  <mat-card-title>Account manager</mat-card-title>
+  <mat-form-field class="full-width">
+    <mat-select
+      placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.CHOOSE_ACCOUNT_MANAGER' | translate }}"
+      required
+      disableOptionCentering
+      [formControl]="selectedAccountManagerId"
+      (focusout)="checkNotSelectedValue()"
+      (selectionChange)="onChangeAccountManager()"
+    >
+      <mat-select-search [formControl]="searchValue" (keyup)="search($event)" (focusout)="onFocusoutSelectSearch()"></mat-select-search>
+
+      <mat-option *ngFor="let accountNamager of selectValues" [value]="accountNamager.id" >{{
+        accountNamager.name
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="showControls && !isLoading" class="add-account-manager-to-publisher__controls">
+    <button mat-stroked-button class="success" color="primary" type="button" (click)="successSelectedAccountManager()">
+      <mat-icon>done</mat-icon>
+    </button>
+    <button mat-flat-button class="deny" color="warn" type="button" (click)="denySelectedAccountManager()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+</div>

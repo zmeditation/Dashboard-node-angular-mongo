@@ -1,0 +1,43 @@
+<div
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  class="example-container h-100"
+>
+  <div *ngIf="failureMessage; else blockData">
+    <p>
+      {{ 'STATISTICS.ANALYTICS.BLOCKS.PLACEHOLDERS.NO_DEDUCTION' | translate }}
+    </p>
+  </div>
+  <ng-template #blockData>
+    <div class="spinner-container h-100" *ngIf="topDeduction.length < 1" fxLayoutAlign="center center">
+      <mat-spinner style="margin: auto auto"></mat-spinner>
+    </div>
+
+    <div *ngIf="topDeduction && topDeduction.length > 0" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+      <mat-card-title align="center">{{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.DEDUCTION_OF_LAST_MONTH' | translate }}</mat-card-title>
+
+      <mat-table [dataSource]="dataSourceTop" class="mat-elevation-z0 deduction-list">
+        <ng-container matColumnDef="publishers">
+          <mat-header-cell *matHeaderCellDef>
+            {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.PUBLISHERS' | translate }}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.name }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="sumOfDeduction">
+          <mat-header-cell *matHeaderCellDef class="flex-for-second-child-header">
+            {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.SUMOFDEDUCTION' | translate }}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="flex-for-second-child">
+            {{ element.sumOfDeduction | number : '1.2-2' }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsTop" class="less-height-for-header-row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsTop" class="less-height-for-row"></mat-row>
+      </mat-table>
+    </div>
+  </ng-template>
+</div>

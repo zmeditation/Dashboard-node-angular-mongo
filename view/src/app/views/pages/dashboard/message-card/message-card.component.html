@@ -1,0 +1,6 @@
+<mat-card *ngIf="hasNotice">
+  <ng-container *ngFor="let notice of messages">
+    <mat-card-title class="block-message">{{ notice.title }}</mat-card-title>
+    <mat-card-content class="notice-content">{{ notice.text }}</mat-card-content>
+  </ng-container>
+</mat-card>

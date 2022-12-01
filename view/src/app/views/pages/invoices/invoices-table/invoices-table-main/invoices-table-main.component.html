@@ -1,0 +1,150 @@
+<mat-card>
+  <mat-card-content>
+    <mat-form-field>
+      <mat-select [placeholder]="'INVOICES.STATUS' | translate" [formControl]="invoiceStatus" [disabled]="!invoices.length && !temp.length">
+        <mat-option>{{ 'INVOICES.ALL' | translate }}</mat-option>
+        <mat-option *ngFor="let status of statuses" [value]="status">
+          {{ 'INVOICES.' + st[status] | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div id="spinner">
+      <mat-progress-bar mode="buffer" *ngIf="load"></mat-progress-bar>
+    </div>
+    <ngx-datatable
+      [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+      [reorderable]="false"
+      [columnMode]="'flex'"
+      [footerHeight]="50"
+      [headerHeight]="50"
+      [limit]="10"
+      [rowHeight]="'auto'"
+      [rows]="invoices"
+      [sorts]="[{ prop: 'name', dir: 'asc' }]"
+      [scrollbarH]="false"
+      [messages]="{
+        emptyMessage: 'INVOICES.EMPTY' | translate,
+        totalMessage: 'INVOICES.TOTAL' | translate
+      }"
+      class="bootstrap invoices-list"
+    >
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="name"
+        [draggable]="false"
+        [name]="'INVOICES.FILE_NAME' | translate | uppercase"
+        [flexGrow]="innerWidth > 576 ? 2 : 1.2"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['name'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="publisher.name"
+        [draggable]="false"
+        [name]="'INVOICES.PUBLISHER' | translate | uppercase"
+        *ngIf="role !== 'PUBLISHER'"
+        [flexGrow]="innerWidth > 576 ? 1.5 : 1"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['publisher']['name'] }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="publisher.am"
+        [draggable]="false"
+        *ngIf="role !== 'PUBLISHER' && role !== 'ACCOUNT MANAGER'"
+        [name]="'INVOICES.MANAGER' | translate | uppercase"
+        [flexGrow]="innerWidth > 576 ? 1.5 : 1"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row['publisher']['am'] ? row['publisher']['am'] : 'No Manager' }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="createdAt"
+        [draggable]="false"
+        *ngIf="innerWidth > 576"
+        [name]="'INVOICES.UPLOADED' | translate | uppercase"
+        [flexGrow]="1.5"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ getDate(row['createdAt']) }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="valid.begin"
+        [draggable]="false"
+        *ngIf="innerWidth > 576"
+        [name]="'INVOICES.VALID' | translate | uppercase"
+        [flexGrow]="1.5"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ parseDatePeriod(row['valid']) }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="true"
+        prop="status"
+        [draggable]="false"
+        [name]="'INVOICES.STATUS' | translate | uppercase"
+        [flexGrow]="innerWidth > 576 ? 1.5 : 1"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <mat-form-field *ngIf="canEditInvoices; else plainStatus">
+            <mat-select
+              [(value)]="row['status']"
+              [ngClass]="{
+                pending: row['status'] === 'pending',
+                paid: row['status'] === 'paid',
+                approved: row['status'] === 'approved',
+                declined: row['status'] === 'declined'
+              }"
+              (valueChange)="updateInvoiceStatus($event, row)"
+              [disabled]="!canEditInvoices"
+            >
+              <mat-option *ngFor="let status of statuses" [value]="status">
+                <span>
+                  {{ 'INVOICES.' + status | uppercase | translate }}
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <ng-template #plainStatus>
+            <span
+              [ngClass]="{
+                pending: row['status'] === 'pending',
+                paid: row['status'] === 'paid',
+                approved: row['status'] === 'approved',
+                declined: row['status'] === 'declined'
+              }"
+              >{{ row['status'] }}</span
+            >
+          </ng-template>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="false"
+        [draggable]="false"
+        [name]="'INVOICES.ACTIONS' | translate | uppercase"
+        *ngxPermissionsOnly="['canDownloadInvoices', 'canDeleteInvoices']"
+        [flexGrow]="innerWidth > 576 ? 1 : 1"
+      >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="actions-icons-block" fxLayout="row">
+            <div *ngxPermissionsOnly="['canDownloadInvoices']">
+              <mat-icon (click)="downloadInvoice(row['_id'], row)" color="primary"> get_app </mat-icon>
+            </div>
+            <div *ngxPermissionsOnly="['canDeleteInvoices']">
+              <mat-icon (click)="deleteInvoice(row['_id'])" color="warn" *ngIf="row.status === 'pending'"> delete_forever </mat-icon>
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </mat-card-content>
+</mat-card>

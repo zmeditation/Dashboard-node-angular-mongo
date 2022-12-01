@@ -1,0 +1,61 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+$breakpoint-small-phone: 359px;
+
+mat-card, mat-card-content {
+  display: flex;
+}
+
+mat-card-content {
+  width: 100%;
+  justify-content: space-around;
+}
+
+mat-form-field {
+  padding: 5px 15px;
+}
+
+mat-card-content {
+  align-items: baseline;
+}
+
+.small-field {
+  max-width: 150px;
+}
+
+#revenue-submit-button {
+  max-height: 40px;
+  width: 140px;
+}
+
+#revenue-input-form {
+  width: 80%
+}
+
+.mat-icon {
+  font-size: 20px;
+}
+
+@media (max-width: $breakpoint-phone) {
+  mat-card-content {
+    flex-direction: column;
+
+    #revenue-input-form {
+
+      width: auto;
+
+      mat-form-field {
+        padding: 0;
+        width: 100%;
+
+        &.small-field {
+          max-width: 100%;
+        }
+      }
+    }
+
+    #revenue-submit-button {
+      width: 100%;
+    }
+  }
+}

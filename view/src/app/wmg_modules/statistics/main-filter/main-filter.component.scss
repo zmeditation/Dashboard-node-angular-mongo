@@ -1,0 +1,91 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+
+.icon-clear-input {
+  position: absolute;
+  right: -2.3em;
+  top: -5px;
+}
+
+.pr-for-closebar {
+  padding-right: 1em;
+}
+
+.input-container {
+  padding-top: 15px;
+}
+
+.no-display {
+  display: none;
+}
+
+form {
+  width: 100%;
+  height: 100%;
+}
+
+mat-card {
+  position: relative;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+
+div.report-type-selector {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+
+  mat-button-toggle-group {
+    width: 100%;
+    height: 36px;
+  }
+}
+
+mat-button-toggle {
+  width: 50%;
+}
+
+::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 40px !important;
+  height: 36px;
+}
+
+.width {
+  &--full {
+    width: 100%;
+  }
+}
+
+button.mat-raised-button {
+  border-radius: 0;
+}
+
+@media (max-width: $breakpoint-phone) {
+  #main-report-filter-container {
+    display: flex;
+    flex-direction: column;
+
+    .report-type-selector {
+      width: 50%;
+      margin: 5px 0;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-tablet) {
+  #main-report-filter-container {
+    display: flex;
+    flex-direction: column;
+
+    .report-type-selector {
+      width: 50%;
+      margin: 5px 0;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ 'WBID.PROPERTIES.PLACEMENTS.UPDATE_SETTINGS' | translate }} {{data.adapter.name}}</h2>
+<mat-dialog-content class="mat-typography">
+  <form action="" id="form" #form>
+    <div *ngFor="let set of data.adapter.settings">
+      <mat-form-field class="adapter-settings-form" style="width: 100%" *ngIf="set[0] !== 'disabled'">
+        <input matInput [value]="set[1].data" [(ngModel)]="set[1].data" [placeholder]="set[0]" [title]="set[1].type" [name]="set[0]" />
+      </mat-form-field>
+    </div>
+    <mat-slide-toggle [(ngModel)]="disabled" name="disabled"> {{'WBID.PROPERTIES.PLACEMENTS.DISABLE' | translate}} </mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-stroked-button mat-dialog-close color="warn">{{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}</button>
+  <button mat-button mat-stroked-button color="primary" [mat-dialog-close]="form" *ngIf="!data.preview">
+    {{ 'WBID.PROPERTIES.PLACEMENTS.SAVE' | translate }}
+  </button>
+</mat-dialog-actions>

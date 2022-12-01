@@ -1,0 +1,72 @@
+<div>
+  <mat-card-title>
+    {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.ADD_PROPERTIES' | translate }}</mat-card-title
+  >
+  <form [formGroup]="propertiesAddForm">
+    <div fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="space-around">
+      <mat-form-field fxFlex="20" fxFlex.lt-md="100">
+        <input
+          [formControl]="propertiesAddForm.controls['property_origin']"
+          [matAutocomplete]="auto"
+          matInput
+          placeholder="{{
+            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.SELECT_ORIGIN' | translate
+          }}"
+        />
+      </mat-form-field>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="getValueOrigin($event.option.value)">
+        <mat-option *ngFor="let programmatic of filterOrigins | async" [value]="programmatic">
+          {{ programmatic }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-form-field fxFlex="35" fxFlex.lt-md="100" class="mb-1">
+        <input
+          [formControl]="propertiesAddForm.controls['placement_name']"
+          [matAutocomplete]="auto_1"
+          matInput
+          name="nameToAdd"
+          placeholder="{{
+            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.PLACEMENT_NAME' | translate
+          }}"
+        />
+        <mat-hint>{{
+          'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.TIPS.TIPS_PLACEMENT_NAME_CONVENTION'
+            | translate
+        }}</mat-hint>
+      </mat-form-field>
+      <mat-autocomplete #auto_1="matAutocomplete">
+        <mat-option *ngFor="let placement of filterPlacements | async" [value]="placement">{{ placement }}</mat-option>
+      </mat-autocomplete>
+
+      <mat-form-field fxFlex="35" fxFlex.lt-md="100">
+        <input
+          [formControl]="propertiesAddForm.controls['property_id']"
+          [matAutocomplete]="auto_2"
+          matInput
+          name="idToAdd"
+          placeholder="{{
+            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.PROPERTY_ID' | translate
+          }}"
+        />
+      </mat-form-field>
+      <mat-autocomplete #auto_2="matAutocomplete">
+        <mat-optgroup *ngFor="let programmatic of filterIdProperty | async" [label]="programmatic._id">
+          <mat-option *ngFor="let property of programmatic.properties" [value]="property">{{ property }}</mat-option>
+        </mat-optgroup>
+      </mat-autocomplete>
+      <mat-form-field fxFlex="97" fxFlex.lt-md="100">
+        <input
+          #desc_add
+          [formControl]="propertiesAddForm.controls['property_description']"
+          matInput
+          maxlength="90"
+          name="descriptionToAdd"
+          placeholder="{{
+            'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.ADD_PROPERTIES_FORM.PLACEHOLDERS.PROPERTY_DESCRIPTION' | translate
+          }}"
+        />
+        <mat-hint align="end">{{ desc_add.value.length }} / 90</mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

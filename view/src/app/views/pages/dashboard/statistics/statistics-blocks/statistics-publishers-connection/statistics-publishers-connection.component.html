@@ -1,0 +1,46 @@
+<div
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  class="example-container"
+>
+  <div class="spinner-container" *ngIf="!publishersCountByMonth; else dataBlock">
+    <mat-spinner style="margin: auto auto"></mat-spinner>
+  </div>
+
+  <ng-template #dataBlock>
+    <div *ngIf="publishersCountByMonth" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+
+      <!-- Main header  -->
+      <mat-card-title align="center">
+        {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.CONNECTION_STATISTICS' | uppercase | translate }}
+        {{ currentYear }}
+      </mat-card-title>
+
+      <mat-table [dataSource]="dataSourceTop" class="mat-elevation-z0 pubs-list">
+        <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumnsTop">
+
+          <!-- Table sub-headers  -->
+          <mat-header-cell *matHeaderCellDef >
+            {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.' + column | uppercase | translate }}
+          </mat-header-cell>
+
+          <!-- Data for each column  -->
+          <mat-cell 
+            *matCellDef="let element" 
+            (click)="openDialog(element[column]?.publisherNames, column)"
+            [ngClass]="{'pointer publishers-count': (column !== 'month')}"
+
+          >
+            {{ (column == 'month') 
+              ? ('STATISTICS.ANALYTICS.MONTHS.' + element[column] | uppercase | translate) 
+              : element[column].count 
+            }}
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsTop" class="less-height-for-header-row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsTop" class="less-height-for-row"></mat-row>
+      </mat-table>
+    </div>
+  </ng-template>
+</div>

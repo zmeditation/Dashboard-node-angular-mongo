@@ -1,0 +1,56 @@
+.flash-prompt {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(164, 171, 174, 0.7);
+  z-index: 99999;
+}
+
+.flashMessage {
+  padding: 10px 5px;
+  text-align: center;
+  position: fixed;
+  min-width: 750px;
+  left: calc(50% - 350px);
+  background-color: #ebebeb;
+  z-index: 99999;
+}
+
+.flashMessage > span {
+  text-transform: uppercase;
+  line-height: 36px;
+}
+
+.flash-top {
+  top: 0;
+}
+
+.flash-bottom {
+  bottom: 0;
+}
+
+.error {
+  background-color: #f44336;
+  color: white;
+}
+
+.success {
+  background-color: #008e7a;
+  color: white;
+}
+
+.prompt {
+  padding: 25px 15px;
+  background-color: #ebebeb;
+}
+
+@media only screen and (max-width: 900px) {
+  .flashMessage {
+    width: 100%;
+    min-width: 300px;
+    left: 0;
+  }
+}

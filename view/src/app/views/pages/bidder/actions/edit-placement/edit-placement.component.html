@@ -1,0 +1,410 @@
+<div id="container">
+  <mat-card class="add-user-card" *ngIf="ready">
+    <mat-card-header>
+      <div class="title-background">
+        <h2>
+          {{ !preview ? ('WBID.PROPERTIES.PLACEMENTS.EDIT' | translate | uppercase) : ('WBID.PROPERTIES.PLACEMENTS.PREVIEW' | translate | uppercase) }}
+        </h2>
+        <div id="dev-checkbox-container" *ngxPermissionsOnly="['canCreateDevConfigs']">
+          <mat-checkbox (change)="checkTestValue($event)" [(ngModel)]="dev"> DEV </mat-checkbox>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div [formGroup]="Form">
+        <div class="user-data-block">
+          <div class="title-background-small">
+            <h4>
+              {{ 'WBID.PROPERTIES.PLACEMENTS.COMMON_INFORMATION' | translate }}
+            </h4>
+          </div>
+          <div class="input-row common-row">
+            <mat-form-field>
+              <input matInput required #name [placeholder]="'WBID.PROPERTIES.PLACEMENTS.PUBLISHER_NAME' | translate" formControlName="name" />
+              <mat-hint align="end"> {{ name.value.length }} / 35 </mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                matInput
+                required
+                #configname
+                (keyup)="filterSlash($event)"
+                [placeholder]="'WBID.PROPERTIES.PLACEMENTS.PLACEMENT_NAME' | translate"
+                formControlName="configname"
+              />
+              <mat-hint align="end"> {{ configname.value.length }} / 35 </mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput required #domain [placeholder]="'WBID.PROPERTIES.PLACEMENTS.DOMAIN' | translate" formControlName="domain" />
+              <mat-hint align="end"> {{ domain.value.length }} / 50 </mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>{{ 'WBID.PROPERTIES.PLACEMENTS.SIZE' | translate }}</mat-label>
+              <mat-select required type="text" formControlName="sizes">
+                <mat-option *ngFor="let size of allowedSizes" [value]="size">
+                  {{ size }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="user-data-block">
+          <div class="title-background-small">
+            <h4>{{ 'WBID.PROPERTIES.PLACEMENTS.BIDDERS' | translate }}</h4>
+          </div>
+          <div id="selectors">
+            <div id="bidder-adapters">
+              <mat-card id="exist-adapters-container">
+                <mat-card-content>
+                  <span>
+                    {{ 'WBID.PROPERTIES.PLACEMENTS.EXIST_ADAPTERS' | translate }}
+                  </span>
+                  <mat-chip-list style="min-height: 40px">
+                    <mat-chip
+                      *ngFor="let adapter of _config.existAdapters"
+                      style="cursor: pointer"
+                      (click)="editAdapterSettings(adapter)"
+                      [removable]="!preview"
+                      color="primary"
+                      [id]="adapter"
+                      (removed)="removeAdapter(adapter)"
+                      [ngClass]="{
+                        disabled: _config.disabledAdapters.includes(adapter)
+                      }"
+                      [matTooltip]="_config.disabledAdapters.includes(adapter) ? ('WBID.PROPERTIES.PLACEMENTS.DISABLED_ADAPTER' | translate) : ''"
+                    >
+                      {{ adapter }}
+                      <mat-icon matChipRemove *ngIf="!preview">cancel</mat-icon>
+                    </mat-chip>
+                  </mat-chip-list>
+                </mat-card-content>
+              </mat-card>
+              <app-adapters-select-component
+                (changeAdaptersList)="changeAdaptersList($event)"
+                [toAll]="toAllState"
+                [existAdapters]="_config.existAdapters"
+                [isPrebidUser]="isPrebidUser"
+                [disabledForm]="disabledForm"
+              >
+              </app-adapters-select-component>
+            </div>
+            <div id="analytics-adapters">
+              <mat-card id="exist-analytics-adapters-container">
+                <mat-card-content>
+                  <span>
+                    {{ 'WBID.PROPERTIES.PLACEMENTS.EXIST_ANALYTICS' | translate }}
+                  </span>
+                  <mat-chip-list style="min-height: 40px">
+                    <mat-chip
+                      *ngFor="let adapter of _config.existAnalyticsAdapters"
+                      [removable]="!preview"
+                      (removed)="removeAnalyticsAdapter(adapter)"
+                      color="warn"
+                    >
+                      {{ adapter }}
+                      <mat-icon matChipRemove *ngIf="!preview">cancel</mat-icon>
+                    </mat-chip>
+                  </mat-chip-list>
+                </mat-card-content>
+              </mat-card>
+              <app-analytics-select
+                (changeAnalyticsList)="changeAnalyticsList($event)"
+                [isPrebidUser]="isPrebidUser"
+                [disabledForm]="disabledForm"
+                [existAnalyticsAdapters]="_config.existAnalyticsAdapters"
+                (sendOptions)="getOptions($event)"
+              >
+              </app-analytics-select>
+            </div>
+          </div>
+        </div>
+        <div class="user-data-block">
+          <div class="title-background-small">
+            <h4>{{ 'WBID.PROPERTIES.PLACEMENTS.OTHER' | translate }}</h4>
+          </div>
+          <section class="sliders">
+            <div id="settings-two">
+              <mat-form-field>
+                <input
+                  matInput
+                  type="number"
+                  #floorPrice
+                  [placeholder]="'WBID.PROPERTIES.PLACEMENTS.FLOOR' | translate"
+                  required
+                  (input)="!isPrebidConfig ? toggleToAll(toAll.checked, floorPrice.value) : false"
+                  formControlName="floorPrice"
+                />
+              </mat-form-field>
+              <mat-checkbox
+                formControlName="toAll"
+                #toAll
+                (change)="!isPrebidConfig ? toggleToAll(toAll.checked, floorPrice.value) : false"
+                [disabled]="isPrebidConfig"
+              >
+                {{ 'WBID.PROPERTIES.PLACEMENTS.TO_ALL' | translate }}
+              </mat-checkbox>
+            </div>
+            <div id="settings-one">
+              <mat-checkbox *ngIf="isPrebidConfig" formControlName="setDomain">
+                {{ 'WBID.PROPERTIES.PLACEMENTS.INCLUDE_DOMAIN' | translate }}
+              </mat-checkbox>
+              <mat-slide-toggle formControlName="cmp">
+                {{ 'WBID.PROPERTIES.PLACEMENTS.CMP' | translate }}
+                <a href="https://adwmg.com/docs/wiki/wbid/publisher-guide/" target="_blank">
+                  <mat-icon [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.CMP_TIP' | translate" matTooltipPosition="after" color="warn" inline
+                    >help_outline
+                  </mat-icon>
+                </a>
+              </mat-slide-toggle>
+              <mat-slide-toggle formControlName="amazon" *ngxPermissionsOnly="['canSeeWBidAmazonSettings']">
+                {{ 'WBID.PROPERTIES.PLACEMENTS.AMAZON' | translate }}
+              </mat-slide-toggle>
+              <div id="marketplace" *ngxPermissionsOnly="['canSetWBidMarketplace']">
+                <mat-slide-toggle [disabled]="!this.isPrebidUser" formControlName="marketplace"> WMG Marketplace </mat-slide-toggle>
+              </div>
+              <div id="currency">
+                <mat-slide-toggle formControlName="currency"> Currency </mat-slide-toggle>
+                <mat-form-field *ngIf="Form.get('currency').value">
+                  <mat-label>{{ 'WBID.PROPERTIES.PLACEMENTS.CURRENCY' | translate }}</mat-label>
+                  <mat-select formControlName="defaultCurrency">
+                    <mat-option *ngFor="let cur of currencyArray" [value]="cur">
+                      {{ cur }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div id="supplyChain" *ngxPermissionsOnly="['canSeeWBidSchainSettings']">
+                <mat-slide-toggle formControlName="schain"> Supply Chain </mat-slide-toggle>
+              </div>
+              <div id="short-tag" *ngxPermissionsOnly="['canSetWBidShortTag']">
+                <mat-checkbox formControlName="shortTag">Short Tag</mat-checkbox>
+              </div>
+              <div id="wmg-logo">
+                <mat-checkbox formControlName="logo"> WMG Logo </mat-checkbox>
+              </div>
+              <div id="adExId" *ngIf="dev">
+                <mat-form-field>
+                  <input formControlName="adExId" type="text" matInput [placeholder]="'WBID.PROPERTIES.PLACEMENTS.ADEX_ID' | translate" />
+                </mat-form-field>
+              </div>
+            </div>
+          </section>
+          <section style="display: flex; justify-content: space-between; align-items: center"></section>
+          <section *ngIf="!isPrebidConfig" id="last-row-section">
+            <div id="last-row" style="margin-top: 10px">
+              <mat-form-field style="width: 85%">
+                <input
+                  matInput
+                  required
+                  type="number"
+                  min="0"
+                  max="20000"
+                  [placeholder]="'WBID.PROPERTIES.PLACEMENTS.PREBID_TIMEOUT' | translate"
+                  formControlName="PREBID_TIMEOUT"
+                />
+                <span matSuffix>ms</span>
+              </mat-form-field>
+            </div>
+            <mat-form-field *ngIf="!isPrebidConfig" id="passbacktag">
+              <mat-label>
+                {{ 'WBID.PROPERTIES.PLACEMENTS.PASSBACK' | translate }}
+              </mat-label>
+              <textarea
+                matInput
+                formControlName="passbacktag"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="4"
+                cdkAutosizeMaxRows="10"
+              ></textarea>
+            </mat-form-field>
+          </section>
+        </div>
+        <div class="user-data-block" *ngIf="Form.get('cmp').value">
+          <div class="title-background-small">
+            <h4>{{ 'WBID.PROPERTIES.PLACEMENTS.CMP_TITLE' | translate }}</h4>
+          </div>
+          <div id="cmp-details" *ngIf="!isPrebidUser">
+            <div class="cmp-type-container" *ngIf="!isPrebidUser">
+              <label id="cmp-type" *ngIf="Form.get('cmp').value">{{ 'WBID.PROPERTIES.PLACEMENTS.CMP_TYPE' | translate }}</label>
+              <mat-radio-group *ngIf="Form.get('cmp').value" aria-labelledby="cmp-type" class="cmp-radio-group" formControlName="cmpType">
+                <mat-radio-button value="basic">
+                  {{ 'WBID.PROPERTIES.PLACEMENTS.CMP_BASIC' | translate }}
+                </mat-radio-button>
+                <mat-radio-button value="custom">
+                  {{ 'WBID.PROPERTIES.PLACEMENTS.CMP_CUSTOM' | translate }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div>
+            </div>
+            <div class="cmp-details" *ngIf="Form.get('cmp').value">
+              <div *ngIf="!isPrebidUser" style="width: 100%">
+                <mat-form-field *ngIf="Form.get('cmpType').value === 'basic'; else customCode">
+                  <input
+                    matInput
+                    type="number"
+                    [placeholder]="'WBID.PROPERTIES.PLACEMENTS.CMP_TIMEOUT' | translate"
+                    formControlName="cmpTimeout"
+                    [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.CMP_TIMEOUT_HINT' | translate"
+                    matTooltipPosition="below"
+                  />
+                  <span matSuffix>ms</span>
+                </mat-form-field>
+              </div>
+              <ng-template #customCode>
+                <mat-form-field *ngIf="Form.get('cmpType').value === 'custom'" style="width: 100%">
+                  <mat-label>
+                    {{ 'WBID.PROPERTIES.PLACEMENTS.CUSTOM_CODE' | translate }}
+                  </mat-label>
+                  <textarea
+                    matInput
+                    formControlName="customCode"
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="2"
+                    cdkAutosizeMaxRows="3"
+                  ></textarea>
+                </mat-form-field>
+              </ng-template>
+            </div>
+            <div id="inner-cmp-module-flag" *ngIf="Form.get('cmpType').value === 'basic'">
+              <mat-checkbox
+                formControlName="thirdPartyCMP"
+                [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.THIRD_PARTY_CMP_HINT' | translate"
+              >
+                {{ 'WBID.PROPERTIES.PLACEMENTS.THIRD_PARTY_CMP' | translate }}
+              </mat-checkbox>
+            </div>
+            <div id="usp-settings" *ngIf="!isPrebidUser">
+              <div>
+                <mat-slide-toggle
+                  formControlName="usp"
+                  *ngIf="Form.get('cmp').value"
+                  [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.USP_PRIVACY_HINT' | translate"
+                  matTooltipPosition="below"
+                >
+                  {{ 'WBID.PROPERTIES.PLACEMENTS.USP' | translate }}
+                </mat-slide-toggle>
+              </div>
+              <mat-form-field *ngIf="Form.get('usp').value" id="usp-timeout">
+                <input
+                  matInput
+                  type="number"
+                  [placeholder]="'WBID.PROPERTIES.PLACEMENTS.USP_TIMEOUT' | translate"
+                  formControlName="uspTimeout"
+                  [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.USP_TIMEOUT_HINT' | translate"
+                  matTooltipPosition="below"
+                />
+                <span matSuffix>ms</span>
+              </mat-form-field>
+            </div>
+          </div>
+          <div id="cmp-settings-prebid" *ngIf="isPrebidConfig">
+            <mat-form-field *ngIf="Form.get('cmp').value">
+              <input
+                matInput
+                type="number"
+                [placeholder]="'WBID.PROPERTIES.PLACEMENTS.CMP_TIMEOUT' | translate"
+                formControlName="cmpTimeout"
+                [matTooltip]="'WBID.PROPERTIES.PLACEMENTS.CMP_TIMEOUT_HINT' | translate"
+                matTooltipPosition="below"
+              />
+              <span matSuffix>ms</span>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="user-data-block" *ngIf="Form.get('marketplace').value && store.getState().role !== 'PUBLISHER'">
+          <div class="title-background-small">
+            <h4>{{ 'WBID.PROPERTIES.PLACEMENTS.MARKETPLACE' | translate }}</h4>
+          </div>
+          <div id="marketplace-adapters" style="width: 100%">
+            <mat-card id="exist-marketplace-adapters-container">
+              <mat-card-content>
+                <span>
+                  {{ 'WBID.PROPERTIES.PLACEMENTS.EXIST_ADAPTERS' | translate }}
+                </span>
+                <mat-chip-list style="min-height: 40px">
+                  <mat-chip
+                    *ngFor="let adapter of _config.marketplace.adapters"
+                    [removable]="false"
+                    [id]="adapter"
+                    (click)="editAdapterSettings(adapter, true)"
+                  >
+                    {{ adapter }}
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-card-content>
+            </mat-card>
+            <app-adapters-select-component [toAll]="toAllState" [isPrebidUser]="isPrebidUser" [existAdapters]="_config.existMarketplaceAdapters">
+            </app-adapters-select-component>
+          </div>
+        </div>
+        <div class="user-data-block" *ngIf="Form.get('schain').value">
+          <div class="title-background-small">
+            <h4>
+              {{ 'WBID.PROPERTIES.PLACEMENTS.SCHAIN_SETTINGS' | translate }}
+            </h4>
+          </div>
+          <div id="supply-chain-global-settings">
+            <mat-form-field>
+              <input matInput [placeholder]="'complete'" formControlName="schainComplete" />
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput [placeholder]="'ver'" formControlName="schainVer" />
+            </mat-form-field>
+            <mat-form-field style="min-width: 30%">
+              <input matInput [placeholder]="'nodes'" formControlName="schainNodes" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="user-data-block" *ngIf="isPrebidConfig === true" style="align-items: flex-start">
+          <div class="title-background-small">
+            <h4>{{ 'WBID.PROPERTIES.PLACEMENTS.AD_UNIT_CODE' | translate }}</h4>
+          </div>
+          <div id="ad-unit-code">
+            <mat-form-field>
+              <input
+                matInput
+                type="text"
+                [required]="isPrebidUser === true"
+                [placeholder]="'WBID.PROPERTIES.PLACEMENTS.NETWORK_ID' | translate"
+                formControlName="networkId"
+              />
+              <mat-hint align="start">
+                {{ 'WBID.PROPERTIES.PLACEMENTS.NETWORK_ID_HINT' | translate }}
+              </mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                matInput
+                type="text"
+                [required]="isPrebidUser === true"
+                [placeholder]="'WBID.PROPERTIES.PLACEMENTS.AD_UNIT_CODE' | translate"
+                formControlName="adUnitCode"
+              />
+              <mat-hint align="start">
+                {{ 'WBID.PROPERTIES.PLACEMENTS.AD_UNIT_CODE_HINT' | translate }}
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div id="adwmg-analytics-alert">
+        <span *ngIf="adWMGAnalyticsConfigIncorrect">
+          {{ 'WBID.PROPERTIES.PLACEMENTS.ADWMG_SETTING_FAILED' | translate }}
+        </span>
+      </div>
+      <div>
+        <button mat-raised-button class="cancel" (click)="goBack()" color="warn">
+          {{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}
+        </button>
+        <button mat-raised-button class="save" (click)="editConfig()" [disabled]="!formIsValid" color="primary" *ngIf="!preview">
+          {{ isCopy ? ('WBID.PROPERTIES.PLACEMENTS.SAVE' | translate) : ('WBID.PROPERTIES.PLACEMENTS.UPDATE' | translate) }}
+        </button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

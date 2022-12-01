@@ -1,0 +1,33 @@
+<mat-card
+  [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }"
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+>
+  <mat-card-title>
+    <h3 class="attachments_title">
+      {{ 'PROFILE_PAGE.ATTACHMENTS.TITLE' | translate }}
+    </h3>
+  </mat-card-title>
+  <ng-container *ngIf="listOfAttachments.length > 0">
+    <div fxLayoutAlign="start center">
+      <button mat-raised-button color="primary" class="p-0 mr-05" *ngFor="let attach of listOfAttachments">
+        <a
+          mat-button
+          id="{{ attach }}"
+          class="adapt-content"
+          (click)="download(attach)"
+          target="_blank"
+          title="{{ 'PROFILE_PAGE.ATTACHMENTS.DOWNLOAD' | translate }}"
+        >
+          <span style="font-weight: 500" class="full-width">
+            {{ attach }}
+          </span>
+        </a>
+      </button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="listOfAttachments.length === 0">
+    <mat-card-title align="center" style="text-shadow: 8px 7px 4px grey">
+      {{ 'PROFILE_PAGE.ATTACHMENTS.NO_ATTACHMENTS' | translate }}
+    </mat-card-title>
+  </ng-container>
+</mat-card>

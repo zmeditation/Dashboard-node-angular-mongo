@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+  {{ ('WBID.PROPERTIES.PLACEMENTS.SET_ANALYT_ONE' | translate)}} {{data.adapter.name}} {{('WBID.PROPERTIES.PLACEMENTS.SET_ANALYT_TWO' | translate)}}
+</h2>
+<mat-dialog-content class="mat-typography">
+  <form action="" #optionsForm [name]="data.adapter.name">
+    <div *ngFor="let option of data.adapter['options']" class="analytics-adapter-option">
+      <mat-form-field class="adapter-settings-form">
+        <input
+          matInput
+          [placeholder]="option[0]"
+          [name]="option[0]"
+          [required]="option[1].required"
+          [value]="(data.adapter.name === 'wbid' || data.adapter.name === 'adWMG') && option[0] === 'publisher_id'
+                    ? dashboardId
+                    : option[1].value"
+          [disabled]="(data.adapter.name === 'wbid' || data.adapter.name === 'adWMG') && option[0] === 'publisher_id'"
+        />
+      </mat-form-field>
+      <div class="additional-info">
+        <span><b>Description:</b> {{option[1].description}}</span>
+        <span><b>Example:</b> {{option[1].example}}</span>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close mat-stroked-button color="warn">{{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}</button>
+  <button mat-button mat-stroked-button color="primary" [mat-dialog-close]="getDataFromInput(optionsForm)" [disabled]="checkFormValidity(optionsForm)">
+    {{ 'WBID.PROPERTIES.PLACEMENTS.SAVE' | translate }}
+  </button>
+</mat-dialog-actions>

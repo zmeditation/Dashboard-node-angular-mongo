@@ -1,0 +1,108 @@
+<div class="mat-color-accent mb-1">Roles</div>
+
+<div class="mb-1">
+  <div
+    [ngClass.lt-sm]="showManageRoles === true ? 'h_20vh' : 'h-100'"
+    fxFlex="100"
+    fxLayout="row"
+    fxLayout.lt-sm="column"
+    [fxLayoutAlign]="showManageRoles === true ? 'space-evenly stretch' : 'flex-start flex-start'"
+    fxLayoutWrap="nowrap"
+  >
+    <button fxFlex="20" mat-raised-button class="mat-accent" [ngClass.gt-xs]="'mr-1'" (click)="manageRoles()" *ngIf="!showManageRoles">Manage Roles</button>
+    <button fxFlex="20" fxFlex.sm="25" mat-raised-button class="mat-warn" [ngClass.gt-xs]="'mr-1'" (click)="showManageRoles = false" *ngIf="showManageRoles">
+      Close
+    </button>
+
+    <button
+      fxFlex="20"
+      fxFlex.sm="25"
+      mat-raised-button
+      class="mat-warn"
+      [disabled]="managingRoles.controls['name'].errors || arrayOfPermissionsReadyToAdd.length === 0"
+      *ngIf="showManageRoles"
+      (click)="sendRolesToServer()"
+      matTooltip="{{ 'SETTINGS_PERMISSIONS.ERRORS.CHOOSE_PERMISSIONS' | translate }}"
+    >
+      Send To Server
+    </button>
+    <mat-chip-list [ngClass.gt-xs]="'ml-1'" fxFlex="40" fxFlex.lt-md="45" fxFlex.lt-sm="20" *ngIf="showManageRoles">
+      <mat-chip color="white" fxFlex="100" fxLayoutAlign="center" class="chip-permissions" selected>
+        {{ 'SETTINGS_PERMISSIONS.ERRORS.CHOOSE_PERMISSIONS' | translate }}</mat-chip
+      >
+    </mat-chip-list>
+  </div>
+</div>
+
+<mat-card *ngIf="showManageRoles">
+  <form [formGroup]="managingRoles">
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutWrap="wrap" fxLayoutAlign="space-around center" fxLayoutAlign.lt-md="stretch">
+      <div fxFlex="100" fxFlex.gt-sm="20" fxFlex.sm="100">
+        <mat-form-field class="full-width">
+          <input matInput formControlName="name" [(ngModel)]="roleName" placeholder="Input Role Name" />
+          <mat-error *ngIf="managingRoles.controls['name'].hasError('required')">{{ 'SETTINGS_PERMISSIONS.ERRORS.MINLENGTH' | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" fxFlex.gt-sm="80" fxFlex.sm="100">
+        <div *ngFor="let perm of arrayOFobjectPermissions; let z = index" class="permissions-list">
+          <mat-card [title]="perm.type" class="card-permissions-role">
+            <mat-card-header>
+              <mat-card-title>{{ perm.type }}</mat-card-title>
+            </mat-card-header>
+            <mat-chip-list [multiple]="true">
+              <mat-chip
+                *ngFor="let permissionsNames of perm.res; let i = index"
+                selected="{{ !outlined[z][i] }}"
+                (click)="addRole(z, i, permissionsNames.name)"
+                [value]="permissionsNames.name"
+                [selectable]="true"
+                style="cursor: pointer"
+              >
+                {{ permissionsNames.name }}
+              </mat-chip>
+            </mat-chip-list>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>
+
+<ngx-datatable
+  class="material fullscreen bg-white"
+  [columnMode]="'force'"
+  [headerHeight]="50"
+  [footerHeight]="0"
+  [rowHeight]="'auto'"
+  [scrollbarV]="false"
+  [scrollbarH]="true"
+  [rows]="roleRows"
+>
+  <ngx-datatable-column [minWidth]="130" name="Name">
+    <ng-template let-column="column" ngx-datatable-header-template>
+      <div class="column-name">{{ column.name }}</div>
+    </ng-template>
+    <ng-template let-value="value" ngx-datatable-cell-template>
+      <div>{{ value }}</div>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column [width]="400" name="Permissions">
+    <ng-template let-column="column" ngx-datatable-header-template> Permissions </ng-template>
+    <ng-template let-value="value" ngx-datatable-cell-template>
+      <mat-chip-list>
+        <mat-chip *ngFor="let permission of value" [color]="'accent'" selected="true">
+          {{ permission }}
+        </mat-chip>
+      </mat-chip-list>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column [width]="160" name="_id" *ngIf="showManageRoles">
+    <ng-template let-column="column" ngx-datatable-header-template> Action </ng-template>
+    <ng-template let-value="value" ngx-datatable-cell-template>
+      <button mat-raised-button class="mat-warn" (click)="deleteRole(value)">Delete Role</button>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>

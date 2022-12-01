@@ -1,0 +1,56 @@
+<div fxLayout="column">
+  <div fxFlex="100">
+    <!--{{title}}-->
+    <mat-card-title class="m-1" translate>
+      {{
+        userType === 'publisher'
+          ? 'USERS_PAGE.USERS_POPUP_COMPONENT.USER_ADD_FORM_COMPONENT.TITLE.PUBLISHER'
+          : 'USERS_PAGE.USERS_POPUP_COMPONENT.USER_ADD_FORM_COMPONENT.TITLE.ACCOUNT_MANAGER'
+      }}
+    </mat-card-title>
+    <div fxLayout="row" *ngxPermissionsOnly="['canEditAllUsers', 'canEditAllPubs']">
+      <button *ngIf="!showEditButton" (click)="editPublishers()" mat-button class="mr-1">Edit</button>
+    </div>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" *ngIf="showUserEditForm">
+      <div fxFlex="100">
+        <mat-progress-bar *ngIf="loadUsers"></mat-progress-bar>
+        <mat-chip-list *ngIf="!loadUsers">
+          <mat-chip class="center-all" color="primary" *ngFor="let publisher of userList" selected>{{ publisher.name }} </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="100">
+    <mat-form-field *ngIf="!showUserEditForm" class="full-width">
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let publisher of userList" [selectable]="selectable" [removable]="removable" (removed)="remove(publisher)">
+          {{ publisher.name }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          translate
+          placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.USER_ADD_FORM_COMPONENT.PLACEHOLDERS.USER' | translate }}"
+          #UserInput
+          [formControl]="userForm"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+        />
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let publisher of filteredUsers | async" [value]="publisher['_id']">
+          {{ publisher['name'] }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <div fxFlexAlign="right">
+      <button *ngIf="showEditButton" mat-button color="accent" class="mr-1" (click)="saveUser()">
+        {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.USER_ADD_FORM_COMPONENT.BUTTONS.SAVE' | translate }}
+      </button>
+      <button *ngIf="showEditButton" mat-button color="warn" class="mr-1" (click)="resetUser()">
+        {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.USER_ADD_FORM_COMPONENT.BUTTONS.CANCEL' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

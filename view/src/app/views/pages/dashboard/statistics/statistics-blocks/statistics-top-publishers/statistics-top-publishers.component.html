@@ -1,0 +1,28 @@
+<div
+  *ngxPermissionsOnly="['canReadAllReports', 'canReadOwnPubsReports', 'canReadAllPubsReports']"
+  [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  class="example-container"
+>
+  <div class="spinner-container" *ngIf="topPublishers.length < 1">
+    <mat-spinner style="margin: auto auto"></mat-spinner>
+  </div>
+
+  <div *ngIf="topPublishers && topPublishers.length > 0" [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }">
+    <mat-card-title align="center">{{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.TOP_PUBLISHERS' | uppercase | translate }}</mat-card-title>
+
+    <mat-table [dataSource]="dataSourceTop" class="mat-elevation-z0">
+      <!-- Position Column -->
+      <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumnsTop">
+        <mat-header-cell *matHeaderCellDef [class.flex-for-second-child-header]="column === 'revenue'">
+          {{ 'STATISTICS.ANALYTICS.BLOCKS.HEADER_COLUMN.' + column | uppercase | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" [class.flex-for-second-child]="column === 'revenue'">
+          {{ column === 'publishers' ? element.name : element[column] }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumnsTop" class="less-height-for-header-row"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumnsTop" class="less-height-for-row"></mat-row>
+    </mat-table>
+  </div>
+</div>

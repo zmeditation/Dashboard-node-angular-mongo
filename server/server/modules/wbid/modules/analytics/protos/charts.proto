@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package wbid.analytics.charts;
+
+message DashboardResponse {
+    string period_start = 1;//"2019-11-01"
+    string period_end = 2;//"2019-11-07"
+    string label_metric = 3; //group by
+    string data_metric = 4; // sum()
+    int32 limit = 5;
+    repeated string publisher_id = 6;
+    repeated string site = 7;
+    repeated string ad_unit = 8;
+}
+
+message PieRequest {
+    repeated double data = 1;
+    repeated string label = 2;
+}
+
+message LineRequest {
+    repeated float data = 1;
+    string label = 2;
+    repeated string dates = 3;
+}
+
+message DashboardRequest {
+    PieRequest pie = 1;
+    repeated LineRequest line = 2;
+}
+
+service Dashboard {
+    rpc GetData (DashboardResponse) returns (DashboardRequest) {}
+}

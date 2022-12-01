@@ -1,0 +1,202 @@
+$add: #396673;
+$cancel: #f44336;
+$save: #008e7a;
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 800px;
+
+#progress-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#progress-percent {
+  margin: 10px;
+  padding: 5px;
+  display: block;
+}
+
+#alert {
+  margin: 10px;
+  padding: 5px;
+  display: block;
+  color: #f44336;
+  font-weight: 600;
+}
+
+#bottom-margin {
+  width: 100%;
+  margin: 10px 0;
+  height: 10px;
+}
+
+.empty-24px-div {
+  width: 24px;
+  height: 24px;
+}
+
+.integration-progress-bar {
+  padding: 5px 10px;
+}
+
+.mat-progress-bar {
+  height: 20px;
+}
+
+.shadow-card {
+  margin: 15px 0;
+  width: 100%;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+  -moz-box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+  box-shadow: 0 0 23px 5px rgba(117, 117, 117, 0.39);
+}
+
+h2 {
+  margin: 5px 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 1.5rem;
+}
+
+.title-background {
+  background-color: $add;
+  width: 100%;
+  height: auto;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.title-background h2 {
+  color: #fff;
+  border: none;
+}
+
+.mat-card {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  font-weight: bold;
+}
+
+mat-card {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#stages-container {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 10px 0;
+}
+
+#stages-container > div {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+#stages-container div span {
+  height: 32px;
+  display: block;
+  font-size: 22px;
+  margin-left: 10px;
+}
+
+#progress-container {
+  box-sizing: border-box;
+  border: 1px solid gray;
+  width: 100%;
+  height: 75px;
+  display: flex;
+  flex-direction: row;
+}
+
+#network {
+  width: 8%;
+}
+
+#order {
+  width: 4%;
+}
+
+#sizes {
+  width: 6%;
+}
+
+#lineitems {
+  width: 8%;
+}
+
+#creatives {
+  width: 4%;
+}
+
+#connections {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+}
+
+.connections-part {
+  width: calc(100% / 7);
+}
+
+.non-active {
+  background-color: lightgray;
+}
+
+.active {
+  background-color: #ffca2c;
+}
+
+.done {
+  background-color: #339637;
+}
+
+@media (max-width: $breakpoint-phone) and (min-width: 300px) {
+  h2 {
+    font-size: 1rem;
+  }
+
+  #stages-container {
+    width: 100%;
+  }
+
+  #stages-container div span {
+    height: auto;
+    display: block;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .mat-card-content span {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: $breakpoint-tablet) and (min-width: $breakpoint-phone) {
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  #stages-container {
+    width: 100%;
+  }
+
+  #stages-container div span {
+    height: auto;
+    display: block;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .mat-card-content span {
+    font-size: 0.8rem;
+  }
+}

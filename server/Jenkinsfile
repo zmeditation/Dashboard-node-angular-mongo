@@ -1,0 +1,24 @@
+pipeline {
+  agent {
+    docker {
+      image 'node:12.11.1'
+      args '-p 3000:3000'
+    }
+
+  }
+  stages {
+    stage('install') {
+      steps {
+        sh 'npm install'
+      }
+    }
+
+    stage('test') {
+      steps {
+        sh 'npm run test'
+        junit(testResults: 'Failing', allowEmptyResults: true)
+      }
+    }
+
+  }
+}

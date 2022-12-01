@@ -1,0 +1,82 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+node_modules
+.idea
+.vscode
+
+# compiled output
+view/dist
+view/tmp
+view/out-tsc
+view/cypress
+
+# dependencies
+view/node_modules
+# IDEs and editors
+*settings.json
+view/.idea
+view/.project
+view/.classpath
+view/.c9/
+view/*.launch
+view/.settings/
+view/*.sublime-workspace
+
+# IDE - VSCode
+view/.vscode/*
+view/!.vscode/settings.json
+view/!.vscode/tasks.json
+view/!.vscode/launch.json
+view/!.vscode/extensions.json
+.idea
+
+# misc
+view/.sass-cache
+view/connect.lock
+view/coverage
+view/libpeerconnection.log
+view/npm-debug.log
+view/testem.log
+view/typings
+
+# e2e
+view/e2e/*.js
+view/e2e/*.map
+
+# System Files
+view/.DS_Store
+.DS_Store
+*.DS_Store
+view/Thumbs.db
+view/.htaccess
+
+# Test's files
+view/debug.log
+view/src/app/shared/tests_materials/*
+
+# Server
+server/node_modules
+server/server/modules/reporting/APIUpload/AppNexus/token.txt
+server/server/modules/reporting/APIUpload/AppNexus/report
+server/server/modules/reporting/APIUpload/RTBHouse/*.json
+#server/server/modules/reporting/APIUpload/Google_Ad_Manager_HB/gam-reports
+#server/server/modules/reporting/APIUpload/config/tokens.json
+server/server/services/analytics/storage/*.json
+server/server/services/users/AdsTxtDomains/storage/*.json
+#server/server/services/helperFunctions/RequiredPaths/*
+server/server/public/attachments
+server/server/public/images/pp
+server/test/user.js
+server/server/dist/exported/*
+server/server/dist/reports/*
+server/server/dist/invoices/*
+server/!server/dist/invoices/test2.png
+#server/server/modules/wbid/services/Socket/socket.js
+server/.env
+server/.idea
+server/README.md
+server/server/modules/wbid/services/TAC/dist/*.js
+server/server/modules/tac/modules/generator/dist/*.js
+server/server/services/API/GoogleAdManager/adUnitsFiles/*.json
+server/server/dist/reports
+server/logs/*

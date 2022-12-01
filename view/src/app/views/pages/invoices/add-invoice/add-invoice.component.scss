@@ -1,0 +1,111 @@
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+
+.font-size {
+  &--22px {
+    font-size: 22px;
+  }
+
+  &--20px {
+    font-size: 20px;
+  }
+
+  &--15px {
+    font-size: 15px;
+  }
+}
+
+.margin {
+  &--bottom {
+    &-15 {
+      margin-bottom: 15px;
+    }
+  }
+
+  &--right {
+    &-15 {
+      margin-right: 15px;
+    }
+  }
+
+  &--left {
+    &-15 {
+      margin-left: 15px;
+    }
+  }
+}
+
+.size {
+  &--24px {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+span.file-name {
+  margin-left: 7px;
+  margin-right: 11px;
+}
+
+mat-icon.delete-icon {
+  position: relative;
+  top: 3px;
+}
+
+.cursor {
+  &--pointer {
+    cursor: pointer;
+  }
+}
+
+.mat-raised-button {
+  height: 36px;
+  width: 20%;
+  align-self: center;
+}
+
+h4 {
+  margin: 0;
+  display: block;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  text-transform: uppercase;
+  align-self: flex-start;
+  font-size: 1rem;
+}
+
+.icon-example-36 {
+  font-size: 36px;
+  align-self: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+mat-form-field {
+  margin: 5px 15px 0 15px;
+}
+
+//adaptive
+@media (max-width: $breakpoint-phone) {
+  mat-card > div > div {
+    flex-direction: column !important;
+
+    mat-form-field {
+      margin: 0;
+    }
+
+    button {
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-tablet) and (min-width: $breakpoint-phone) {
+  mat-card > div > div {
+    button {
+      width: 40%;
+    }
+  }
+}

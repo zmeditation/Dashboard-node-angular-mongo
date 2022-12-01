@@ -1,0 +1,500 @@
+{
+  "rubicon": [
+    {
+      "id": 0,
+      "domain": "rubiconproject.com",
+      "publisherAccountID": "19652",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "0bfd66d529a55807"
+    }
+  ],
+  "appnexus": [
+    {
+      "id": 0,
+      "domain": "appnexus.com",
+      "publisherAccountID": "8950",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    }
+  ],
+  "pubmatic": [
+    {
+      "id": 0,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "156307",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    },
+    {
+      "id": 1,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "156736",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    }
+  ],
+  "pulsepoint": [
+    {
+      "id": 0,
+      "domain": "contextweb.com",
+      "publisherAccountID": "561622",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "89ff185a4c4e857c"
+    }
+  ],
+  "oath": [
+    {
+      "id": 0,
+      "domain": "adtech.com",
+      "publisherAccountID": "11094",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 1,
+      "domain": "adtech.com",
+      "publisherAccountID": "11094",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    }
+  ],
+  "brealtime": [
+    {
+      "id": 0,
+      "domain": "EMXDGT.com",
+      "publisherAccountID": "397",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "1e1d41537f7cad7f"
+    },
+    {
+      "id": 1,
+      "domain": "Appnexus.com",
+      "publisherAccountID": "1356",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f5ab79cb980f11d1"
+    },
+    {
+      "id": 2,
+      "domain": "Google.com",
+      "publisherAccountID": "pub-5995202563537249",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f08c47fec0942fa0"
+    }
+  ],
+  "152media": [
+    {
+      "id": 0,
+      "domain": "appnexus.com",
+      "publisherAccountID": "3153",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f5ab79cb980f11d1"
+    }
+  ],
+  "smart": [
+    {
+      "id": 0,
+      "domain": "smartadserver.com",
+      "publisherAccountID": "3277",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 1,
+      "domain": "contextweb.com",
+      "publisherAccountID": "560288",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "89ff185a4c4e857c"
+    },
+    {
+      "id": 2,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "156439",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 3,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "154037",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 4,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "156030",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    },
+    {
+      "id": 5,
+      "domain": "rubiconproject.com",
+      "publisherAccountID": "16114",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "0bfd66d529a55807"
+    },
+    {
+      "id": 6,
+      "domain": "rubiconproject.com",
+      "publisherAccountID": "13132",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "0bfd66d529a55807"
+    },
+    {
+      "id": 7,
+      "domain": "openx.com",
+      "publisherAccountID": "537149888",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "6a698e2ec38604c6"
+    },
+    {
+      "id": 8,
+      "domain": "appnexus.com",
+      "publisherAccountID": "3703",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f5ab79cb980f11d1"
+    },
+    {
+      "id": 9,
+      "domain": "groundtruth.com",
+      "publisherAccountID": "107",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "81cbf0a75a5e0e9a"
+    },
+    {
+      "id": 10,
+      "domain": "districtm.io",
+      "publisherAccountID": "101760",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "3fd707be9c4527c3"
+    },
+    {
+      "id": 11,
+      "domain": "loopme.com",
+      "publisherAccountID": "s-2411",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "6c8d5f95897a5a3b"
+    },
+    {
+      "id": 12,
+      "domain": "loopme.com",
+      "publisherAccountID": "5679",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "6c8d5f95897a5a3b"
+    }
+  ],
+  "springserve": [
+    {
+      "id": 0,
+      "domain": "springserve.com",
+      "publisherAccountID": "581",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "a24eb641fc82e93d"
+    },
+    {
+      "id": 1,
+      "domain": "beachfront.com",
+      "publisherAccountID": "4969",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "e2541279e8e2ca4d"
+    },
+    {
+      "id": 2,
+      "domain": "advertising.com",
+      "publisherAccountID": "26282",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 3,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "157310",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    },
+    {
+      "id": 4,
+      "domain": "rhythmone.com",
+      "publisherAccountID": "2968119028",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "a670c89d4a324e47"
+    },
+    {
+      "id": 5,
+      "domain": "openx.com",
+      "publisherAccountID": "OPENX ID",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "6a698e2ec38604c6"
+    },
+    {
+      "id": 6,
+      "domain": "spotxchange.com",
+      "publisherAccountID": "239904",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "7842df1d2fe2db34"
+    },
+    {
+      "id": 7,
+      "domain": "spotx.tv",
+      "publisherAccountID": "239904",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "7842df1d2fe2db34"
+    }
+  ],
+  "amazon": [
+    {
+      "id": 0,
+      "domain": "aps.amazon.com",
+      "publisherAccountID": "20225d70-0d78-4b5e-9cb8-b69178e535c7",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 1,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "157150",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    },
+    {
+      "id": 2,
+      "domain": "openx.com",
+      "publisherAccountID": "540191398",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "6a698e2ec38604c6"
+    },
+    {
+      "id": 3,
+      "domain": "rubiconproject.com",
+      "publisherAccountID": "18020",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "0bfd66d529a55807"
+    },
+    {
+      "id": 4,
+      "domain": "appnexus.com",
+      "publisherAccountID": "1908",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f5ab79cb980f11d1"
+    },
+    {
+      "id": 5,
+      "domain": "adtech.com",
+      "publisherAccountID": "12068",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "e1a5b5b6e3255540"
+    },
+    {
+      "id": 6,
+      "domain": "ad-generation.jp",
+      "publisherAccountID": "12474",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "7f4ea9029ac04e53"
+    },
+    {
+      "id": 7,
+      "domain": "districtm.io",
+      "publisherAccountID": "100962",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "3fd707be9c4527c3"
+    },
+    {
+      "id": 8,
+      "domain": "appnexus.com",
+      "publisherAccountID": "3663",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f5ab79cb980f11d1"
+    },
+    {
+      "id": 9,
+      "domain": "rhythmone.com",
+      "publisherAccountID": "1654642120",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "a670c89d4a324e47"
+    },
+    {
+      "id": 10,
+      "domain": "yahoo.com",
+      "publisherAccountID": "55029",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "e1a5b5b6e3255540"
+    },
+    {
+      "id": 11,
+      "domain": "indexexchange.com",
+      "publisherAccountID": "192410",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "50b1c356f2c5c8fc"
+    }
+  ],
+  "google": [
+    {
+      "id": 0,
+      "domain": "google.com",
+      "publisherAccountID": "pub-8309773808661346",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "f08c47fec0942fa0"
+    },
+    {
+      "id": 1,
+      "domain": "google.com",
+      "publisherAccountID": "pub-6733417337840393",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "f08c47fec0942fa0"
+    }
+  ],
+  "ebda": [
+    {
+      "id": 0,
+      "domain": "rubiconproject.com",
+      "publisherAccountID": "19654",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "0bfd66d529a55807"
+    },
+    {
+      "id": 1,
+      "domain": "pubmatic.com",
+      "publisherAccountID": "157335",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "5d62403b186f2ace"
+    },
+    {
+      "id": 2,
+      "domain": "openx.com",
+      "publisherAccountID": "540310752",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "6a698e2ec38604c6"
+    },
+    {
+      "id": 3,
+      "domain": "rhythmone.com",
+      "publisherAccountID": "1654642120",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "a670c89d4a324e47"
+    },
+    {
+      "id": 4,
+      "domain": "rhythmone.com",
+      "publisherAccountID": "4195999290",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "a670c89d4a324e47"
+    },
+    {
+      "id": 5,
+      "domain": "Indexexchange.com",
+      "publisherAccountID": "188128",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "50b1c356f2c5c8fc"
+    },
+    {
+      "id": 6,
+      "domain": "sovrn.com",
+      "publisherAccountID": "265392",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "fafdf38b16bf6b2b"
+    },
+    {
+      "id": 7,
+      "domain": "sovrn.com",
+      "publisherAccountID": "252889",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "fafdf38b16bf6b2b"
+    },
+    {
+      "id": 8,
+      "domain": "triplelift.com",
+      "publisherAccountID": "6747",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "6c33edb13117fd86"
+    },
+    {
+      "id": 9,
+      "domain": "appnexus.com",
+      "publisherAccountID": "1314",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 10,
+      "domain": "spotxchange.com",
+      "publisherAccountID": "228454",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "7842df1d2fe2db34"
+    },
+    {
+      "id": 11,
+      "domain": "spotx.tv",
+      "publisherAccountID": "228454",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "7842df1d2fe2db34"
+    }
+  ],
+  "teads": [
+    {
+      "id": 0,
+      "domain": "teads.tv",
+      "publisherAccountID": "17163",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "15a9c44f6d26cbe1"
+    },
+    {
+      "id": 1,
+      "domain": "teads.tv",
+      "publisherAccountID": "16877",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "15a9c44f6d26cbe1"
+    }
+  ],
+  "criteo": [
+    {
+      "id": 0,
+      "domain": "Criteo.com",
+      "publisherAccountID": "155036",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    },
+    {
+      "id": 1,
+      "domain": "Criteo.com",
+      "publisherAccountID": "174835",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    }
+  ],
+  "wmginternational": [
+    {
+      "id": 0,
+      "domain": "wmgroup.us",
+      "publisherAccountID": "142088",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    }
+  ],
+  "facebook": [
+    {
+      "id": 0,
+      "domain": "facebook.com",
+      "publisherAccountID": "119888871962164",
+      "accountType": "RESELLER",
+      "certificateAuthorityID": "c3e20eee3f780d68"
+    }
+  ],
+  "rtb_house": [
+    {
+      "id": 0,
+      "domain": "RTBHOUSE.COM",
+      "publisherAccountID": "L9mpDKGuioBmI257VKeJ",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": ""
+    }
+  ],
+  "openx": [
+    {
+      "id": 0,
+      "domain": "openx.com",
+      "publisherAccountID": "540233887",
+      "accountType": "DIRECT",
+      "certificateAuthorityID": "6a698e2ec38604c6"
+    }
+  ]
+}

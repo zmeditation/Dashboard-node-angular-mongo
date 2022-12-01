@@ -1,0 +1,33 @@
+.basic-form-width {
+  width: 60%;
+}
+
+.basic-form-p {
+  margin: 0;
+  padding: 0;
+}
+
+.query-builder-block-title {
+  border-bottom: 1px solid dimgrey;
+  width: 95%;
+}
+
+.run-delivery-btn,
+.chart-toggle-btn {
+  padding-top: 8px;
+  margin-top: 5px;
+}
+
+.smaller-font-size {
+  font-size: 0.95em !important;
+}
+
+@media (max-width: 767px) {
+  #run-report-btn {
+    width: 100%;
+  }
+
+  .query-builder-block-title {
+    width: 100%;
+  }
+}

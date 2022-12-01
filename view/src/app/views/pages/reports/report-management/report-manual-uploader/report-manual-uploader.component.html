@@ -1,0 +1,235 @@
+<!-- @format -->
+
+<mat-card class="mb-1" [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+  <mat-card-title>
+    <div class="card-title-text pb-1 pt-1">
+      {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TITLE' | translate }}
+    </div>
+    <mat-divider [inset]="true"></mat-divider>
+  </mat-card-title>
+  <mat-card-content>
+    <form *ngIf="!loading" [formGroup]="uploadFormManual" #formDirective="ngForm" (ngSubmit)="uploadRow(formDirective)">
+      <mat-card-title>{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.TITLE_PLACEMENT' | translate }}</mat-card-title>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" class="full-width">
+        <mat-form-field class="pr-1" fxFlex="100" [hideRequiredMarker]="true">
+          <input
+            type="text"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.PUBLISHER'
+                | translate
+            }}"
+            matInput
+            formControlName="publisher"
+            [matAutocomplete]="autoCompletePublishers"
+          />
+          <mat-error *ngIf="uploadFormManual.get('publisher').invalid">{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.' +
+              getErrorMessagePub() | translate }}</mat-error>
+          <mat-autocomplete #autoCompletePublishers="matAutocomplete" [displayWith]="displayFn">
+            <mat-option data-cy="publishers" *ngFor="let publisher of filteredPublishers | async" [value]="publisher"
+              >{{ publisher.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field fxFlex="100" class="pr-1" [hideRequiredMarker]="true">
+          <input
+            type="text"
+            placeholder="{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.PROGRAMMATIC' | translate }}"
+            matInput
+            formControlName="report_origin"
+            [matAutocomplete]="autoCompleteOrigins"
+          />
+          <mat-error *ngIf="uploadFormManual.get('report_origin').invalid">{{
+            'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.' +
+              getErrorMessageOrigins() | translate
+          }}</mat-error>
+          <mat-autocomplete #autoCompleteOrigins="matAutocomplete">
+            <mat-option *ngFor="let origin of filteredProgrammatics | async" [value]="origin">{{ origin }}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field fxFlex="100" class="pr-1" [hideRequiredMarker]="true">
+          <input
+            type="text"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.PROPERTY' | translate
+            }}"
+            matInput
+            formControlName="tags"
+            [matAutocomplete]="autoCompletePlacements"
+          />
+          <mat-error *ngIf="uploadFormManual.get('tags').invalid">{{
+            'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.' +
+             getErrorMessageTags() | translate
+          }}</mat-error>
+          <mat-autocomplete #autoCompletePlacements="matAutocomplete">
+            <mat-option *ngFor="let property of filteredProperty | async" [value]="property">{{ property }} </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="pr-1" fxFlex="100" [hideRequiredMarker]="true">
+          <input
+            type="text"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.DOMAIN' | translate
+            }}"
+            matInput
+            formControlName="domain"
+            [matAutocomplete]="autoCompleteDomains"
+          />
+          <mat-error *ngIf="uploadFormManual.get('domain').invalid">{{
+             'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.' +
+              getErrorMessageDom() | translate
+          }}</mat-error>
+          <mat-autocomplete #autoCompleteDomains="matAutocomplete">
+            <mat-option *ngFor="let domain of filteredDomains | async" [value]="domain">{{ domain }}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <mat-card-title>{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.TITLE_AD' | translate }}</mat-card-title>
+      <mat-divider class="mt-1 mb-1" [inset]="true"></mat-divider>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutWrap="wrap">
+        <mat-form-field class="pr-1" fxFlex="100" [hideRequiredMarker]="true">
+          <mat-select
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.TYPE' | translate
+            }}"
+            formControlName="inventory_type"
+          >
+            <mat-option *ngFor="let type of types" [value]="type" (click)="checkingInventoryType()">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="uploadFormManual.get('inventory_type').invalid">{{
+            'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.' +
+            getErrorMessageType() | translate }}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="pr-1" fxFlex="100" [hideRequiredMarker]="true">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.DATE' | translate
+            }}"
+            formControlName="day"
+            [max]="unavailabilityRange.max"
+            [min]="unavailabilityRange.min"
+            readonly
+          />
+          <mat-error *ngIf="uploadFormManual.get('day').invalid">{{
+            "REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.DATE" | translate }}</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker disabled="false"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="pr-1" fxFlex="100" [hideRequiredMarker]="true" formGroupName="inventory_sizes">
+          <input
+            type="number"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.WIDTH' | translate
+            }}"
+            matInput
+            formControlName="width"
+          />
+          <mat-error *ngIf="uploadFormManual.get('inventory_sizes').get('width').invalid">
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.WIDTH' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100" class="pr-1" [hideRequiredMarker]="true" formGroupName="inventory_sizes">
+          <input
+            type="number"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.HEIGHT' | translate
+            }}"
+            matInput
+            formControlName="height"
+          />
+          <mat-error
+            *ngIf="
+              uploadFormManual.get('inventory_sizes').get('height').invalid
+            "
+          >
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.HEIGHT' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <mat-card-title>{{
+        "REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.TITLE_STATISTIC"
+          | translate
+      }}</mat-card-title>
+      <mat-divider class="mt-1 mb-1" [inset]="true"></mat-divider>
+      <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxWrap="wrap" class="mb-1">
+        <mat-form-field class="pr-1" fxFlex="100" fxFlex.gt-xs="25" [hideRequiredMarker]="true">
+          <input
+            type="number"
+            placeholder="{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.AD_REQUESTS' | translate }}"
+            matInput
+            formControlName="ad_request"
+          />
+          <mat-error *ngIf="uploadFormManual.get('ad_request').invalid">
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.INTEGER_MAX_10' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="pr-1" fxFlex="100" fxFlex.gt-xs="25" [hideRequiredMarker]="true">
+          <input
+            type="number"
+            placeholder="{{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.IMPRESSIONS' | translate }}"
+            matInput
+            formControlName="matched_request"
+          />
+          <mat-error *ngIf="uploadFormManual.get('matched_request').invalid">
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.INTEGER_MAX_10' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="pr-1" fxFlex="100" fxFlex.gt-xs="25" [hideRequiredMarker]="true">
+          <input
+            type="number"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.CLICKS' | translate
+            }}"
+            matInput
+            formControlName="clicks"
+          />
+          <mat-error *ngIf="uploadFormManual.get('clicks').invalid">
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.INTEGER_MAX_10' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100" class="pr-1" fxFlex.gt-xs="25" [hideRequiredMarker]="true">
+          <input
+            type="number"
+            placeholder="{{
+              'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ECPM' | translate
+            }}"
+            matInput
+            formControlName="ecpm"
+          />
+          <mat-error *ngIf="uploadFormManual.get('ecpm').invalid">
+            {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.ERRORS.INTEGER_MAX_10' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <button mat-raised-button class="mr-1" color="primary" type="submit" [disabled]="!uploadFormManual.valid">
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.BUTTON_SUBMIT' | translate }}
+      </button>
+      <button mat-raised-button color="warn" type="reset">
+        {{ 'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.FORM.BUTTON_RESET' | translate }}
+      </button>
+    </form>
+    <div *ngIf="loading" fxFlexAlign="row" fxLayoutAlign="center center" style="height: 300px">
+      <mat-spinner [diameter]="70"></mat-spinner>
+    </div>
+  </mat-card-content>
+  <mat-tab-group>
+    <mat-tab
+      label="{{
+        'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.LABEL_READY' | translate
+      }}"
+    >
+      <app-report-manual-uploader-table></app-report-manual-uploader-table>
+    </mat-tab>
+    <mat-tab
+      label="{{
+        'REPORT_MANAGEMENT_PAGE.MANUAL_UPLOADER.TABLE.LABEL_LAST' | translate
+      }}"
+    >
+      <app-report-last-manual-uploads></app-report-last-manual-uploads>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

@@ -1,0 +1,93 @@
+<div class="create-message-button-container" (click)="toggleNotificationBlock()">
+  <mat-icon *ngIf="!isCreateNewMessage; else remove" class="add-notice-button" matTooltip="Create message">add</mat-icon>
+  <ng-template #remove>
+    <mat-icon class="add-notice-button" matTooltip="Close">remove</mat-icon>
+  </ng-template>
+</div>
+
+<mat-card class="create-notice-container" [ngClass]="isCreateNewMessage ? 'show-create-message' : 'hide-create-message'">
+  <mat-card-content class="create-notice-container-content">
+    <form [formGroup]="form" fxLayout="column" #formDirective="ngForm" (ngSubmit)="submitMessage(formDirective)">
+      <section fxFlex="100">
+        <mat-form-field class="full-width">
+          <mat-select id="type" formControlName="notificationType" placeholder="{{ 'NOTIFICATIONS.TYPES' | translate }}">
+            <mat-option *ngFor="let noticeType of notificationsType" [value]="noticeType.typeDB">
+              {{ 'NOTIFICATIONS.' + noticeType.type | translate }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="form.get('notificationType').hasError('required')">
+            {{ 'NOTIFICATIONS.ERRORS.FIELD_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </section>
+
+      <section fxFlex="100">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="roles" placeholder="{{ 'NOTIFICATIONS.ROLES' | translate }}">
+            <mat-option *ngFor="let role of rolesArray" [value]="role">
+              {{ role }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error *ngIf="form.get('roles').hasError('required')">
+            {{ 'NOTIFICATIONS.ERRORS.FIELD_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </section>
+
+      <section fxFlex="100">
+        <mat-form-field class="full-width">
+          <input
+            type="text"
+            placeholder="{{ 'NOTIFICATIONS.USERS' | translate }}"
+            aria-label="Type users"
+            matInput
+            formControlName="users"
+            [matAutocomplete]="users_"
+          />
+
+          <mat-autocomplete #users_="matAutocomplete">
+            <mat-option *ngFor="let user of usersFiltered | async" [value]="user.name">
+              {{ user.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </section>
+
+      <section fxFlex="100">
+        <mat-form-field class="full-width">
+          <textarea
+            class="textarea-notification"
+            type="text"
+            placeholder="{{ 'NOTIFICATIONS.TYPE_IN_MESSAGE' | translate }}"
+            aria-label="Type users"
+            matInput
+            formControlName="message"
+          ></textarea>
+
+          <mat-error *ngIf="form.get('message').hasError('minlength')">
+            {{ 'NOTIFICATIONS.ERRORS.MIN_LENGTH' | translate }}
+            {{ form.get('message').errors.minlength.requiredLength }}
+          </mat-error>
+          <mat-error *ngIf="form.get('message').hasError('maxlength')">
+            {{ 'NOTIFICATIONS.ERRORS.MAX_LENGTH' | translate }}
+            {{ form.get('message').errors.maxlength.requiredLength }}
+          </mat-error>
+          <mat-error *ngIf="form.get('message').hasError('required')">
+            {{ 'NOTIFICATIONS.ERRORS.FIELD_REQUIRED' | translate }}
+          </mat-error>
+          <mat-error *ngIf="form.get('message').hasError('incorrect')">
+            {{ 'NOTIFICATIONS.ERRORS.INCORRECT_TEXT' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </section>
+
+      <section fxFlex="100" fxLayoutAlign="center center" class="mt-1">
+        <button color="primary" type="submit" [disabled]="!isValidForm" mat-stroked-button>
+          {{ 'SETTINGS_PERMISSIONS.ADD_BUTTON' | translate }}
+        </button>
+      </section>
+    </form>
+  </mat-card-content>
+</mat-card>

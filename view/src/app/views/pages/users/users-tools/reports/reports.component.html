@@ -1,0 +1,100 @@
+<div class="reports-users-tools">
+  <div class="reports-users-tools__filter">
+    <mat-form-field class="reports-users-tools__user-select" fxFlex="100" fxFlex.gt-sm="40" fxFlex.sm="100" fxFlex.xs="100">
+      <input
+        matInput
+        type="text"
+        placeholder="{{ 'TOOLS.USERS_REPORTS.PUBLISHER_NAME' | translate }}"
+        [formControl]="searchUserValue"
+        [matAutocomplete]="matAutoRef.autocomplete"
+        (keyup)="searchUser($event)"
+      />
+      <app-mat-autocomplete-pagination
+        #matAutoRef
+        idProperty="id"
+        [data]="usersData"
+        [load]="isLoadingPublishers"
+        [disabledLoadMoreButton]="disabledLoadMoreButton"
+        (selected)="selectUser($event.option)"
+        (onLoadMore)="loadMoreUsers()"
+      ></app-mat-autocomplete-pagination>
+    </mat-form-field>
+    <button mat-raised-button type="button" color="primary" class="get-user-button" (click)="showUserData()">
+      {{ 'TOOLS.USERS_REPORTS.GET_DATA' | translate }}
+    </button>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoadingUserData || isLoadingSyncAction" mode="indeterminate"></mat-progress-bar>
+
+  <div class="table-wrapper">
+    <table
+      *ngIf="userInformation.length && !isLoadingUserData"
+      mat-table
+      multiTemplateDataRows
+      [dataSource]="userInformation"
+      class="reports-users-tools__info-table"
+    >
+      <ng-container matColumnDef="{{ column }}" *ngFor="let column of displayedColumns">
+        <th mat-header-cell *matHeaderCellDef>{{ 'TOOLS.USERS_REPORTS.' + column.toUpperCase() | translate }}</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="column === 'field'">{{ 'TOOLS.USERS_REPORTS.' + element.translationKey | translate }}</span>
+
+          <span *ngIf="column === 'value' && element.field !== 'enabled.status'">{{ element.value }}</span>
+
+          <div *ngIf="column === 'value' && element.field === 'enabled.status'">
+            <mat-chip *ngIf="!element.value" [color]="'primary'" [selected]="element.value" translate>{{
+              'USERS_PAGE.USERS_TABLE.STATUS.INACTIVE'
+            }}</mat-chip>
+            <mat-chip *ngIf="element.value" [color]="'primary'" [selected]="element.value" translate>{{
+              'USERS_PAGE.USERS_TABLE.STATUS.ACTIVE'
+            }}</mat-chip>
+          </div>
+
+          <button
+            *ngIf="column === 'actions' && element.sync"
+            mat-raised-button
+            matTooltip="Sync"
+            color="primary"
+            type="button"
+            [disabled]="isLoadingSyncAction"
+            (click)="syncEvent(element.syncType)"
+          >
+            <mat-icon>sync</mat-icon>
+          </button>
+
+          <button *ngIf="element !== expandedElement && column === 'actions' && element.field === 'countOfReports'" mat-stroked-button>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+
+          <button *ngIf="element === expandedElement && column === 'actions' && element.field === 'countOfReports'" mat-stroked-button>
+            <mat-icon>expand_less</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="displayedColumns.length"
+          [class.expanded-false]="element.field !== 'countOfReports'"
+          class="count-of-reports-row"
+        >
+          <div *ngIf="element.field === 'countOfReports'" class="expand-element-detail" [@fadeInOut]="element == expandedElement ? 1 : 0">
+            <mat-progress-bar *ngIf="isLoadingReportsData" class="progress-bar" mode="query"></mat-progress-bar>
+
+            <app-programmatics-reports-counts-table
+              *ngIf="!isLoadingReportsData"
+              [data]="programmaticsReportsCountsData"
+              [totalReportsCount]="userTotalReportsCount"
+            ></app-programmatics-reports-counts-table>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns" class="expand-element-row" (click)="onExpandElement(element)"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expand-detail-row"></tr>
+    </table>
+  </div>
+</div>

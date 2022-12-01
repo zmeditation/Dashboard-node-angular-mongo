@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+$add: #396673;
+$cancel: #f44336;
+$save: #008e7a;
+$fullWidth: 100%;
+$font: Roboto, 'Helvetica Neue', sans-serif;
+$breakpoint-phone: 576px;
+
+.title-background {
+  background-color: $add;
+  width: 100%;
+  height: auto;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+mat-card {
+  margin: auto;
+  font-family: $font;
+}
+
+mat-card-content {
+  max-width: none !important;
+}
+
+h1,
+h2,
+h3 {
+  display: inline-block;
+}
+
+#head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: $fullWidth;
+}
+
+.mat-flat-button {
+  background-color: $add;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 0 16px;
+  border-radius: 2px;
+  font-size: 16px;
+  width: 120px;
+  font-family: $font;
+  height: 36px;
+
+  ::selection {
+    background-color: #b3d4fc;
+    color: #000;
+    text-shadow: none;
+  }
+}
+
+#tags,
+#prebidTags {
+  display: flex;
+  justify-content: space-around;
+
+  textarea {
+    padding: 0 5px;
+  }
+}
+
+.full-width {
+  width: $fullWidth;
+}
+
+mat-icon {
+  font-size: 22px;
+}
+
+mat-form-field {
+  width: 50%;
+}
+
+textarea {
+  width: $fullWidth;
+  resize: none !important;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: $font;
+  height: 60vh;
+}
+
+.status {
+  margin: 10px 0 10px 0;
+  font-size: 18px;
+}
+
+.success {
+  color: #000000;
+}
+
+.error {
+  background-color: $cancel;
+  color: #fff;
+}
+
+.mat-card-header-text {
+  display: none;
+}
+
+.border-for-beautify {
+  border-right: 0.5px solid lightgrey;
+}
+
+@media (max-width: $breakpoint-phone) and (min-width: 300px) {
+  #tags {
+    flex-direction: column !important;
+  }
+
+  mat-form-field {
+    width: 100% !important;
+  }
+}

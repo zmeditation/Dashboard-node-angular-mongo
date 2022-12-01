@@ -1,0 +1,114 @@
+<mat-card class="mb-1" [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+  <mat-card-title class="mb-1">
+    <div>
+      <p>
+        {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.TITLE' | translate }}
+      </p>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      <div
+        ng2FileDrop
+        [ngClass]="{ 'dz-file-over': hasBaseDropZoneOver }"
+        (fileOver)="fileOverBase($event)"
+        [uploader]="uploader"
+        class="fileupload-drop-zone"
+      >
+        <div class="input-container">
+          {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.DROP_FILES' | translate }}
+          <input id="fileinput" class="inputfile" type="file" ng2FileSelect [uploader]="uploader" multiple/>
+          <label for="fileinput">{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.SELECT_FROM_PC' | translate }}</label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="uploader.queue.length"
+      fxLayout.lt-md="row"
+      fxLayout="column"
+      style="width: 100%"
+      [@animate]="{ value: '*', params: { y: '-50px', delay: '20ms' } }"
+    ></div>
+
+    <div id="file-uploader-container" *ngIf="uploader.queue.length">
+      <div id="file-container" *ngFor="let item of uploader.queue">
+        <div class="file-uploader-inner">
+          <div class="file-details">
+            <span>{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.FILE_NAME' | translate }}</span>
+          </div>
+          <div class="file-details">
+            <span>{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.PROGRAMMATIC' | translate }}</span>
+          </div>
+          <div class="file-details">
+            <span>{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.FILE_SIZE' | translate }}</span>
+          </div>
+          <div class="file-details">
+            <span>{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.PROGRESS' | translate }}</span>
+          </div>
+          <div class="file-details">
+            <span>{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.STATUS' | translate }}</span>
+          </div>
+        </div>
+        <div class="file-uploader-inner">
+          <div class="file-details">
+            <span>
+              {{ item.file.name }}
+              <button mat-icon-button mat-sm-button class="mat-warn remove-button" (click)="item.remove()">
+              <mat-icon>clear</mat-icon>
+            </button>
+            </span>
+          </div>
+          <div class="file-details">
+            <form [formGroup]="programmaticForm" class="full-width">
+              <mat-form-field class="select_container full-width">
+                <mat-select
+                  [placeholder]="'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.PROGRAMMATIC_SELECTOR_PLACEHOLDER' | translate"
+                  formControlName="programmaticValue"
+                  (selectionChange)="selected($event, item)" required>
+                  <mat-option *ngFor="let programmatic of programmatics" [value]="programmatic.value" ngDefaultControl>
+                    {{ programmatic.viewValue }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="programmaticForm.controls['programmaticValue'].hasError('required') && programmaticForm.controls['programmaticValue'].pristine">
+                  {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.ERRORS.NO_PROGRAMMATIC_SELECTED' | translate }}
+                </mat-error>
+              </mat-form-field>
+            </form>
+          </div>
+          <div class="file-details"><span>{{ item.file.size / 1024 | number: '.2' }} Kb</span></div>
+          <div class="file-details">
+            <span><strong>{{ item.progress }}%</strong></span>
+          </div>
+          <div class="file-details">
+            <span *ngIf="item.isSuccess">
+              <mat-icon color="primary">check_circle</mat-icon>
+              {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.UPLOAD_SUCCESSFUL' | translate }}
+            </span>
+            <span *ngIf="item.isCancel">
+              <mat-icon color="warn">cancel</mat-icon>
+              {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.UPLOAD_CANCELLED' | translate }}
+            </span>
+            <span *ngIf="item.isError">
+              <mat-icon color="warn">error_outline</mat-icon>
+              {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.UPLOAD_ERROR' | translate }}
+            </span>
+            <span *ngIf="item.isUploading">
+              <mat-spinner [diameter]="20" color="primary"></mat-spinner>
+              {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.UPLOAD_CONTINUES' | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxLayoutAlign="center">
+      <div class="mb-1 mt-1" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button class="mat-primary" (click)="uploader.uploadAll()"
+                [disabled]="!uploader.getNotUploadedItems().length">
+          {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.UPLOAD' | translate }}
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

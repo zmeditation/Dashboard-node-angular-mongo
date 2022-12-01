@@ -1,0 +1,22 @@
+.layout-content-container {
+  h5 {
+    margin: 0 0 10px 0;
+    font-weight: 600;
+  }
+
+  p {
+    width: 100%;
+    text-align: center;
+    .data {
+      font-weight: 500;
+    }
+  }
+
+  p > * {
+    overflow-wrap: break-word;
+  }
+}
+
+.dialog-container {
+  min-height: 200px;
+}

@@ -1,0 +1,6 @@
+<div *ngIf="data !== undefined">
+  <mat-card-title style="font-size: 2em; color: orangered; text-align: center">{{ data.message | translate }}</mat-card-title>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">OK</button>
+  </div>
+</div>

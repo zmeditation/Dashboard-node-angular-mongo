@@ -1,0 +1,68 @@
+.leader-of-accounts {
+  background: rgba(255, 255, 128, 1);
+}
+
+.table-account-manager-performance-header {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1a2534;
+  overflow: visible;
+  justify-content: center;
+  white-space: nowrap;
+}
+.mat-cell-photo {
+  border-radius: 50%;
+  max-height: 2.6rem;
+  min-width: 2.6rem;
+  margin-right: 10px;
+  box-shadow: 1px -1px 5px rgba(10, 10, 10, 0.6);
+  cursor: default;
+}
+.mat-cell:first-of-type,
+.mat-footer-cell:first-of-type {
+  padding: 10px 0px 10px 10px;
+}
+.mat-footer-cell {
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 960px) and (max-width: 970px) {
+  .table-account-manager-performance-header {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1a2534;
+    overflow: visible;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  .mat-cell-photo {
+    border-radius: 50%;
+    max-height: 1.5rem;
+    min-width: 1.5rem;
+    margin-right: 10px;
+    box-shadow: 1px -1px 5px rgba(10, 10, 10, 0.6);
+    cursor: default;
+  }
+
+  .mat-footer-cell {
+    font-weight: 500;
+    padding: 0px 5px 0px 5px !important;
+    font-size: 0.8rem;
+  }
+  mat-cell {
+    padding: 0px 5px 0px 5px !important;
+    font-size: 0.75rem;
+  }
+
+  .cell-account {
+    p {
+      max-width: 60%;
+    }
+  }
+  mat-row {
+    min-height: 1.8rem;
+  }
+  mat-header-row {
+    min-height: 1.8rem;
+  }
+}

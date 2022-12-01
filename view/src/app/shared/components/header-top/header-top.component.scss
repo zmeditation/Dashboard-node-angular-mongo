@@ -1,0 +1,131 @@
+li:last-child {
+  border-left: 0.5px groove rgba(165, 165, 165, 0.4);
+}
+
+.header-topnav {
+  opacity: 1;
+}
+
+ul.menu {
+  height: 100%;
+  > li {
+    height: 100%;
+    > div {
+      height: 100%;
+      > a,
+      > div {
+        margin: 0;
+        height: 100%;
+      }
+    }
+  }
+}
+.max-width-img {
+  max-width: 25%;
+  vertical-align: text-bottom;
+}
+
+.en {
+  background: url('assets/images/English.svg') left / contain no-repeat;
+  white-space: nowrap;
+}
+.ru {
+  background: url('assets/images/Russian.svg') left / contain no-repeat;
+  white-space: nowrap;
+}
+.es {
+  background: url('assets/images/Spanish.svg') left / contain no-repeat;
+  white-space: nowrap;
+}
+.lang {
+  min-width: 6rem;
+}
+
+.container-drop-down-lists > li {
+  //padding: 0 1%;
+}
+
+.ref-to-component > div > a {
+  height: 100% !important;
+  padding: 0 10px;
+}
+
+.ref-to-component > a {
+  // height: 100% !important;
+  padding: 0 !important;
+}
+
+@media only screen and (min-width: 960px) and (max-width: 970px) {
+  .topnav {
+    ul.menu {
+      height: 30px;
+      li {
+        div {
+          height: 30px;
+          a {
+            height: 30px;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+          }
+          ul {
+            transform: translateY(-10px);
+          }
+        }
+      }
+    }
+  }
+}
+
+.animate-alert {
+  animation: shake 0.5s;
+  animation-iteration-count: 1;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+    opacity: 0.9;
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.publisher-account-contact-information {
+  position: relative;
+  width: 23rem;
+  padding: 0 10px;
+  
+  span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

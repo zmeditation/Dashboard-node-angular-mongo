@@ -1,0 +1,82 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      {{ 'VAST_GENERATOR_PAGE.PAGE_TITLE' | translate }}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="2em" fxLayoutGap.xs="1em" fxLayoutAlign="center">
+        <!-- Main group -->
+        <div fxFlex fxLayout="column" fxLayoutGap="1em" fxLayoutGap.sm="2em">
+          <mat-form-field>
+            <mat-label>NetworkID</mat-label>
+            <input matInput formControlName="networkId"/>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Child Network ID</mat-label>
+            <input matInput formControlName="childNetworkId"/>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ getLabel('adUnitCode') | translate }}</mat-label>
+            <input matInput type="text" formControlName="adUnitCode"/>
+            <mat-error *appControlError="form.controls.adUnitCode"></mat-error>
+          </mat-form-field>
+          <div id="createAdUnit" >
+            <mat-checkbox formControlName="newAdUnit" #newUnitCheckbox
+                          (change)="newAdUnitCheck($event)">{{ getLabel('newAdUnit') | translate }}
+            </mat-checkbox>
+            <button type='button' id="generate-ad-unit" mat-raised-button color="primary" [disabled]="AdManagerRequestCounter !== 0"
+                    *ngIf="newUnitCheckbox.checked" (click)="sendAdUnitRequest()">
+              Generate Unit
+            </button>
+          </div>
+        </div>
+        <!-- Secondary group -->
+        <div fxFlex fxLayout="column" fxLayoutGap="1em" fxLayoutGap.sm="2em">
+          <mat-form-field>
+            <mat-label>{{ getLabel('pageUrl') | translate }}</mat-label>
+            <input matInput formControlName="pageUrl" url/>
+            <mat-error *appControlError="form.controls.pageUrl"></mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ getLabel('skipOffset') | translate }}</mat-label>
+            <input matInput formControlName="skipOffset" appOnlyNumbers type="number" number appChangeInputOnWheel/>
+            <mat-error *appControlError="form.controls.skipOffset"></mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{ getLabel('duration') | translate }}</mat-label>
+            <input matInput formControlName="duration" appOnlyNumbers type="number" number appChangeInputOnWheel/>
+            <mat-error *appControlError="form.controls.duration"></mat-error>
+          </mat-form-field>
+          <mat-checkbox formControlName="showSkipButton"
+                        (change)="checkboxChecked($event)">{{ getLabel('showSkipButton') | translate }}
+          </mat-checkbox>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="2em" fxLayoutGap.xs="1em" fxLayoutAlign="center"></div>
+    </form>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="form.valid && unitCompleted !== false">
+  <mat-card-content>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <mat-form-field
+        class="full-width"
+        [class.cursor--not-allowed]="form.invalid"
+        [class.cursor--pointer]="!form.invalid"
+        [matTooltip]="(form.invalid ? 'VAST_GENERATOR_PAGE.TOOLTIPS.INVALID' : 'VAST_GENERATOR_PAGE.TOOLTIPS.COPY') | translate"
+        [matTooltipClass]="{ warn: form.invalid }"
+        (click)="form.valid && copyUrl(resultUrl)"
+      >
+        <mat-label>{{ 'VAST_GENERATOR_PAGE.URL_CARD_TITLE' | translate }}</mat-label>
+        <input matInput [(ngModel)]="resultUrl" [disabled]="form.invalid"/>
+      </mat-form-field>
+      <div (click)="showValidationWarning()">
+        <button [disabled]="form.invalid" mat-raised-button (click)="copyUrl(resultUrl)" color="primary">
+          {{ 'BUTTONS_TITLE.COPY' | translate }}
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

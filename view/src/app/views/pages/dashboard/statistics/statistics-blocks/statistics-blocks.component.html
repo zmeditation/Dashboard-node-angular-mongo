@@ -1,0 +1,31 @@
+<section fxFlex="100" fxLayout="column">
+  <div
+    fxFlex="100"
+    fxLayout="row nowrap"
+    fxLayoutAlign="space-between stretch"
+    fxLayout.lt-md="column"
+    [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  >
+    <mat-card fxFlex="50" fxFlex.lt-md="100">
+      <app-statistics-top-publishers></app-statistics-top-publishers>
+    </mat-card>
+    <mat-card fxFlex="50" fxFlex.lt-md="100">
+      <app-statistics-worst-publishers></app-statistics-worst-publishers>
+    </mat-card>
+  </div>
+
+  <div
+    fxFlex="100"
+    fxLayout="row nowrap"
+    fxLayoutAlign="space-between stretch"
+    fxLayout.lt-md="column"
+    [@animate]="{ value: '*', params: { y: '25px', delay: '300ms' } }"
+  >
+    <mat-card fxFlex="50" fxFlex.lt-md="100">
+      <app-statistics-publishers-connection></app-statistics-publishers-connection>
+    </mat-card>
+    <mat-card fxFlex="50" fxFlex.lt-md="100">
+      <app-statistics-list-deduction-last-month></app-statistics-list-deduction-last-month>
+    </mat-card>
+  </div>
+</section>

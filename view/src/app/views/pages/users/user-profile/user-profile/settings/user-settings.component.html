@@ -1,0 +1,102 @@
+<mat-card class="p-0" [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+  <mat-tab-group>
+    <mat-tab label="{{ 'PROFILE_PAGE.SETTINGS.PROFILE_INFO' | translate }}">
+      <mat-card-content style="margin: 0">
+        <app-user-settings-edit></app-user-settings-edit>
+      </mat-card-content>
+    </mat-tab>
+
+    <mat-tab label="{{ 'PROFILE_PAGE.SETTINGS.PROFILE_PICTURE' | translate }}">
+      <mat-card-content *ngIf="hasAvatar" class="m-0">
+        <div class="profile-sidebar mb-1 pb-0" style="padding-top: 1.5rem">
+          <div class="propic text-center">
+            <img
+              class="profile-pic-settings"
+              width="200"
+              height="200"
+              src="{{ userAvatar ? userImgFolder + userAvatar : 'assets/images/avatar-placeholder.png' }}"
+              alt="{{ 'PROFILE_PAGE.SETTINGS.PROFILE_PICTURE' | translate }}"
+            />
+          </div>
+          <div class="profile-actions text-center mb-1">
+            <button mat-raised-button color="primary" (click)="showPictureUploader()">
+              {{ 'PROFILE_PAGE.SETTINGS.CHANGE_PROFILE_PICTURE' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-content *ngIf="!hasAvatar">
+        <div class="mb-1 mt-1">
+          <p>
+            {{ 'PROFILE_PAGE.SETTINGS.UPLOAD_A_PROFILE_PICTURE' | translate }}.
+            <span style="color: red">
+              <strong>{{ 'PROFILE_PAGE.SETTINGS.MAX_SIZE' | translate }}</strong>
+            </span>
+          </p>
+        </div>
+
+        <div>
+          <div
+            ng2FileDrop
+            [ngClass]="{ 'dz-file-over': hasBaseDropZoneOver }"
+            (fileOver)="fileOverBase($event)"
+            [uploader]="uploader"
+            class="fileupload-drop-zone"
+          >
+            <div class="input-container">
+              {{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.DROP_FILES' | translate }}
+              <input id="fileinput" class="inputfile" type="file" ng2FileSelect [uploader]="uploader" />
+              <label for="fileinput">{{ 'REPORT_MANAGEMENT_PAGE.FILE_UPLOADER.SELECT_FROM_PC' | translate }}</label>
+            </div>
+          </div>
+        </div>
+
+        <table class="default-table" style="width: 100%">
+          <thead>
+            <tr [hidden]="true">
+              <th width="30%">
+                {{ 'PROFILE_PAGE.SETTINGS.NAME' | translate }}
+              </th>
+              <th>{{ 'PROFILE_PAGE.SETTINGS.SIZE' | translate }}</th>
+              <th>{{ 'PROFILE_PAGE.SETTINGS.PROGRESS' | translate }}</th>
+              <th>{{ 'PROFILE_PAGE.SETTINGS.STATUS' | translate }}</th>
+              <th>{{ 'PROFILE_PAGE.SETTINGS.ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="uploader.queue.length; else tableNoData">
+            <tr *ngFor="let item of uploader.queue">
+              <td>{{ item?.file?.name }}</td>
+              <td nowrap>{{ item?.file?.size / 1024 / 1024 | number: '.2' }} MB</td>
+              <td>
+                <div class="progress" style="margin-bottom: 0">
+                  <div class="progress-bar" role="progressbar" [ngStyle]="{ width: item.progress + '%' }"></div>
+                  <mat-progress-bar color="primary" mode="determinate" [value]="item.progress"> </mat-progress-bar>
+                </div>
+              </td>
+              <td class="">
+                <mat-icon *ngIf="item.isSuccess">check</mat-icon>
+                <mat-icon *ngIf="item.isCancel" color="accent">cancel</mat-icon>
+                <mat-icon *ngIf="item.isError" color="warn">error</mat-icon>
+              </td>
+              <td class="uploads-table-actions-container" nowrap>
+                <button
+                  style="margin-right: 1em"
+                  mat-stroked-button
+                  class="mat-primary"
+                  (click)="item.upload()"
+                  [disabled]="item.isReady || item.isUploading || item.isSuccess"
+                >
+                  {{ 'PROFILE_PAGE.SETTINGS.UPLOAD' | translate }}
+                </button>
+                <button mat-stroked-button class="mat-warn" (click)="item.remove()">
+                  {{ 'PROFILE_PAGE.SETTINGS.REMOVE' | translate }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

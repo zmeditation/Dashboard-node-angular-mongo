@@ -1,0 +1,197 @@
+<mat-form-field class="example-chip-list">
+  <mat-chip-list #chipList aria-label="Adapter selection" multiple>
+    <mat-chip *ngFor="let adapter of adapters" [removable]="removable" (removed)="remove(adapter)" selectable="true" class="mat-chip-selected chip-selected">
+      {{ adapter }}
+      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+    <input
+      [placeholder]="'WBID.PROPERTIES.PLACEMENTS.ADAPTERS_SELECT' | translate"
+      [required]="!mainFormDisabled"
+      [disabled]="mainFormDisabled"
+      #adapterInput
+      matInput
+      [formControl]="adapterCtrl"
+      [matAutocomplete]="auto"
+      [matAutocompleteDisabled]="mainFormDisabled"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="addOnBlur"
+      (matChipInputTokenEnd)="add($event)"
+      (click)="openPanel($event)"
+    />
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let adapter of filteredAdapters | async" [value]="adapter">
+      {{ adapter }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<div id="adapter-settings" *ngIf="settings && settings.length > 0">
+  <div *ngFor="let set of settings" [className]="'adapter-settings-block'">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title [id]="set.code"
+          ><h5>{{ set.name }}</h5></mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <div id="adapter-additional-options">
+        <mat-checkbox labelPosition="after" #checkbox [hidden]="!perm.includes('canSeeWBidSchainSettings')"> Supply Chain </mat-checkbox>
+        <mat-checkbox [checked]="clicked" color="accent" (change)="showNonRequired(set.code)" labelPosition="after" *ngIf="set['hasNonRequired']">
+          {{ 'WBID.PROPERTIES.PLACEMENTS.SHOW_REQUIRED' | translate }}
+        </mat-checkbox>
+      </div>
+      <div class="adapter-settings-main" *ngFor="let option of set['options']">
+        <mat-form-field *ngIf="option.show === true">
+          <input
+            matInput
+            [placeholder]="option['option']"
+            [required]="option.required"
+            [type]="['number', 'integer', 'int', 'float'].includes(option.type) ? 'number' : 'text'"
+          />
+        </mat-form-field>
+        <div class="adapter-settings-details-container" *ngIf="option.show === true">
+          <div class="adapter-settings-details first-row">
+            <b>Description: </b><span>{{ option.description }}</span
+            ><br />
+            <b>Example: </b><span>{{ option['example'] }}</span>
+          </div>
+          <div class="adapter-settings-details second-row">
+            <b>Type: </b><span>{{ option.type }}</span
+            ><br />
+            <b>Required: </b><span>{{ option.required }}</span
+            ><br />
+          </div>
+        </div>
+      </div>
+      <div class="adapter-settings-main">
+        <mat-form-field>
+          <input
+            matInput
+            [placeholder]="!isPrebidUser ? 'floorPrice' : 'cpmAdjustment'"
+            [required]="false"
+            class="floor-price"
+            [value]="toAllToggle ? floorPriceValue : '0'"
+            [readonly]="toAllToggle"
+          />
+        </mat-form-field>
+        <div class="adapter-settings-details-container">
+          <div class="adapter-settings-details first-row">
+            <b>Description: </b><span>{{ !isPrebidUser ? 'Floor price' : 'CPM Adjustment' }} for {{ set.name }} </span><br />
+            <b>Example: </b><span>0.25</span>
+          </div>
+          <div class="adapter-settings-details second-row">
+            <b>Type: </b><span>float</span><br />
+            <b>Required: </b><span>false</span><br />
+          </div>
+        </div>
+      </div>
+      <div class="adapter-settings-main" *ngIf="!isPrebidUser">
+        <mat-form-field>
+          <input matInput [placeholder]="'cpmAdjustment'" [required]="false" class="cpm-adjustment" [value]="'0'" [readonly]="false" />
+        </mat-form-field>
+        <div class="adapter-settings-details-container">
+          <div class="adapter-settings-details first-row">
+            <b>Description: </b><span>CPM Adjustment for {{ set.name }} </span><br />
+            <b>Example: </b><span>0.25</span>
+          </div>
+          <div class="adapter-settings-details second-row">
+            <b>Type: </b><span>float</span><br />
+            <b>Required: </b><span>false</span><br />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="checkbox.checked" id="supply-chain-settings">
+        <div class="adapter-settings-main">
+          <mat-form-field>
+            <input
+              matInput
+              type="number"
+              [placeholder]="'complete'"
+              [required]="true"
+              class="supply-chain complete"
+              value="1"
+              min="0"
+              max="1"
+              [readonly]="false"
+            />
+          </mat-form-field>
+          <div class="adapter-settings-details-container">
+            <div class="adapter-settings-details first-row">
+              <b>Description: </b
+              ><span>
+                Flag indicating whether the chain contains all nodes involved in the transaction leading back to the owner of the site, app or other medium of
+                the inventory, where 0 = no, 1 = yes. </span
+              ><br />
+              <b>Example: </b><span>1</span>
+            </div>
+            <div class="adapter-settings-details second-row">
+              <b>Type: </b><span>integer</span><br />
+              <b>Required: </b><span>true</span><br />
+            </div>
+          </div>
+        </div>
+        <div class="adapter-settings-main">
+          <mat-form-field>
+            <input matInput [placeholder]="'ver'" [required]="true" class="supply-chain ver" value="1.0" [readonly]="false" />
+          </mat-form-field>
+          <div class="adapter-settings-details-container">
+            <div class="adapter-settings-details first-row">
+              <b>Description: </b
+              ><span>
+                Version of the supply chain specification in use, in the format of “major.minor”. For example, for version 1.0 of the spec, use the string
+                “1.0”. </span
+              ><br />
+              <b>Example: </b><span>1.0</span>
+            </div>
+            <div class="adapter-settings-details second-row">
+              <b>Type: </b><span>string</span><br />
+              <b>Required: </b><span>true</span><br />
+            </div>
+          </div>
+        </div>
+        <div class="adapter-settings-main">
+          <mat-form-field>
+            <input
+              matInput
+              [placeholder]="'nodes'"
+              [required]="true"
+              class="supply-chain nodes"
+              [value]="[{ asi: 'bidderA.com', sid: '00001', hp: 1 }] | json"
+              [readonly]="false"
+            />
+          </mat-form-field>
+          <div class="adapter-settings-details-container">
+            <div class="adapter-settings-details first-row">
+              <b>Description: </b
+              ><span>
+                Array of SupplyChainNode objects in the order of the chain. In a complete supply chain, the first node represents the initial advertising system
+                and seller ID involved in the transaction, i.e. the owner of the site, app, or other medium. In an incomplete supply chain, it represents the
+                first known node. The last node represents the entity sending this bid request. </span
+              ><br />
+              <b>Example: </b><span>{{ [{ asi: 'bidderA.com', sid: '00001', hp: 1 }] | json }}</span>
+            </div>
+            <div class="adapter-settings-details second-row">
+              <b>Type: </b><span>array of objects</span><br />
+              <b>Required: </b><span>true</span><br />
+            </div>
+          </div>
+        </div>
+        <div class="adapter-settings-main">
+          <mat-form-field>
+            <input matInput [placeholder]="'ext'" [required]="false" class="supply-chain ext" [readonly]="false" />
+          </mat-form-field>
+          <div class="adapter-settings-details-container">
+            <div class="adapter-settings-details first-row">
+              <b>Description: </b><span> Placeholder for advertising-system specific extensions to this object. </span><br />
+              <b>Example: </b><span></span>
+            </div>
+            <div class="adapter-settings-details second-row">
+              <b>Type: </b><span>object</span><br />
+              <b>Required: </b><span>false</span><br />
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>

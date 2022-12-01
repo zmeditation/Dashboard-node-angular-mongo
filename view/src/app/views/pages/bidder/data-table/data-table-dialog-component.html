@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>{{ 'WBID.PROPERTIES.TABLE.EDIT_DOMAIN' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field>
+    <input
+      matInput
+      [value]="data.domain"
+      [(ngModel)]="data.domain"
+      name="domain"
+      id="domain"
+      required
+      #domain="ngModel"
+      maxlength="50"
+      minlength="4"
+      pattern="^(https?:\/\/)?([\w.-]+)\.([a-z]{2,7}\.?)(\/[\w.]*)*\/?$"
+    />
+    <mat-hint align="end"> {{domain.value ? domain.value.length : ''}} / 50 </mat-hint>
+    <mat-hint align="start" [hidden]="domain.valid || domain.pristine" style="color: #f44336">
+      {{ 'WBID.PROPERTIES.PLACEMENTS.VALIDATION_ERROR' | translate }}
+    </mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ 'WBID.PROPERTIES.PLACEMENTS.CANCEL' | translate }}</button>
+  <button mat-button [disabled]="!domain.valid" [mat-dialog-close]="data.domain">{{ 'WBID.PROPERTIES.PLACEMENTS.SAVE' | translate }}</button>
+</mat-dialog-actions>

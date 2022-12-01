@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ 'WBID.PROPERTIES.TABLE.TAGS' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field class="show-tags-dialog">
+    <textarea
+      matInput
+      [value]="data.fulltag"
+      [(ngModel)]="data.fulltag"
+      readonly
+      [placeholder]="'WBID.PROPERTIES.TABLE.FULL_TAG' | translate"
+      (dblclick)="copyTag($event)"
+      style="resize: none; min-height: 50vh"
+    >
+    </textarea>
+  </mat-form-field>
+  <mat-form-field class="show-tags-dialog" *ngIf="data && data.passbackTag">
+    <textarea
+      matInput
+      [value]="data.passbackTag"
+      [(ngModel)]="data.passbackTag"
+      readonly
+      [placeholder]="'WBID.PROPERTIES.TABLE.PASSBACK_TAG' | translate"
+      (dblclick)="copyTag($event)"
+      style="resize: none; min-height: 20vh"
+    >
+    </textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div id="hint">
+    <span> {{'WBID.PROPERTIES.TABLE.COPY_HINT' | translate }} </span>
+  </div>
+  <button mat-button mat-stroked-button mat-dialog-close>{{ 'WBID.PROPERTIES.TABLE.CLOSE' | translate }}</button>
+</mat-dialog-actions>

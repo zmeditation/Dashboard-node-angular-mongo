@@ -1,0 +1,172 @@
+<div class="height-100 container-signin" fxFlex="100" fxLayout="row">
+  <div class="content-container_logo scroll-container" fxFlex="60" appLazyLoad [ngClass.lt-sm]="'display-none'">
+    <img src="assets/images/logo.png" alt="logo" class="forbid-event" />
+  </div>
+
+  <div fxFlex="40" fxFlex.lt-sm="100" fxLayoutAlign="center" class="scroll-container">
+    <mat-card class="p-0 m-0" fxFlex="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md="flex-start flex-start">
+      <header fxFlex="4 2 10rem" class="full-width" fxLayoutAlign="center center" [ngClass]="'display-none'" [ngClass.lt-sm]="'display-flex'">
+        <div fxLayoutAlign="center center">
+          <img src="assets/images/logo-full.png" alt="Logo" class="forbid-event img-container" [ngClass]="'display-none'" [ngClass.lt-sm]="'display-block'" />
+        </div>
+      </header>
+
+      <mat-card-content class="m-auto" [ngClass.gt-sm]="'max-w-80'">
+        <div class="form-wrapper">
+          <div fxLayout="column" fxLayoutAlign="flex-start center" class="mb-1">
+            <div fxLayout="row" fxFlex="50" fxLayoutAlign="center center">
+              <h3 class="m-0" fxFlex="95">
+                {{ (!isForgotPass ? 'SIGNING_PAGE.TITLE' : 'SIGNING_PAGE.FORGOT_FORM') | translate }}
+              </h3>
+
+              <mat-select
+                [ngClass]="currentLang"
+                class="langToggle-signing ml-05"
+                fxFlex="5"
+                fxFlexAlign="center"
+                id="langToggle-signing"
+                name="currentLang"
+                [(ngModel)]="currentLang"
+                (selectionChange)="setLang()"
+              >
+                <div *ngFor="let lang of availableLangs">
+                  <mat-option [value]="lang.code" ngDefaultControl title="{{ lang.name }}">
+                    <img
+                      class="m-auto pt-1 forbid-event"
+                      fxFlex="60"
+                      src="{{ 'assets/images/' + lang.name + '.svg' }}"
+                      alt="{{ 'LANGUAGES.' + lang.name | translate }}"
+                    />
+                  </mat-option>
+                </div>
+              </mat-select>
+            </div>
+
+            <h6 class="mt-1">
+              {{ (!isForgotPass ? 'SIGNING_PAGE.SUB_TITLE' : '') | translate }}
+            </h6>
+          </div>
+
+          <!-- Sign In Form  -->
+          <form
+            *ngIf="!isForgotPass; else forgotComponent"
+            [formGroup]="signInForm"
+            #formDirective="ngForm"
+            (ngSubmit)="signIn(formDirective)"
+            [fxFlex]="!isForgotPass ? 55 : 65"
+            [@animate]="{ value: '*', params: { y: '50px', delay: '200ms' } }"
+          >
+            <!-- Email Input -->
+            <mat-form-field class="full-width">
+              <input matInput name="username" formControlName="email" placeholder="{{ 'SIGNING_PAGE.EMAIL' | translate }}" value="" required />
+              <mat-error *ngIf="signInForm.get('email').invalid">
+                {{ 'SIGNING_PAGE.ERROR.SIGNING_EMAIL' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Password Input -->
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                name="password"
+                type="password"
+                formControlName="password"
+                placeholder="{{ 'SIGNING_PAGE.PASSWORD' | translate }}"
+                value=""
+                required
+              />
+              <mat-error *ngIf="signInForm.controls['password'].hasError('required') && signInForm.controls['password'].touched" class="form-error-msg">
+                {{ 'SIGNING_PAGE.ERROR.REQUIRED_PASSWORD' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <div *ngIf="showPasswordRecoveryAndSignUp" class="text-center">
+              <a [routerLink]="'/sessions/forgot-password'" class="mat-primary text-center full-width">
+                {{ 'SIGNING_PAGE.FORGOT_PASSWORD' | translate }}
+              </a>
+              <span fxFlex></span>
+              <a [routerLink]="'/sessions/signup'" class="mat-primary text-center full-width">
+                {{ 'SIGNING_PAGE.CREATE_ACCOUNT' | translate }}
+              </a>
+            </div>
+
+            <div fxLayout="column-reverse">
+              <!-- Submit Button Sign In -->
+              <button
+                mat-flat-button
+                class="submit-btn"
+                [ngClass]="{ 'botton-shadow': !isDisable }"
+                fxFlex="90"
+                [disabled]="isDisable"
+                (click)="signIn(signInForm)"
+                type="submit"
+                (mouseup)="$event.stopPropagation()"
+              >
+                {{ 'SIGNING_PAGE.SUBMIT' | translate }}
+              </button>
+
+              <div fxFlex="100" fxLayout="row" [ngClass]="{ 'mb-1_5': !isForgotPass }">
+                <mat-checkbox
+                  *ngIf="!isForgotPass"
+                  name="rememberMe"
+                  class="check-box"
+                  [ngClass.lt-md]="'p-0'"
+                  formControlName="rememberMe"
+                  fxFlex="50"
+                  fxFlex.lt-lg="100"
+                  fxFlexAlign="center"
+                  fxLayoutAlign.lt-lg="flex-start"
+                >
+                  {{ 'SIGNING_PAGE.REMEMBER_ME' | translate }}
+                </mat-checkbox>
+
+                <div
+                  [fxFlex]="isForgotPass ? 100 : 50"
+                  id="forgot-pass-desktop"
+                  fxFlex.lt-md="100"
+                  fxLayoutAlign.lt-md="center"
+                  [fxLayoutAlign]="isForgotPass ? 'center' : 'flex-end'"
+                  [ngClass]="'display-flex'"
+                  [ngClass.lt-sm]="{ 'display-none': !isForgotPass }"
+                >
+                  <!-- Go to Forgot component -->
+                  <!-- Back to sign In component-->
+                  <button mat-flat-button (click)="forgotPassBtn($event)" type="button">
+                    {{ (!isForgotPass ? 'SIGNING_PAGE.FORGOT_PASSWORD' : 'SIGNING_PAGE.BACK_TO_SIGN_IN') | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div
+            fxFlex.lt-md="100"
+            fxLayoutAlign="center flex-start"
+            id="forgot-pass-mob"
+            [ngClass]="{ 'display-none': !isForgotPass }"
+            [ngClass.lt-sm]="'display-flex'"
+          >
+            <!-- Go to Forgot component -->
+            <!-- Back to sign In component-->
+            <button mat-flat-button class="m-0" (click)="forgotPassBtn($event)" [ngClass]="isForgotPass ? 'mt-1' : 'm-0'">
+              {{ (!isForgotPass ? 'SIGNING_PAGE.FORGOT_PASSWORD' : 'SIGNING_PAGE.BACK_TO_SIGN_IN') | translate }}
+            </button>
+          </div>
+
+          <ng-template #forgotComponent>
+            <app-forgot-password
+              fxLayout="column"
+              fxLayoutAlign="space-between"
+              (popUpChange)="forgotPassBtn($event)"
+              [currentLang]="currentLang"
+              [@animate]="{ value: '*', params: { y: '50px', delay: '200ms' } }"
+            >
+            </app-forgot-password>
+          </ng-template>
+
+          <mat-progress-bar *ngIf="isRequestSent" mode="indeterminate" class="signin-loader"> </mat-progress-bar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

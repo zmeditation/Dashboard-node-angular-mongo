@@ -1,0 +1,83 @@
+<div class="versions-popup-overlay" (click)="closeEvent()"></div>
+<div class="versions-popup">
+  <mat-progress-bar *ngIf="isLoading" class="mt-1 mb-1" mode="indeterminate"> </mat-progress-bar>
+  <mat-tab-group mat-align-tabs="start">
+    <mat-tab label="Dashboard versions view">
+      <div class="versions-popup-view mt-1">
+        <div mat-dialog-content>
+          <div *ngIf="!versions.length">
+            <h4>No dashboard versions available</h4>
+          </div>
+          <div *ngIf="versions.length" [style.visibility]="!isLoading ? 'visible' : 'hidden'">
+            <mat-form-field>
+              <mat-label>Versions</mat-label>
+              <mat-select [(value)]="selected" (selectionChange)="changeVersionEvent()">
+                <mat-option *ngFor="let version of versions" [value]="version.value">
+                  {{ version.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-slide-toggle
+              *ngIf="canEdit"
+              [(ngModel)]="isOutside"
+            >{{ isOutside ? 'Outside' : 'Inside' }}</mat-slide-toggle>
+            <mat-divider></mat-divider>
+            <div class="versions-popup-view__version-description">
+              <div>
+                <b class="title">Release date:</b
+                ><span *ngIf="!isLoading">
+                  {{ currentVersionReleaseDate.getMonth() + 1 }}/{{ currentVersionReleaseDate.getDate() }}/{{
+                    currentVersionReleaseDate.getFullYear()
+                  }}</span
+                >
+              </div>
+              <mat-divider></mat-divider>
+              <div class="description">
+                <b class="title">Description: </b>
+                <pre>{{
+                  canEdit ?
+                    isOutside ? currentVersionDescription.out : currentVersionDescription.in
+                  : currentVersionDescription
+                }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div mat-dialog-actions class="versions-popup-view__actions mt-1">
+          &nbsp;
+          <span fxFlex></span>
+          <button type="button" color="accent" mat-raised-button (click)="closeEvent()">Close</button>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab *ngIf="canEdit" label="Dashboard versions edit">
+      <div class="versions-popup-form mt-1">
+        <div mat-dialog-content>
+          <mat-form-field>
+            <mat-label>Versions</mat-label>
+            <mat-select [(value)]="selected" (selectionChange)="changeVersionEvent()">
+              <mat-option *ngFor="let version of versions" [value]="version.value">
+                {{ version.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <app-update-version-form-versions-popup
+            [version]="selected"
+            [releaseDate]="currentVersionReleaseDate"
+            [description]="currentVersionDescription"
+            (updateVersion)="updateVersionEvent($event)"
+            (deleteVersion)="deleteVersionEvent($event)"
+            (close)="closeEvent()"
+          ></app-update-version-form-versions-popup>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab *ngIf="canEdit" label="Dashboard version create">
+      <app-create-version-form-versions-popup
+        (createVersion)="createVersionEvent($event)"
+        (close)="closeEvent()"
+      ></app-create-version-form-versions-popup>
+    </mat-tab>
+  </mat-tab-group>
+</div>

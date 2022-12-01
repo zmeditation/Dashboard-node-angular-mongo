@@ -1,0 +1,40 @@
+<div mat-dialog-title>
+  {{ 'INVOICES.CANCEL_REASON' | translate }}
+</div>
+<div mat-dialog-content>
+  <div fxLayout="column">
+    <span>
+      {{ 'INVOICES.SELECT_CANCEL_REASON' | translate }}
+    </span>
+    <mat-form-field>
+      <mat-select #cancelReason>
+        <mat-option *ngFor="let reason of reasons" [value]="reason">
+          {{ 'INVOICES.CANCEL_REASONS.' + reason | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column">
+    <span>
+      {{ 'INVOICES.INPUT_CANCEL_REASON' | translate }}
+    </span>
+    <mat-form-field>
+      <label>
+        <input type="text" matInput #customReason />
+      </label>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button [mat-dialog-close]="null" mat-button color="warn">
+    {{ 'INVOICES.BUTTONS.CANCEL' | translate }}
+  </button>
+  <button
+    mat-button
+    color="accent"
+    [mat-dialog-close]="customReason.value ? { reason: customReason.value, custom: true } : { reason: cancelReason.value, custom: false }"
+    [disabled]="!customReason.value && !cancelReason.value"
+  >
+    {{ 'INVOICES.BUTTONS.SAVE' | translate }}
+  </button>
+</div>

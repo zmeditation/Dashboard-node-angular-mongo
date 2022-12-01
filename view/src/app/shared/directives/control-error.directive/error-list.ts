@@ -1,0 +1,12 @@
+export const errorList: { [key: string]: string } = {
+  required: 'VALIDATION_ERRORS.REQUIRED',
+  minlength: 'VALIDATION_ERRORS.MIN_LENGTH',
+  maxlength: 'VALIDATION_ERRORS.MAX_LENGTH',
+  max: 'VALIDATION_ERRORS.MAX',
+  min: 'VALIDATION_ERRORS.MIN',
+  number: 'VALIDATION_ERRORS.ONLY_NUMBERS',
+  url: 'VALIDATION_ERRORS.ONLY_URL',
+  mustBeSelected: 'VALIDATION_ERRORS.MUST_SELECT',
+  domainsMustBeCreated: 'VALIDATION_ERRORS.DOMAINS_MUST_CREATED',
+  default: 'VALIDATION_ERRORS.DEFAULT'
+};

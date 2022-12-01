@@ -1,0 +1,113 @@
+$add: #396673;
+$cancel: #f44336;
+$save: #008e7a;
+$fullWidth: 100%;
+$breakpoint-phone: 576px;
+$breakpoint-tablet: 1120px;
+
+#gpt-settings {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+
+  mat-form-field,
+  mat-checkbox {
+    margin: 0 15px;
+    min-width: 200px;
+  }
+
+  mat-checkbox {
+    margin: 18px 15px;
+  }
+}
+
+#code-type-selector {
+  display: flex;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    margin: 0 15px;
+    min-width: 200px;
+  }
+}
+
+#pub-id {
+  min-width: 200px;
+}
+
+#code-result {
+  margin: 10px 15px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+mat-card-actions {
+  margin: 10px !important;
+
+  button {
+    min-width: 124px;
+  }
+}
+
+#fluid {
+  margin: 18px 15px;
+  min-width: 200px;
+}
+
+#fluid-settings {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+
+  mat-form-field {
+    margin: 0 15px;
+    min-width: 200px;
+  }
+
+  mat-checkbox {
+    margin: 18px 15px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: $breakpoint-phone) {
+  mat-card-content {
+    margin: 0;
+  }
+
+  mat-card-actions {
+    margin-top: 0 !important;
+    padding: 0;
+  }
+
+  #code-type-selector,
+  #gpt-settings {
+    mat-form-field {
+      margin: 0;
+      width: $fullWidth;
+    }
+
+    mat-checkbox {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  #code-result {
+    margin: 0;
+    font-size: 0.75rem;
+
+    mat-form-field {
+      width: $fullWidth;
+    }
+  }
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+  /* CSS specific to iOS devices */
+  mat-card {
+    padding-bottom: 65px !important;
+  }
+}

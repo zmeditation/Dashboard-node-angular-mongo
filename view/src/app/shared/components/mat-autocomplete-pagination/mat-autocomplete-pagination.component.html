@@ -1,0 +1,20 @@
+<mat-autocomplete (optionSelected)="onSelect($event)">
+  <mat-option *ngIf="load && !data.list.length">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-option>
+  <ng-container *ngIf="data.list.length">
+    <mat-option *ngFor="let item of data.list" [value]="item.name" [id]="item[idProperty]">
+      {{ item.name }}
+    </mat-option>
+
+    <mat-progress-bar *ngIf="load" mode="indeterminate"></mat-progress-bar>
+
+    <ng-container *ngIf="data.list.length < data.pagination.total && !disabledLoadMoreButton">
+      <button [disabled]="load" mat-raised-button color="primary" (click)="loadMore($event)" class="width--full">
+        {{ 'MAT_AUTOCOMPLETE_PAGINATION.LOAD_MORE' | translate }}
+        {{ unloadedItems > PER_PAGE ? PER_PAGE : unloadedItems }} /
+        {{ unloadedItems }}
+      </button>
+    </ng-container>
+  </ng-container>
+</mat-autocomplete>

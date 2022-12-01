@@ -1,0 +1,23 @@
+<mat-card-content [@animate]="{ value: '*', params: { x: '50px', delay: '300ms' } }">
+  <mat-tab-group #tabWbidGroup>
+    <mat-tab label="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_BUILDER' | translate }}">
+      <app-report-viewer-query-builder
+        [tabGroup]="tabWbidGroup"
+        [isChartOption]="isChartOption"
+        [initialMetricsArray]="initialMetricsArray"
+        [filtersArray]="filtersArray"
+        [starterObject]="starterObject"
+        [queryObject]="queryObject"
+        [initialDimensionsArray]="initialDimensionsArray"
+        [basicForm]="basicForm"
+        [typeReport]="'wbid'"
+        [intervalObjectArray]="intervalObjectArray"
+        [rangeObjectArray]="rangeObjectArray"
+      >
+      </app-report-viewer-query-builder>
+    </mat-tab>
+    <mat-tab label="{{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_VIEWER.REPORT_QUERY_VIEWER' | translate }}" disabled>
+      <app-report-viewer-query-result [isDownloadCSV]="isDownloadCSV" [typeReport]="'wbid'"></app-report-viewer-query-result>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card-content>

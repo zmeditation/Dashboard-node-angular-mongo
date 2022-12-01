@@ -1,0 +1,41 @@
+<div class="mb-1" fxLayout="column">
+  <div class="mb-1 query-builder-block-title">
+    <h4>
+      {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DIMENSIONS.DIMENSIONS' | translate }}
+    </h4>
+  </div>
+
+  <div>
+    <mat-list *ngIf="selectedDimensions.length > 0" fxLayout="column" fxLayoutAlign="center center" class="mat-primary">
+      <ng-container *ngFor="let dimension of selectedDimensions">
+        <mat-list-item
+          *ngIf="dimension.value === 'daily' || dimension.value === 'monthly' || dimension.value === 'day' || dimension.value === 'month'"
+          class="smaller-height"
+        >
+          <div class="overflow-hidden nowrap smaller-font-size">
+            {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DIMENSIONS.' + dimension.name | uppercase | translate }}
+          </div>
+        </mat-list-item>
+      </ng-container>
+    </mat-list>
+  </div>
+
+  <div class="query-builder-dimension-list">
+    <mat-selection-list #dimensionsSelection>
+      <ng-container *ngFor="let dimension of initialDimensionsArray; let i = index">
+        <mat-list-option
+          *ngxPermissionsOnly="dimension.permissions"
+          (click)="logDimensionSelection(dimensionsSelection, i)"
+          [selected]="dimension.selected"
+          [value]="isCommissionOn ? undefined : dimension.value"
+          [disabled]="isCommissionOn"
+          class="smaller-height"
+        >
+          <div class="overflow-hidden nowrap smaller-font-size">
+            {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.DIMENSIONS.' + dimension.name | uppercase | translate }}
+          </div>
+        </mat-list-option>
+      </ng-container>
+    </mat-selection-list>
+  </div>
+</div>

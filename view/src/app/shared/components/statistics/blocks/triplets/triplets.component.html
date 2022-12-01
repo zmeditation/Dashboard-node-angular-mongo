@@ -1,0 +1,63 @@
+<div *ngxPermissionsOnly="['canSeeSettingsPage']">
+  <div class="text-center full-width pb-1" *ngIf="loading">
+    <mat-card>
+      <h5 class="m-0 pb-1">{{ 'STATISTICS.TRIPLETS.LOADING' | translate }}</h5>
+      <div mat-dialog-content>
+        <mat-progress-bar mode="buffer" class="mb-1 mt-1"></mat-progress-bar>
+      </div>
+    </mat-card>
+  </div>
+  <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" *ngIf="!loading">
+    <ng-container *ngTemplateOutlet="chart;context:{ 
+      translationKey: 'STATISTICS.TRIPLETS.REVENUE', 
+      chartType: 'revenue', 
+      value: revenue 
+    }">
+    </ng-container>
+    <ng-container *ngTemplateOutlet="chart;context:{ 
+      translationKey: 'STATISTICS.TRIPLETS.AVERAGE_CPM', 
+      chartType: 'averageCPM', 
+      value: averageCPM 
+    }">
+    </ng-container>
+    <ng-container *ngTemplateOutlet="chart;context:{ 
+      translationKey: 'STATISTICS.TRIPLETS.IMPRESSIONS', 
+      chartType: 'totalImpressions', 
+      value: totalImpressions 
+    }">
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #chart let-translationKey="translationKey" let-chartType="chartType" let-value="value">
+  <div 
+    fxFlex="100" 
+    fxFlex.gt-sm="33" 
+    fxFlex.sm="50" 
+    [@animate]="{ value: '*', params: { delay: '300ms', scale: '.9' } }"
+  >
+    <mat-card>
+      <mat-card-title>
+        <small class="text-muted">{{ translationKey | translate }}</small>
+        <span fxFlex></span>
+        <mat-chip 
+          [disableRipple]="true" 
+          class="icon-chip" 
+          color="{{ badgeColorObject[chartType] }}" 
+          selected="true"
+        >
+          <mat-icon>
+            {{ badgeColorObject[chartType] === BadgeColorsType.ACCENT ? 'trending_up' : 'trending_down' }}
+          </mat-icon>
+          {{ value | number: '1.2-2' }}%
+        </mat-chip>
+      </mat-card-title>
+      <mat-card-content *ngIf="currentMonth">
+        <h3 class="m-0 font-normal">
+          {{ currentMonth[chartType] || 0 | number: '1.0' }}
+        </h3>
+        <small class="text-muted">{{ 'STATISTICS.TRIPLETS.THIS_MONTH' | translate }}</small>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

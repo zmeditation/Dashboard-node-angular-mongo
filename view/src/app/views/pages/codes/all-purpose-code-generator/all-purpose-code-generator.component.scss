@@ -1,0 +1,78 @@
+.full-screen {
+  width: 100%;
+}
+
+.ten-percent {
+  width: calc(10% - 0.25em);
+}
+
+.one-third {
+  width: calc(92% / 3);
+}
+
+.half {
+  width: calc(50% - 1em);
+}
+
+.checkboxes {
+  justify-content: space-around;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  padding: 0.3em 1em;
+}
+
+mat-checkbox {
+  padding: 0.3em 1em;
+}
+
+#radio-buttons {
+  display: flex;
+  flex-direction: column;
+
+  mat-radio-button {
+    padding: 0.3em 1em;
+  }
+}
+
+#sizes-container {
+  display: flex;
+  padding: 0.3em 1em;
+
+  mat-form-field {
+    padding: 0.3em calc((100% - 92%) / 4 + 0.75em);
+  }
+
+  mat-form-field:first-child {
+    padding-left: 0;
+  }
+
+  mat-form-field:last-child {
+     padding-right: 0;
+  }
+}
+
+#banner-ad-unit {
+  padding-left: 3em;
+}
+
+#video-settings {
+  display: flex;
+}
+
+#buttons-actions {
+  display: flex;
+  width: 100%;
+
+  button {
+    margin: 0.3em;
+    width: calc(50% - 0.6em);
+  }
+}

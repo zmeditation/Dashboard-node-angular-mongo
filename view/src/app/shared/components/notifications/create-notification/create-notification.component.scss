@@ -1,0 +1,38 @@
+.add-notice-button {
+  height: 1rem !important;
+}
+
+.create-message-button-container {
+  position: absolute;
+  right: 0;
+  top: -2rem;
+  color: white;
+  cursor: pointer;
+}
+
+.create-notice-container {
+  padding: 0;
+  margin: 0;
+}
+
+.show-create-message {
+  height: 21rem;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.create-notice-container-content {
+  padding: 1rem;
+}
+
+.hide-create-message {
+  height: 0rem;
+  opacity: 0.5;
+  padding: 0 !important;
+  transition: all 0.5s ease;
+}
+
+.textarea-notification {
+  resize: none;
+  height: 2.5rem;
+}

@@ -1,0 +1,172 @@
+{
+  "env": { "browser": true, "es6": true, "commonjs": true, "es2017": true, "es2020": true, "es2021": true },
+  "rules": {
+    //eslint 0: "off", 1: "warn", 2: "error"
+    "no-console": [2, { "allow": ["warn", "error"] }],
+    "no-async-promise-executor": 0,
+    "no-compare-neg-zero": 2,
+    "no-cond-assign": 2,
+    "no-dupe-args": 1,
+    "no-dupe-else-if": 2,
+    "no-dupe-keys": 2,
+    "no-extra-semi": 2,
+    "no-irregular-whitespace": [1, { "skipStrings": true, "skipRegExps": false, "skipTemplates": false, "skipComments": false }],
+    "no-func-assign": 2,
+    "no-invalid-regexp": 1,
+    "no-loss-of-precision": 0,
+    "no-misleading-character-class": 1,
+    "no-obj-calls": 1,
+    "no-promise-executor-return": 0,
+    "no-prototype-builtins": "off",
+    "no-regex-spaces": 1,
+    "no-setter-return": 1,
+    "no-sparse-arrays": 1,
+    "no-template-curly-in-string": 1,
+    "no-unexpected-multiline": 1,
+    "no-unreachable": 1,
+    "no-unreachable-loop": 0,
+    "no-unsafe-finally": 1,
+    "no-unsafe-negation": 0,
+    "no-unsafe-optional-chaining": 2,
+    "no-useless-backreference": 1,
+    "require-atomic-updates": 1,
+    "use-isnan": 1,
+    "valid-typeof": 1,
+    "class-methods-use-this": [0, { "exceptMethods": ["ngOnInit"] }],
+    "block-scoped-var": 0,
+    "curly": [1, "all"],
+    "default-case": 1,
+    "default-case-last": 1,
+    "dot-location": [1, "property"],
+    "dot-notation": 1,
+    "eqeqeq": 1,
+    "max-classes-per-file": [1, 2],
+    "no-constructor-return": 2,
+    "no-empty-function": [1, { "allow": ["constructors", "methods"] }],
+    "no-empty-pattern": 2,
+    "no-eq-null": 2,
+    "no-eval": 2,
+    "no-fallthrough": 0,
+    "no-floating-decimal": 1,
+    "no-implicit-coercion": 0,
+    "no-implicit-globals": 2,
+    "no-lone-blocks": 1,
+    "no-loop-func": 1,
+    "no-magic-numbers": 0,
+    "no-multi-spaces": 1,
+    "no-multi-str": 1,
+    "no-new": 1,
+    "no-new-wrappers": 1,
+    "no-octal": 1,
+    "no-redeclare": [1, { "builtinGlobals": false }],
+    "no-sequences": 1,
+    "no-throw-literal": 1,
+    "no-unmodified-loop-condition": 1,
+    "prefer-promise-reject-errors": 1,
+    "radix": [1, "always"],
+    "yoda": 1,
+    "init-declarations": 0,
+    "no-restricted-globals": 0,
+    "no-shadow": 0,
+    "no-undefined": 0, //
+    "no-unused-vars": [
+      0,
+      {
+        "vars": "local",
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "no-use-before-define": [1, { "classes":  false }],
+    "array-bracket-newline": [1, "consistent"],
+    "block-spacing": 1, //
+    "brace-style": [
+      1,
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "comma-dangle": [1, "never"],
+    "comma-style": [2, "last"], //
+    "eol-last": [1, "always"],
+    "func-call-spacing": [1, "never"],
+    "implicit-arrow-linebreak": [2, "beside"],
+    "indent": [1, 2, { "ignoredNodes": ["TemplateLiteral"], "SwitchCase": 1 }],
+    "key-spacing": [1, { "beforeColon": false }],
+    "keyword-spacing": [1, { "before": true }],
+    "lines-between-class-members": [1, "always"],
+    "max-depth": [1, 6], //
+    "max-len": [2, { "code": 141, "ignorePattern": "from '|\".*'|\"", "comments": 160, "ignoreUrls": true }],
+    "max-lines": [2, { "max": 1001, "skipBlankLines": true }],
+    "max-statements": [1, 101],
+    "multiline-ternary": [1, "always-multiline"],
+    "new-cap": [1, { "newIsCap": true, "capIsNew": false, "capIsNewExceptionPattern": "^@.*", "properties": false }],
+    "no-multiple-empty-lines": [1, { "max": 2 }],
+    "no-useless-computed-key": 1,
+    "template-curly-spacing": [0, "always"],
+    "no-var": 0,
+    "@typescript-eslint/no-extra-semi": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/no-unused-vars": [
+      1,
+      {
+        "vars": "local",
+        "args": "none",
+        "ignoreRestSiblings": false
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/no-shadow": [2, { "builtinGlobals": false, "hoist": "all" }],
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true,
+        "amd": true,
+        "caseSensitive": false,
+        "ignore": ["^shared.*", "^environments.*", "^html-loader!.*"] }
+    ],
+    "@typescript-eslint/no-inferrable-types": [0],
+    "@typescript-eslint/ban-types":  0
+  },
+  "extends": [
+    //
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "plugins": ["import", "@angular-eslint/template", "@typescript-eslint", "html", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".scss"]
+    }
+  },
+  "parserOptions": {
+    "warnOnUnsupportedTypeScriptVersion": false,
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": false
+    },
+    "createDefaultProgram": true,
+    "project": [ //
+      "./view/angular.json",
+      "./view/src/tsconfig.app.json",
+      "./view/src/tsconfig.spec.json"
+    ],
+    "projectFolderIgnoreList": [ //
+      "./view/node_modules",
+      "./view/src/assets/**/*",
+      "./view/src/app/shared/interfaces/**/*",
+      "./server/node_modules",
+      "./server/test"
+    ],
+    "extraFileExtensions": [".scss", ".css", ".html", ".json"]
+  }
+}

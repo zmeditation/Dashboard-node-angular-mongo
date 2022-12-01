@@ -1,0 +1,16 @@
+<div mat-dialog-title>
+  {{ 'INVOICES.DELETE_CONFIRMATION_TITLE' | translate }}
+</div>
+
+<div mat-dialog-content>
+  <div [innerHTML]="'INVOICES.DELETE_CONFIRMATION' | translate: { invoice: invoice.name }"></div>
+</div>
+
+<div mat-dialog-actions>
+  <button [mat-dialog-close]="false" mat-button color="accent">
+    {{ 'INVOICES.BUTTONS.CANCEL' | translate }}
+  </button>
+  <button mat-button color="warn" [mat-dialog-close]="true">
+    {{ 'INVOICES.BUTTONS.DELETE' | translate }}
+  </button>
+</div>

@@ -1,0 +1,28 @@
+<mat-card *ngxPermissionsOnly="['canUseAPIAccessForReports']" [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+  <mat-card-title>
+    <h3 class="api-access-title">
+      {{ 'PROFILE_PAGE.API_ACCESS.TITLE' | translate }}
+    </h3>
+  </mat-card-title>
+  <mat-card-content fxLayout="column" fxLayoutAlign="space-around start">
+    <button class="mb-1" mat-raised-button color="primary" (click)="toOrderToken()">
+      {{ 'PROFILE_PAGE.API_ACCESS.GENERATE' | translate }}
+    </button>
+    <mat-form-field class="full-width">
+      <label id="place-for-link-with-token">
+        <textarea
+          #textareaForLink
+          matInput
+          readonly
+          rows="7"
+          placeholder="{{ 'PROFILE_PAGE.API_ACCESS.CURRENT_TOKEN' | translate }}"
+          type="text"
+          value="{{ urlWithToken }}"
+        ></textarea>
+      </label>
+    </mat-form-field>
+    <button mat-raised-button color="{{ isCopied['color'] }}" (click)="copyString(urlWithToken)" [disabled]="urlWithToken === ''">
+      {{ 'PROFILE_PAGE.API_ACCESS.' + isCopied['value'] | translate }}
+    </button>
+  </mat-card-content>
+</mat-card>

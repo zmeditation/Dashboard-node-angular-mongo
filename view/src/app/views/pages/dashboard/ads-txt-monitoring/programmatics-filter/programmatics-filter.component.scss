@@ -1,0 +1,23 @@
+.flex-settings {
+  max-height: 200px;
+  align-items: stretch;
+}
+.flex-settings-chip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 767px) {
+  mat-panel-title {
+    font-size: 1rem;
+  }
+
+  .flex-settings {
+    max-height: 460px;
+  }
+
+  .button-adapt {
+    font-size: 0.8rem;
+  }
+}

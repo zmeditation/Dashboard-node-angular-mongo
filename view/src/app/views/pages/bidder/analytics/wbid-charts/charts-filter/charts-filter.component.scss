@@ -1,0 +1,42 @@
+.before-users-data {
+  height: 0px !important;
+  min-height: 0px !important;
+}
+.normalize-height {
+  height: auto;
+}
+.trans-height {
+  min-height: 50px;
+}
+.transition-class {
+  transition: all 300ms ease-out;
+  &-first {
+    transition-delay: 100ms;
+  }
+  &-second {
+    transition-delay: 300ms;
+  }
+  &-third {
+    transition-delay: 500ms;
+  }
+  &-fourth {
+    transition-delay: 700ms;
+  }
+  &-fifth {
+    transition-delay: 900ms;
+  }
+}
+
+.button-submit-mobile {
+  display: none;
+}
+
+@media all and (max-width: 959px) {
+  .button-submit-desktop {
+    display: none;
+  }
+
+  .button-submit-mobile {
+    display: block;
+  }
+}

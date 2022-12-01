@@ -1,0 +1,14 @@
+.smaller-height {
+  height: 30px;
+  .smaller-font-size {
+    font-size: 0.95em !important;
+  }
+}
+
+.filters-bidders-list {
+  .mat-selection-list {
+    padding-top: 0;
+    overflow: auto;
+    max-height: 330px;
+  }
+}

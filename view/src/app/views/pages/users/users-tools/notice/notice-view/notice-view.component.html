@@ -1,0 +1,128 @@
+<ng-container *ngIf="isReadyForLoad">
+  <button data-cy="clear_button_1"
+          mat-icon-button
+          matTooltip="Clear"
+          class="clear-form"
+          color="primary"
+          (click)="clearForm()">
+    <mat-icon>clear</mat-icon>
+  </button>
+  <form [formGroup]="noticeForm"
+        [@animate]="{ value: '*', params: { y: '50px', delay: '700ms' } }"
+        fxFlex="100" fxLayout="column" (submit)="createNotice()">
+    <div class="first-row-inputs">
+      <ng-container>
+        <div fxFlex="30">
+          <mat-card-title>{{ 'TOOLS.NOTICE.FORM.NOTICE_TYPE' | translate }}</mat-card-title>
+          <mat-form-field appearance="legacy" class="full-width">
+            <mat-label>{{ 'TOOLS.NOTICE.FORM.NOTICE_TYPE' | translate }}</mat-label>
+            <mat-select formControlName="notice_type">
+              <mat-option *ngFor="let type of possibleTypes" [value]="type">
+                {{ type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div fxFlex="30">
+          <mat-card-title>{{ 'TOOLS.NOTICE.FORM.CREATOR' | translate }}</mat-card-title>
+          <mat-form-field appearance="legacy" class="full-width">
+            <mat-label>{{ 'TOOLS.NOTICE.FORM.CREATOR' | translate }}</mat-label>
+            <input matInput readonly formControlName="creator">
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <ng-container>
+        <div fxFlex="30">
+          <mat-card-title>{{ 'TOOLS.NOTICE.FORM.REMOVE_DATE' | translate }}</mat-card-title>
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'TOOLS.NOTICE.FORM.REMOVE_DATE' | translate }}</mat-label>
+            <input matInput 
+            [matDatepicker]="remove_date_picker" 
+            formControlName="remove_date" 
+            [min]="todayDate">
+            <mat-datepicker-toggle matSuffix [for]="remove_date_picker"></mat-datepicker-toggle>
+            <mat-datepicker #remove_date_picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+    <ng-container>
+      <mat-card-title>{{ 'TOOLS.NOTICE.FORM.TITLE' | translate }}</mat-card-title>
+      <mat-form-field appearance="legacy">
+        <mat-label>{{ 'TOOLS.NOTICE.FORM.TITLE' | translate }}</mat-label>
+        <input matInput formControlName="title">
+      </mat-form-field>
+    </ng-container>
+    <ng-container>
+      <mat-card-title>{{ 'TOOLS.NOTICE.FORM.FOR_WHOM' | translate }}</mat-card-title>
+      <div>
+        <mat-form-field appearance="legacy" fxFlex="50" class="mr-05">
+          <mat-label>{{ 'ROLES' | translate }}</mat-label>
+          <mat-select formControlName="target_roles" multiple>
+            <mat-option *ngFor="let role of roles" [value]="role">
+              {{ role }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field fxFlex="50" class="ml-05">
+          <div class="input-wrapper">
+            <input type="text"
+                   placeholder="{{ 'USERS' | translate }}"
+                   matInput
+                   formControlName="target_users"
+                   [matAutocomplete]="auto"
+                   (click)="clearValue()">
+            <button data-cy="clear_button_1"
+                    mat-icon-button
+                    matTooltip="Clear"
+                    class="icon-clear-input"
+                    *ngIf="checkedUsersIds.length"
+                    (click)="clearInputChecks()">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-optgroup *ngFor="let group of usersObservable | async" [label]="group.role">
+              <mat-option *ngFor="let user of group.users">
+                <div (click)="toggleCheckedUsers(user, $event)">
+                  <mat-checkbox [checked]="user.selected" (click)="toggleCheckedUsers(user, $event)">
+                    {{ user.name }}
+                  </mat-checkbox>
+                </div>
+              </mat-option>
+            </mat-optgroup>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </ng-container>
+    <ng-container>
+      <mat-card-title>{{ 'TOOLS.NOTICE.FORM.MESSAGE' | translate }}</mat-card-title>
+      <mat-form-field appearance="fill">
+        <mat-label>{{ 'TOOLS.NOTICE.FORM.TEXTAREA' | translate }}</mat-label>
+        <textarea class="notice-text"
+                  matInput
+                  formControlName="text"
+                  rows="7">
+        </textarea>
+      </mat-form-field>
+    </ng-container>
+    <div>
+      <button mat-raised-button color="primary"
+              type="submit"
+              [disabled]="readyToGo">
+        {{ 'BUTTONS_TITLE.CREATE' | translate }}
+      </button>
+      <button mat-raised-button color="warn"
+              class="ml-05"
+              type="button"
+              [disabled]="readyToDelete"
+              (click)="deleteNotice()">
+        {{ 'BUTTONS_TITLE.DELETE' | translate }}
+      </button>
+    </div>
+  </form>
+</ng-container>

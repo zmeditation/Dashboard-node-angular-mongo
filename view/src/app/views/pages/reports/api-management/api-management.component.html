@@ -1,0 +1,19 @@
+<mat-card [@animate]="{ value: '*', params: { y: '50px', delay: '300ms' } }">
+  <mat-card-title class="mb-1">
+    <div>
+      <p>
+        {{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.TITLE' | translate }}
+      </p>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-tab-group #tabGroup [animationDuration]="'1ms'">
+      <mat-tab label="{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.UPLOAD_RECORDS.TITLE' | translate | uppercase }}">
+        <app-api-upload></app-api-upload>
+      </mat-tab>
+      <mat-tab label="{{ 'REPORT_MANAGEMENT_PAGE.API_MANAGEMENT.DELETE_RECORDS.TITLE' | translate | uppercase }}">
+        <app-api-deletion></app-api-deletion>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

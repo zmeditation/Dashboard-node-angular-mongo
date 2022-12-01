@@ -1,0 +1,38 @@
+.profile-pic-settings {
+  max-width: 200px;
+  height: auto;
+}
+
+.fileupload-drop-zone {
+  text-align: center;
+  border: 2px dashed #396673;
+  padding: 48px;
+  height: 120px;
+}
+
+.fileupload-drop-zone .input-container .inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.fileupload-drop-zone .input-container .inputfile + label {
+  font-weight: 500;
+  color: #396673;
+  display: inline-block;
+}
+
+.fileupload-drop-zone .input-container .inputfile:focus + label,
+.fileupload-drop-zone .input-container .inputfile + label:hover {
+  cursor: pointer;
+}
+
+.uploads-table-actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}

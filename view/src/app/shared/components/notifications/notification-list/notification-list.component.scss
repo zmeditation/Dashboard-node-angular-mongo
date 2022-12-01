@@ -1,0 +1,127 @@
+.mat-nav-list .mat-list-item {
+  cursor: default;
+  outline: 0;
+}
+
+h3 {
+  background-color: #f6f6f6;
+}
+
+.items-container mat-list-item {
+  padding: 0.3rem 0 !important;
+  min-height: 2rem;
+  height: auto;
+  max-height: 5rem;
+  border-top: 1px solid #c8c8c894;
+}
+
+.notices-header {
+  position: relative;
+  cursor: pointer;
+  padding: 8px 8px 8px 16px;
+}
+
+.items-container {
+  height: 35vh;
+  overflow: auto;
+  opacity: 1;
+  transition: all 0.5s ease-out;
+  min-height: 17rem;
+  scrollbar-width: none;
+}
+
+.items-container::-webkit-scrollbar {
+  display: none;
+}
+
+.display-none {
+  height: 0vh;
+  overflow: hidden;
+  opacity: 0.6;
+  scrollbar-width: none;
+  min-height: 0rem;
+  transition: all 0.4s ease;
+}
+
+::ng-deep .date-text {
+  font-size: 0.8rem !important;
+}
+
+.clear-msg {
+  position: absolute;
+  top: 0px;
+  right: 4px;
+  cursor: pointer;
+}
+
+.mat-list-text h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 96%;
+}
+
+.scroll-buttons {
+  position: absolute;
+  height: 35vh;
+  padding: 0.3rem;
+
+  mat-icon {
+    cursor: pointer;
+    height: 2rem;
+    width: 2rem;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #008e7a;
+    border: 1px solid #008e7a;
+    border-radius: 50%;
+    background-color: #f6f6f6;
+  }
+}
+
+mat-list-item .clear-msg {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+mat-list-item:hover .clear-msg {
+  visibility: visible;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+h3 .clear-all-msg {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+h3:hover .clear-all-msg {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.items-container .scroll-buttons {
+  visibility: hidden;
+
+  mat-icon {
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+}
+
+.items-container:hover .scroll-buttons {
+  visibility: visible;
+
+  mat-icon {
+    opacity: 0.65;
+    transition: all 0.3s ease;
+  }
+}
+
+.error-text {
+  color: #f44336;
+}

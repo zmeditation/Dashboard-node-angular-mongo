@@ -1,0 +1,39 @@
+.warn {
+  background: #b71c1c !important;
+}
+
+.cursor--not-allowed {
+  cursor: not-allowed;
+}
+
+.cursor--pointer {
+  cursor: pointer;
+}
+
+.fileupload-drop-zone .input-container .inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.fileupload-drop-zone .input-container .inputfile + label {
+  font-weight: 500;
+  color: #396673;
+  display: inline-block;
+}
+
+.fileupload-drop-zone .input-container .inputfile:focus + label,
+.fileupload-drop-zone .input-container .inputfile + label:hover {
+  cursor: pointer;
+}
+
+.event-none {
+  pointer-events: none;
+}
+
+#generate-ad-unit {
+  margin-left: 20px;
+}

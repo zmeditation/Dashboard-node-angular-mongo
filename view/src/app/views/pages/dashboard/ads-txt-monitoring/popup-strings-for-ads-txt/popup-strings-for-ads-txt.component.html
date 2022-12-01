@@ -1,0 +1,48 @@
+<mat-card-content id="popup-dialog-adstxt" *ngIf="data.success">
+  <h1 mat-dialog-title>
+    {{ data.programmatic | uppercase
+    }}{{
+      data.dataStrings.length !== 0
+        ? ('USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.TITLE' | translate)
+        : ('USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.PROGRAMMATIC_DOESNT_HAVE_ADSTXT' | translate)
+    }}
+  </h1>
+  <div mat-dialog-content>
+    <mat-list dense role="list" class="format-list-of-stings p-0">
+      <div *ngFor="let string of data.dataStrings">
+        <mat-list-item class="p-0" role="listitem" fxFlex fxLayoutAlign="start center" [class.absent-string]="string.absent">
+          {{ string.domain }}, {{ string.publisherAccountID }}, {{ string.accountType
+          }}{{ string.certificateAuthorityID !== '' ? ', ' + string.certificateAuthorityID : '' }}
+        </mat-list-item>
+      </div>
+    </mat-list>
+  </div>
+  <div
+    mat-dialog-actions
+    fxLayout="row"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="space-around center"
+    fxLayoutAlign.lt-sm="space-around center"
+    [ngClass.lt-sm]="'actions-container'"
+  >
+    <button mat-flat-button color="accent" (click)="copyAllRows()" *ngIf="data.dataStrings.length !== 0">
+      {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.COPY_ALL' | translate }}
+    </button>
+    <button mat-stroked-button class="m-0" color="primary" (click)="closeDialog()">
+      {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.CLOSE_POPUP_WITHOUT_COPY' | translate }}
+    </button>
+  </div>
+</mat-card-content>
+
+<mat-card-content class="p-1" *ngIf="!data.success">
+  <h1 mat-dialog-title>
+    {{ data.programmatic | lowercase }} -
+    {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.NO_SUCH_PROGRAMMATIC' | translate }}
+  </h1>
+
+  <div mat-dialog-actions>
+    <button mat-stroked-button color="accent" (click)="closeDialog()">
+      {{ 'USERS_PAGE.ADS_TXT_MONITOR.TABLE.POPUP_WITH_STRINGS.CLOSE_POPUP_WITH_ERROR' | translate }}
+    </button>
+  </div>
+</mat-card-content>

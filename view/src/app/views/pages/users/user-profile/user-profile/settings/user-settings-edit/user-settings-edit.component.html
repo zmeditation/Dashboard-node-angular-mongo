@@ -1,0 +1,15 @@
+<div *ngIf="loading" fxFlexAlign="row" fxLayoutAlign="center center" style="height: 400px">
+  <mat-spinner [diameter]="70"></mat-spinner>
+</div>
+<!--<div class="mb-1" style="margin-top: 16px;"></div>-->
+<div fxLayout="row wrap" style="padding-top: 1.5rem">
+  <ng-container *ngFor="let data of userData">
+    <div fxFlex="50" *ngIf="user[data.value]">
+      <p>
+        <span
+          ><strong>{{ data.name }}</strong></span
+        >:<span style="margin-left: 6px">{{ user[data.value] }}</span>
+      </p>
+    </div>
+  </ng-container>
+</div>

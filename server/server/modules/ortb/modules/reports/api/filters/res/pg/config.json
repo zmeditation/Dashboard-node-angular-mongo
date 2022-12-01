@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "dev",
+    "password": "meb9kohh9bai{H4aeW9ohphi",
+    "database": "rtb",
+    "host": "95.179.250.224",
+    "port": "5432",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "staging": {
+    "username": "dev",
+    "password": "meb9kohh9bai{H4aeW9ohphi",
+    "database": "rtb",
+    "host": "95.179.250.224",
+    "port": "5432",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "username": "dashboard",
+    "password": "73G28LBVC9Mn5ZQlw2RKCXqX",
+    "database": "rtb",
+    "host": "147.135.11.114",
+    "port": "5432",
+    "dialect": "postgres",
+    "logging": false
+  }
+}

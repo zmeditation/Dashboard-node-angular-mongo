@@ -1,0 +1,8 @@
+<mat-tab-group animationDuration="0ms" dynamicHeight>
+<mat-tab [label]="'REVENUE.TABLE' | translate" *ngxPermissionsOnly="['canSeeRevenues']">
+  <app-revenue-table [user]="user" [publishersList]="publishersList"></app-revenue-table>
+</mat-tab>
+<mat-tab [label]="'REVENUE.MANAGEMENT' | translate" *ngxPermissionsOnly="['canEditRevenues', 'canDeleteRevenues']">
+  <app-revenue-management [user]="user" [publishersList]="publishersList"></app-revenue-management>
+</mat-tab>
+</mat-tab-group>

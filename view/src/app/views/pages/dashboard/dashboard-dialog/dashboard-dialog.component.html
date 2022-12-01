@@ -1,0 +1,19 @@
+<div class="dialog-container" fxLayout="column" fxLayoutAlign="center center">
+  <h2 mat-dialog-title>{{ 'DASHBOARD_DIALOG.GREETING' | translate }}</h2>
+  <mat-dialog-content class="mat-typography">
+    <p>
+      <span>{{ 'DASHBOARD_DIALOG.UPDATED_DASHBOARD' | translate }}</span>
+      <span>{{ 'DASHBOARD_DIALOG.UPLOAD_INVOICES' | translate }}</span>
+      <span
+        >{{ 'DASHBOARD_DIALOG.FOLLOW_THE_LINK' | translate }} <a href="https://dashboard.wmgroup.us/invoices/">https://dashboard.wmgroup.us/invoices/</a>.</span
+      >
+      <span>{{ 'DASHBOARD_DIALOG.ONLY_FOR_PUBS' | translate }}</span>
+      <span>{{ 'DASHBOARD_DIALOG.ANY_QUESTIONS' | translate }}</span>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" mat-dialog-close>
+      {{ 'DASHBOARD_DIALOG.CONFIRM' | translate }}
+    </button>
+  </mat-dialog-actions>
+</div>

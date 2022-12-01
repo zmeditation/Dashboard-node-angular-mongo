@@ -1,0 +1,43 @@
+.basic-form-width {
+  width: 60%;
+}
+
+.filter-name-p {
+  margin: 0;
+  padding: 0;
+}
+
+.query-builder-block-title {
+  border-bottom: 1px solid dimgrey;
+  width: 95%;
+}
+
+.mat-selection-list .mat-list-option {
+  font-size: 14px;
+  height: 30px;
+}
+
+.mat-list {
+  padding-top: 0;
+}
+
+.mat-list .mat-list-item {
+  width: 70%;
+  height: 30px;
+  margin-bottom: 2px;
+  background-color: rgba(57, 102, 115, 0.85);
+  border-radius: 5px;
+  color: white;
+  position: relative;
+}
+
+.query-builder-dimension-list {
+  width: 97%;
+}
+
+.smaller-height {
+  height: 30px;
+  .smaller-font-size {
+    font-size: 0.95em !important;
+  }
+}

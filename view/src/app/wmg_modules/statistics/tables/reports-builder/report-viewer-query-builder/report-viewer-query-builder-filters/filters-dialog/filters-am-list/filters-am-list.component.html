@@ -1,0 +1,20 @@
+<div [hidden]="!filterListValues.length" class="filters-am-list">
+  <mat-selection-list #filtersSelection (selectionChange)="logSelection($event.option)">
+    <mat-list-option
+      *ngFor="let value of filterListValues | SearchFilter: searchValue; let i = index"
+      [selected]="value.selected"
+      [value]="value.id"
+      [color]="toggledValue === 'exclude' ? 'warn' : 'accent'"
+      class="smaller-height"
+    >
+      <div class="overflow-hidden nowrap smaller-font-size">
+        {{ value.name !== 'No manager' ? value.name : ('REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.FILTERS.NO_MANAGER' | translate) }}
+      </div>
+    </mat-list-option>
+  </mat-selection-list>
+</div>
+<div *ngIf="filterListValues.length === 0">
+  <p>
+    {{ 'REPORT_MANAGEMENT_PAGE.REPORT_VIEWER.REPORT_QUERY_BUILDER.FILTERS.NO_MORE_ELEMENTS' | translate }}
+  </p>
+</div>

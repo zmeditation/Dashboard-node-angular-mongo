@@ -1,0 +1,341 @@
+<!-- @format -->
+<mat-progress-bar *ngIf="!showForm"></mat-progress-bar>
+<mat-dialog-content *ngIf="showForm">
+  <div>
+    <div
+      *ngIf="data.payload.role"
+      [ngClass]="{ 'role-top-block-edit-publisher': showEditAccountManager }"
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+    >
+      <h3 matDialogTitle><span style="display: flex;    align-items: center;">
+        {{ data.payload.role }}
+        <mat-icon *ngIf="!data.payload.permissions.includes('hideRequestsAndFillrate')"
+                  style="cursor: default; margin-left: 5px"
+                  matTooltip="This user can see requests and fill rate">
+          visibility
+        </mat-icon>
+      </span>
+      </h3>
+      <mat-chip *ngIf="owner.show === true" class="min-height-for-chip mat-teal">
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlexAlign="center">
+          <h4 class="m-05 mt-05">{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.YOUR_MANAGER' | translate }}</h4>
+          <span class="m-05">{{ owner.name }}</span>
+          <span *ngIf="owner.date_to_connect_am !== null" class="smaller-font-size">
+            {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.MANAGER_SINCE' | translate: { date: owner.date_to_connect_am } }}
+          </span>
+        </div>
+      </mat-chip>
+      <app-update-publisher-account-manager
+        *ngIf="showEditAccountManager"
+        fxFlex="50"
+        [publisherId]="data.payload._id"
+        [currentAccountManagerId]="owner.id"
+        (updatedAccountManager)="updatedAccountManager($event)"
+      ></app-update-publisher-account-manager>
+    </div>
+    <div>
+      <form [formGroup]="mainForm" id="formWrapper">
+        <mat-card-title class="m-1">{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.MAIN_INFO' | translate }}</mat-card-title>
+        <div fxLayout="column">
+          <div
+            *ngIf="showEditRole"
+            fxLayout="row"
+            fxLayout.lt-sm="column"
+            fxLayoutWrap="wrap"
+          >
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="full-width">
+                <mat-select placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.CHOOSE_ROLE' | translate }}"
+                            formControlName="role" required>
+                  <mat-option *ngFor="let role of roles" [value]="role" (click)="roleChosen(role)">
+                    {{ role }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayout.sm="column" fxFlex="100">
+            <div fxFlex="50" fxFlex.sm="100" class="pr-1">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  name="username"
+                  formControlName="name"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.NAME' | translate }}"
+                  required
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('name').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.' + mainForm.get('name').errors.message | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" fxFlex.sm="100" class="pr-1">
+              <mat-form-field class="full-width">
+                <input
+                  matInput
+                  type="email"
+                  name="email"
+                  formControlName="email"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.EMAIL' | translate }}"
+                  required
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('email').invalid">{{
+                  'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.USER_EMAIL' | translate
+                  }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayout.sm="column" fxFlex="100">
+            <div fxFlex="50" fxFlex.sm="100" class="pr-1" *ngIf="!showPassword || !editablePassword">
+              <mat-form-field class="full-width" (click)="editPassword()">
+                <input
+                  matInput
+                  type="password"
+                  name="password"
+                  formControlName="password"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.PASSWORD' | translate }}"
+                  required
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('password').invalid">{{
+                  'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.' + mainForm.get('password').errors.message | translate
+                  }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" fxFlex.sm="100" class="pr-1" *ngIf="!showPassword || !editablePassword">
+              <mat-form-field class="full-width" (click)="editPassword()">
+                <input
+                  matInput
+                  type="password"
+                  name="password"
+                  formControlName="password_confirm"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.PASSWORD_CONFIRM' | translate }}"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxFlex="100" class="pr-1" *ngIf="editablePassword">
+            <button mat-menu-item (click)="showPassword = !showPassword" *ngIf="showPassword">
+              <mat-icon>edit</mat-icon>
+              <span>{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.EDIT_PASSWORD' | translate }}</span>
+            </button>
+          </div>
+          <div fxFlex="50" fxLayout="row">
+            <div class="pr-1" *ngIf="!showPassword">
+              <button mat-button color="accent" class="mr-1" [disabled]="mainForm.invalid" (click)="savePassword()">
+                {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.BUTTONS.SAVE' | translate }}
+              </button>
+            </div>
+            <div class="pr-1" *ngIf="!showPassword">
+              <button mat-button color="warn" class="mr-1" (click)="cancelPassword()">
+                {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.BUTTONS.CANCEL' | translate }}
+              </button>
+            </div>
+          </div>
+          <mat-card-title
+            class="m-1">{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ADDITIONAL_INFO' | translate }}</mat-card-title>
+          <div fxLayoutAlign="space-between" fxLayout="row" fxLayout.sm="column" fxFlex="100">
+            <div fxFlex="33" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <input
+                  matInput
+                  name="company"
+                  formControlName="company"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.COMPANY' | translate }}"
+                />
+                <mat-error *ngIf="mainForm.get('additional').get('company').invalid">{{
+                  'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.' + mainForm.get('additional').get('company').errors.message | translate
+                  }}</mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="33" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <input
+                  matInput
+                  name="phone"
+                  formControlName="phone"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.PHONE' | translate }}"
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('additional').get('phone').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.' + mainForm.get('additional').get('phone').errors.message | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="33" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <input
+                  matInput
+                  name="skype"
+                  formControlName="skype"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.SKYPE' | translate }}"
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('additional').get('skype').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.USER_SKYPE' | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayout.sm="column" fxFlex="100">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <input
+                  matInput
+                  name="address"
+                  formControlName="address"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.ADDRESS' | translate }}"
+                />
+                <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('additional').get('address').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.USER_ADDRESS' | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--birthday-->
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <input matInput readonly formControlName="birthday" [matDatepicker]="pickerBirthday"
+                       placeholder="Birthday"/>
+                <mat-datepicker-toggle matSuffix [for]="pickerBirthday"></mat-datepicker-toggle>
+                <mat-datepicker #pickerBirthday disabled="false"></mat-datepicker>
+                <mat-error fxShow.lt-sm="false" fxShow="true"
+                           *ngIf="mainForm.get('additional').get('birthday').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.' + mainForm.get('additional').get('birthday').errors.message | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!--birthday-->
+          <div fxLayout="row" fxLayout.sm="column" fxFlex="100">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="full-width" formGroupName="additional">
+                <textarea
+                  matInput
+                  name="description"
+                  rows="5"
+                  formControlName="description"
+                  placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.DESCRIPTION' | translate }}"
+                ></textarea>
+                <mat-error fxShow.lt-sm="false" fxShow="true"
+                           *ngIf="mainForm.get('additional').get('description').invalid">
+                  {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.ADDITIONAL_DESCRIPTION' | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <ng-container *ngIf="isRTBFormEnabled || potentialForWbid">
+            <mat-card-title
+              class="m-1">{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.AD_CONFIGURATION' | translate }}</mat-card-title>
+            <section fxFlex="1 1 100" fxLayout="row wrap" class="pr-1 pb-1">
+              <mat-form-field fxFlex="50" *ngIf="potentialForWbid">
+                <mat-label>{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.LABEL_TYPE_HB' | translate }}</mat-label>
+                <mat-select formControlName="wbidType" multiple>
+                  <mat-option *ngFor="let type of ['postbid', 'prebid']" [value]="type">{{
+                    'USERS_PAGE.USERS_POPUP_COMPONENT.' + type | uppercase | translate
+                    }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-slide-toggle style="height: 57px; padding-left: 20px" formControlName="adWMGAdapter">
+                {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.ADWMG_ADAPTER' | translate }}
+              </mat-slide-toggle>
+              <div id="ortb-settings" *ngIf="isRTBFormEnabled" fxFlex="100">
+                <mat-form-field fxFlex="50" fxFlex.sm="100" class="pr-1">
+                  <mat-label>{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.LABEL_TYPE_RTB' | translate }}</mat-label>
+                  <mat-select formControlName="oRTBType">
+                    <mat-option *ngFor="let type of ['SSP', 'DSP']" [value]="type">
+                      {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.' + type | uppercase | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="50" fxFlex.sm="100" class="pr-1">
+                  <input
+                    matInput
+                    formControlName="oRTBId"
+                    placeholder="{{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.ORTB_ID' | translate }}"
+                  />
+                  <mat-error fxShow.lt-sm="false" fxShow="true" *ngIf="mainForm.get('oRTBId').invalid">
+                    {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.ERRORS.ONLY_NUMBERS' | translate }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div id="user-id" *ngIf="data.edit">
+                User ID: {{ user['_id'] }}
+                <mat-icon [cdkCopyToClipboard]="user['_id']"
+                          [matTooltip]="'USERS_PAGE.USERS_POPUP_COMPONENT.COPY_USER_ID' | translate">
+                  content_copy
+                </mat-icon>
+              </div>
+            </section>
+          </ng-container>
+          <mat-divider class="mb-1" [inset]="false"></mat-divider>
+          <div
+            fxFlex="100"
+            *ngIf="permissions"
+            [@animate]="{
+              value: 'fade',
+              params: { x: '0px', delay: '1200ms' }
+            }"
+          >
+            <div *ngIf="user['role'] === 'PUBLISHER'">
+              <app-domain-add-form></app-domain-add-form>
+            </div>
+            <div *ngIf="user['role'] === 'ACCOUNT MANAGER'">
+              <app-user-add-form userType="publisher"></app-user-add-form>
+            </div>
+            <div *ngIf="user['role'] === 'SENIOR ACCOUNT MANAGER'">
+              <ng-template [ngxPermissionsOnly]="['canEditAllUsers', 'canEditAllPubs']">
+                <app-user-add-form userType="publisher"></app-user-add-form>
+                <app-user-add-form userType="manager"></app-user-add-form>
+              </ng-template>
+            </div>
+            <div fxLayout="row" *ngIf="permissions.includes('canReadOwnDomains')" class="pt-1 pb-1">
+              <button class="mat-primary full-width" mat-raised-button (click)="toProperties()">
+                {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.DOMAIN_ADD_FORM_COMPONENT.PROPERTIES_COMPONENT.PROPERTIES_TITLE' | translate }}
+              </button>
+            </div>
+            <app-commission-form [User]="data.payload" *ngIf="user['role'] === 'PUBLISHER'"></app-commission-form>
+          </div>
+          <div fxLayout="row wrap">
+            <div fxFlex="35" fxFlex.sm="50" fxFlex.xs="50" class="pt-1 pr-1" formGroupName="enabled">
+              <mat-slide-toggle
+                formControlName="status"
+                [disabled]="isChangedStatus"
+                (change)="changeStatus()"
+              >
+                {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.ACTIVE_CUSTOMER' | translate }}
+              </mat-slide-toggle>
+            </div>
+            <div *ngIf="currentUser.role === 'ADMIN'" fxFlex="20" fxFlex.sm="50" fxFlex.xs="50" class="pt-1 pr-1">
+              <mat-slide-toggle formControlName="isTest">Test</mat-slide-toggle>
+            </div>
+          </div>
+          <!--
+                    <span>* - {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.FORM_MAINFORM.REQUIRED_FIELDS' | translate }}</span>
+          -->
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="mt-1 buttons-panel" *ngIf="showForm">
+  <button
+    mat-raised-button
+    *ngxPermissionsOnly="['canEditAllUsers', 'canEditAllPubs']"
+    color="primary"
+    [disabled]="saveButtonDisabled"
+    (click)="submit()"
+  >
+    {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.BUTTONS.SAVE' | translate }}
+  </button>
+  <span fxFlex></span>
+  <button mat-button color="warn" type="button" (click)="discardChanges()">
+    {{ 'USERS_PAGE.USERS_POPUP_COMPONENT.BUTTONS.CANCEL' | translate }}
+  </button>
+</mat-dialog-actions>
+
+<app-confirm-popup
+  *ngIf="isDiscardPopup"
+  [title]="confirmPopupTitle"
+  [message]="confirmPopupMessage"
+  (approve)="approveDiscardPopup()"
+  (deny)="denyDiscardPopup()"
+></app-confirm-popup>

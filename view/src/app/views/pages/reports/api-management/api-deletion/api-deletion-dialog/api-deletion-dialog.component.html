@@ -1,0 +1,21 @@
+<div class="dialog-container" fxLayout="column" fxLayoutAlign="center space-around">
+  <div class="layout-content-container" fxLayout="column" fxLayoutAlign="center center">
+    <h5 class="text-gray">Are you sure?</h5>
+    <p>
+      If you choose to remove all reports by
+      <span class="data">{{ query.programmatic }}</span>
+      <span *ngIf="query.publisher"
+        >`s publisher <span class="data">{{ query.publisher.name }} </span></span
+      >
+      <span *ngIf="query.properties.length > 0"
+        >and his properties: <span *ngFor="let property of query.properties" class="data"> {{ property }}, </span></span
+      >
+      from <span class="data">{{ query.dateFrom }}</span> to <span class="data">{{ query.dateTo }}</span
+      >, they will be gone forever.
+    </p>
+  </div>
+  <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center">
+    <button style="margin-bottom: 5px" mat-raised-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Delete Reports</button>
+    <button mat-stroked-button (click)="onNoClick()">Cancel</button>
+  </div>
+</div>

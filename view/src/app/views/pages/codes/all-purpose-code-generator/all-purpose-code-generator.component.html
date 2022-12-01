@@ -1,0 +1,446 @@
+<mat-card [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }">
+
+  <mat-card-title style="display: flex; align-items: flex-end; justify-content: space-between">
+    <h2>{{ 'CODES_PAGES.UNIVERSAL_GENERATOR.TITLE' | translate }}</h2>
+    <div style="display: flex; padding: 0.5em 1em">
+      <a style="display: flex" href="https://wmgint.atlassian.net/wiki/spaces/DEVS/pages/1888092161/ADWMG.MIN.JS"
+         target="_blank">
+        <span>
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.DOCUMENTATION' | translate }}
+        </span>
+        <mat-icon aria-hidden="false" aria-label="Example home icon">info</mat-icon>
+      </a></div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="form">
+      <div class="line">
+
+        <mat-form-field class="one-third">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.TYPE_OF_AD' | translate }}
+          </mat-label>
+          <mat-select
+            [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.TYPE_OF_AD_TIP' | translate"
+            required type="text" (selectionChange)="showNecessaryParams($event)" formControlName="typeOfAd"
+          >
+            <mat-option *ngFor="let type of adTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="one-third">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER' | translate }}
+          </mat-label>
+          <input type="text" formControlName="publisher" required matInput [matAutocomplete]="auto"
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_TIP' | translate"
+                 (input)="filterPublishers()"/>
+          <mat-error>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_ERROR' | translate }}
+          </mat-error>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updatePubId($event.option.value)">
+            <mat-option *ngFor="let pub of filteredPublishers" [value]="pub">
+              {{ pub }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="one-third">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PAGE_URL' | translate }}
+          </mat-label>
+          <input type="text" formControlName="pageUrl" matInput placeholder="https://site.com/"
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PAGE_URL_TIP' | translate">
+          <mat-error>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PAGE_URL_ERROR' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+      <div class="line" *ngIf="typeOfAd !== undefined">
+
+        <div class="one-third" id="sizes-container">
+
+          <mat-form-field class="one-third">
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.SIZES' | translate }}
+            </mat-label>
+            <mat-select formControlName="sizes" (selectionChange)="checkCustomSizeValue($event)"
+                        (openedChange)="resetSizesList($event)" #sizes
+                        [required]="typeOfAd === 'banner' || typeOfAd === 'in-banner-video'"
+                        [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.SIZES_TIP' | translate">
+              <input (focusout)="resetFilterValue()" matInput id="search-field" type="text"
+                     (keyup)="filterSizes($event.target.value)" style="padding: 1em; width: 85%"
+              >
+              <mat-option *ngFor="let size of selectedSizes" [value]="size">
+                {{ size }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="one-third">
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_WIDTH' | translate }}
+            </mat-label>
+            <input type="text" matInput formControlName="customWidth" [required]="sizes.value === 'custom'"
+                   [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_WIDTH_TIP' | translate"
+            >
+            <mat-error>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_WIDTH_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="one-third">
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_HEIGHT' | translate }}
+            </mat-label>
+            <input type="text" matInput formControlName="customHeight" [required]="sizes.value === 'custom'"
+                   [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_HEIGHT_TIP' | translate"
+            >
+            <mat-error>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CUSTOM_HEIGHT_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <mat-form-field class="one-third" id="banner-ad-unit">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.UNIT_ID' | translate }}
+          </mat-label>
+          <input type="text" matInput formControlName="unitId" placeholder="espresso.tv_300x250_main"
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.UNIT_ID_TIP' | translate"
+                 [required]="typeOfAd === 'banner' || typeOfAd === 'in-banner-video'">
+          <mat-hint>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.UNIT_ID_HINT' | translate }}
+          </mat-hint>
+          <mat-error>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.UNIT_ID_ERROR' | translate }}
+          </mat-error>
+
+          <button matSuffix mat-stroked-button style="margin-bottom: 4px; height: 24px; line-height: 0" color="primary"
+                  [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.NEW_UNIT_TIP' | translate"
+                  [disabled]="unitCompleted || !form.controls.unitId.valid"
+                  type="button" (click)="createNewUnit()">
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CREATE_NEW_UNIT_BUTTON' | translate }}
+          </button>
+        </mat-form-field>
+
+        <mat-form-field class="one-third">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_NETWORK_ID' | translate }}
+          </mat-label>
+          <input type="text" matInput formControlName="publisherNetworkId" placeholder="1234567890" required
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_NETWORK_ID_TIP' | translate">
+          <mat-hint>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_NETWORK_ID_HINT' | translate }}
+          </mat-hint>
+          <mat-error>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PUBLISHER_NETWORK_ID_ERROR' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+
+      </div>
+
+      <div class="line checkboxes" *ngIf="typeOfAd !== undefined">
+        <div id="radio-buttons">
+          <mat-radio-group labelPosition="before"
+                           formControlName="adPosition" aria-labelledby="ad-page-position"
+                           (change)="setResizePosition($event)"
+          >
+
+            <mat-radio-button value="standard" [checked]="true"
+                              [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.STANDARD_TIP' | translate">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.STANDARD' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button value="fixed" [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.FIXED_TIP' | translate">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.FIXED' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button value="fullscreen"
+                              [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.FULLSCREEN_TIP' | translate">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.FULLSCREEN' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button value="sticky" [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.STICKY_TIP' | translate">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.STICKY' | translate }}
+            </mat-radio-button>
+            <mat-radio-button value="resize-on-scroll" [disabled]="typeOfAd === 'banner'"
+                              [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL_TIP' | translate">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL' | translate }}
+            </mat-radio-button>
+
+          </mat-radio-group>
+
+        </div>
+
+        <mat-checkbox formControlName="protectedMedia"
+                      [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PROTECTED_MEDIA_TIP' | translate">
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PROTECTED_MEDIA' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox formControlName="noClose"
+                      [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.NO_CLOSE_BUTTON_TIP' | translate">
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.NO_CLOSE_BUTTON' | translate }}
+        </mat-checkbox>
+
+        <div>
+
+          <mat-checkbox formControlName="refresh" #refresh
+                        [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.REFRESH_TIP' | translate">
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.REFRESH' | translate }}
+          </mat-checkbox>
+
+          <mat-form-field *ngIf="refresh.checked" style="width: 80px !important">
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.REFRESH_TIME' | translate }}
+            </mat-label>
+            <input type="text" matInput formControlName="refreshTime"
+                   [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.REFRESH_TIME_TIP' | translate"
+            > <span matSuffix>{{ 'CODES_PAGES.UNIVERSAL_GENERATOR.SECONDS' | translate }}</span>
+            <mat-error>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.REFRESH_TIME_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+      </div>
+
+      <div class="line" *ngIf="typeOfAd === 'in-banner-video' || typeOfAd === 'outstream'">
+
+        <mat-form-field class="full-screen">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.VAST_TAG' | translate }}
+          </mat-label>
+          <input type="text" matInput formControlName="vastTag"
+                 [required]="typeOfAd === 'in-banner-video' || typeOfAd === 'outstream'"
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.VAST_TAG_TIP' | translate">
+          <mat-hint> {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.VAST_TAG_HINT' | translate }}</mat-hint>
+        </mat-form-field>
+
+      </div>
+
+      <div class="line" *ngIf="typeOfAd === 'in-banner-video' || typeOfAd === 'outstream'">
+
+        <mat-form-field class="full-screen">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.SECOND_VAST_TAG' | translate }}
+          </mat-label>
+          <input type="text" matInput formControlName="vastTagSecond"
+                 [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.SECOND_VAST_TAG_TIP' | translate">
+        </mat-form-field>
+
+      </div>
+      <div class="line" style="justify-content: space-between;">
+
+        <mat-form-field *ngIf="form.controls.adPosition.value === 'sticky'">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.STICKY_POSITION' | translate }}
+          </mat-label>
+          <mat-select formControlName="stickyPosition" value="bottom"
+                      [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.STICKY_POSITION_TIP' | translate"
+          >
+            <mat-option *ngFor="let position of ['top', 'bottom']" [value]="position">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.STICKY_POSITION_' + position | uppercase | translate }}
+
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="form.controls.adPosition.value === 'fixed'">
+          <mat-label>
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.FIXED_POSITION' | translate }}
+          </mat-label>
+          <mat-select formControlName="fixedPosition" value="right"
+                      [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.FIXED_POSITION_TIP' | translate"
+          >
+            <mat-option *ngFor="let position of ['right', 'left']" [value]="position">
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.FIXED_POSITION_' + position | uppercase | translate }}
+
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div id="video-settings" class="half" *ngIf="typeOfAd === 'in-banner-video' || typeOfAd === 'outstream'">
+          <div *ngIf="position === 'resize-on-scroll'">
+
+            <mat-form-field>
+              <mat-label>
+                {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL_PARAMS' | translate }}
+              </mat-label>
+              <mat-select formControlName="resizeOnScroll" #resizeOnScroll
+                          [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL_PARAMS_TIP' | translate">
+                <mat-option value="no-resize">
+                  {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.NO_RESIZE' | translate }}
+                </mat-option>
+                <mat-option *ngFor="let position of resizePositions" [value]="position">
+                  {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.' + position | uppercase | translate }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field
+              *ngIf="resizeOnScroll.value && resizeOnScroll.value !== 'no-resize'"
+              style="max-width: 110px !important">
+              <mat-label>
+                {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL_SIZES' | translate }}
+              </mat-label>
+              <input type="text" matInput formControlName="resizeOnScrollSize"
+                     [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.RESIZE_ON_SCROLL_SIZES_TIP' | translate">
+            </mat-form-field>
+
+          </div>
+
+          <mat-form-field>
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.VIDEO_UNIT_NAME' | translate }}
+            </mat-label>
+            <input type="text" matInput formControlName="wmgUnitId" placeholder="outstream_default"
+                   [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.VIDEO_UNIT_NAME_TIP' | translate ">
+          </mat-form-field>
+
+        </div>
+
+        <button
+          style="margin: 0.3em 1em; justify-self: flex-end"
+          mat-raised-button color="primary" type="button" class="one-third"
+          (click)="prepareCode(form)" [disabled]="!form.valid">
+          {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.GENERATE_CODE' | translate }}
+        </button>
+
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="code">
+  <mat-card-content style="display: flex; flex-direction: column; justify-content: flex-end">
+
+    <mat-form-field class="full-screen" style="width: 98%">
+      <mat-label>
+        {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CODE' | translate }}
+      </mat-label>
+      <textarea matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="5" [value]="code"
+                id="code-result">
+      </textarea>
+    </mat-form-field>
+
+    <div id="buttons-actions">
+
+      <button mat-raised-button type="button" color="primary" [disabled]="copied" (click)="copy()">
+        {{ !copied
+        ? ('CODES_PAGES.UNIVERSAL_GENERATOR.COPY_CODE' | translate)
+        : ('CODES_PAGES.UNIVERSAL_GENERATOR.COPIED' | translate)
+        }}
+      </button>
+
+      <button mat-raised-button type="button" color="primary" (click)="test()">
+        {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.TEST_CODE' | translate }}
+      </button>
+
+      <button mat-raised-button type="button" color="primary" (click)="addToPack()">
+        {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.ADD_TO_PACK' | translate }}
+      </button>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card [@animate]="{ value: '*', params: { scale: '.9', delay: '300ms' } }" *ngIf="pack">
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let codeObject of codesPack; let i = index" style="margin: 0 1em;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Code {{ i + 1 }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{codeObject.params.typeOfAd + " " + codeObject.params.sizes + " " + codeObject.params.adPosition }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field style="width: 98%">
+          <mat-label>script</mat-label>
+          <input type="text" matInput [value]="codeObject.script">
+        </mat-form-field>
+        <div id="script-params" style="display: flex; align-items: baseline"
+             *ngIf="codeObject.params.adPosition !== 'fixed'
+        && codeObject.params.adPosition !== 'fullscreen'
+        && codeObject.params.adPosition !== 'sticky'"
+        >
+          <mat-form-field>
+            <mat-label>
+              {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.AD_BLOCK_POSITION' | translate }}
+            </mat-label>
+            <mat-select [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.CODE_POSITION_TIP' | translate" #position
+                        (selectionChange)="setCodePosition($event)"
+            >
+              <mat-option *ngFor="let position of ['inArticle', 'afterElement', 'placementId']" [value]="position">
+                {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CODE_POSITION_' + position | uppercase | translate }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div [hidden]="position.value !== 'afterElement'">
+            <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.AFTER_ELEMENT_TIP' | translate">
+              <mat-label>selector</mat-label>
+              <input type="text" matInput required #selector>
+            </mat-form-field>
+          </div>
+          <div [hidden]="position.value !== 'placementId'">
+            <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.PLACEMENT_ID_TIP' | translate">
+              <mat-label>Script Id</mat-label>
+              <input type="text" matInput #placementId>
+            </mat-form-field>
+          </div>
+          <div id="inArticle-settings" [hidden]="position.value !== 'inArticle'">
+            <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.IN_ARTICLE_CLASS_TIP' | translate">
+              <mat-label>
+                {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.ARTICLE_CLASS' | translate }}
+              </mat-label>
+              <input type="text" matInput required #articleClass>
+            </mat-form-field>
+            <mat-form-field [matTooltip]="'CODES_PAGES.UNIVERSAL_GENERATOR.IN_ARTICLE_PARAGRAPH_TIP' | translate">
+              <mat-label>
+                {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.PARAGRAPH_NUMBER' | translate }}
+              </mat-label>
+              <input type="number" matInput min="1" required #paragraphNumber>
+            </mat-form-field>
+          </div>
+          <button mat-raised-button type="button" color="primary" [disabled]="savedSettings[i] === true"
+                  style="margin: 0.3em 1em; justify-self: flex-end; height: 36px"
+                  (click)="saveSettings({
+                  index: i,
+                  position: position.value,
+                  selector: selector.value,
+                  articleClass: articleClass.value,
+                  paragraphNumber: paragraphNumber.value,
+                  placementId: placementId.value
+                  })">
+            {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.SAVE_CODE_SETTINGS' | translate }}
+          </button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <button mat-raised-button type="button" color="primary" [disabled]="!!packedCode" (click)="sendPack()"
+            style="margin: 1em; width: calc(92% / 3)">
+      {{ 'CODES_PAGES.UNIVERSAL_GENERATOR.CREATE_PACK' | translate }}
+    </button>
+    <div [hidden]="!packedCode">
+      <mat-form-field style="width: 97%">
+      <textarea matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="5" [value]="packedCode"
+                id="packed-code-result">
+      </textarea>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+</mat-card>

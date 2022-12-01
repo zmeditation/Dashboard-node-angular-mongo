@@ -1,0 +1,28 @@
+.basic-form-width {
+  width: 80%;
+}
+
+.basic-form-list-item {
+  padding: 0 16px;
+}
+
+.basic-form-p {
+  margin: 0;
+  padding: 0;
+}
+
+.query-builder-block-title {
+  border-bottom: 1px solid dimgrey;
+  margin-bottom: 18px;
+  width: 95%;
+}
+
+.basic-form-fill-missing-checkbox {
+  .mat-checkbox {
+    width: 100%;
+  }
+}
+
+.smaller-font-size {
+  font-size: 0.95em !important;
+}

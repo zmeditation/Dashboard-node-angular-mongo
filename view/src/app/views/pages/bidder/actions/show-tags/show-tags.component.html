@@ -1,0 +1,60 @@
+<mat-card>
+  <mat-toolbar class="title-background">
+    <div id="head">
+      <h1>{{ 'WBID.PROPERTIES.TABLE.TAGS' | translate }}</h1>
+    </div>
+  </mat-toolbar>
+  <mat-card-content>
+    <mat-progress-bar mode="indeterminate" *ngIf="!ready"> </mat-progress-bar>
+    <div *ngIf="success && success.length > 0" class="success status">
+      <mat-icon color="accent">done</mat-icon>
+      {{ success | translate }}
+    </div>
+    <div *ngIf="error && error.length > 0" class="error">
+      <mat-icon>error</mat-icon>
+      {{ error }}
+    </div>
+  </mat-card-content>
+  <mat-card-content>
+    <div id="tags" *ngIf="isPrebidUser === false; else prebidTags">
+      <mat-form-field>
+        <mat-label>{{ 'WBID.PROPERTIES.TABLE.FULL_TAG' | translate }}</mat-label>
+        <textarea id="full-tag" matInput [value]="fulltag ? fulltag : ''" [disabled]="!fulltag"> </textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{ 'WBID.PROPERTIES.TABLE.PASSBACK_TAG' | translate }}</mat-label>
+        <textarea matInput [value]="passbacktag ? passbacktag : ''" [disabled]="!passbacktag"> </textarea>
+      </mat-form-field>
+    </div>
+    <ng-template #prebidTags>
+      <div id="prebidTags">
+        <mat-form-field class="full-width">
+          <mat-label>{{ 'WBID.PROPERTIES.TABLE.FULL_TAG' | translate }}</mat-label>
+          <textarea id="fulltag" matInput [value]="fulltag ? fulltag : ''" [disabled]="!fulltag"> </textarea>
+        </mat-form-field>
+      </div>
+    </ng-template>
+    <div fxLayoutAlign="space-between center">
+      <a href="https://adwmg.com/docs/wiki/wbid/publisher-guide/" target="_blank" style="color: #396673; text-decoration: underline; font-style: italic">
+        {{ 'WIKI.WBID.HOW_TO_INTEGRATE' | translate }}
+        <mat-icon
+          style="font-size: 15px; margin-top: -20px"
+          [matTooltip]="'WBID.PROPERTIES.INTEGRATION.READ_MORE_TIP' | translate"
+          matTooltipPosition="below"
+          color="primary"
+        >
+          help_outline
+        </mat-icon>
+      </a>
+      <div>
+        <a mat-raised-button color="primary" class="mr-1" [disabled]="!ready" [routerLink]="'../' + href" [queryParams]="reqParams">
+          {{ 'WBID.PROPERTIES.SHOW_TAG.DONE' | translate }}
+        </a>
+        <a #copyButton mat-raised-button color="white" [disabled]="!ready" (click)="copyButton.disabled === false ? copyToClipBoard(copyButton) : ''">
+          {{ 'WBID.PROPERTIES.SHOW_TAG.' + clipBoardData | uppercase | translate }}
+        </a>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<app-console></app-console>
